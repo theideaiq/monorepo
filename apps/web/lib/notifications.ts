@@ -62,6 +62,7 @@ export const NOTIFICATION_EVENTS = [
   "plus_invite",
   "plus_swap_booked",
   "plus_swap_done",
+  "digital_code_ready",
   "plus_duo_joined",
   "plus_duo_guardian",
   "plus_duo_approved",
@@ -297,6 +298,10 @@ const extraValues: Partial<
   auction_won: auctionValues,
   bulbs_birthday: bulbsExpiringValues,
   bulbs_expiring: bulbsExpiringValues,
+  digital_code_ready: (data, locale) => ({
+    name: locale === "ar" ? text(data.name_ar) : text(data.name_en),
+    number: text(data.number),
+  }),
   gift_claimed: (data) => ({
     name: text(data.name),
     number: text(data.number),

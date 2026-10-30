@@ -86,13 +86,14 @@ import {
   type KitLine,
   summarizeCart,
 } from "@/lib/cart";
+import { useCartDigitalLines, useInApp } from "@/lib/digital-codes";
 import { type CheckoutError, toCheckoutError } from "@/lib/errors";
 import { useInviteDiscount } from "@/lib/invites";
 import { useCartKitLine } from "@/lib/kits";
 import { orderPath, usePlaceGift, usePlaceOrder } from "@/lib/order-checkout";
 import { isNativeApp } from "@/lib/platform";
 import { useCartPlusGiftLine } from "@/lib/plus-gifts";
-import { type ProgramLine, useCartProgramLines } from "@/lib/programs";
+import { useCartProgramLines } from "@/lib/programs";
 import { useProfile } from "@/lib/queries";
 import {
   type QuoteRequest,
@@ -569,6 +570,8 @@ interface SummaryCardProps {
   readonly auctionNames?: readonly string[];
   readonly busy: boolean;
   readonly cash: boolean;
+  /** The digital codes in the cart, listed with the lines. */
+  readonly codeNames?: readonly string[];
   /** Why placing failed (CheckoutErrorNote), if it did. */
   readonly error: ReactNode;
   /** The cart's game night kit's name, listed with the lines. */
@@ -594,6 +597,7 @@ const SummaryCard = ({
   oneTap,
   plusName = null,
   programNames = [],
+  codeNames = [],
   quote,
   summary,
 }: SummaryCardProps) => {
@@ -662,6 +666,14 @@ const SummaryCard = ({
               <span className="line-clamp-1 min-w-0">{name}</span>
               <span className="shrink-0 text-muted-foreground">
                 {t("programLine")}
+              </span>
+            </li>
+          ))}
+          {codeNames.map((name) => (
+            <li className="flex justify-between gap-3" key={name}>
+              <span className="line-clamp-1 min-w-0">{name}</span>
+              <span className="shrink-0 text-muted-foreground">
+                {t("codeLine")}
               </span>
             </li>
           ))}
@@ -822,8 +834,11 @@ const useCheckoutPricing = ({
   kit: KitLine | null;
   /** The cart's gifted Plus months: nothing to deliver. */
   plus: { price: number } | null;
-  /** The cart's program installments: paid online, nothing to deliver. */
-  programs: readonly ProgramLine[];
+  /**
+   * The cart's program installments and digital codes: paid online,
+   * nothing to deliver.
+   */
+  programs: readonly { amount: number }[];
   payment: PaymentMethod;
   settings: ReturnType<typeof useStoreSettings>;
   useBulbs: boolean;
@@ -839,7 +854,7 @@ const useCheckoutPricing = ({
   const choices = resolveChoices({
     address,
     payment,
-    // Programs and won auctions are paid online, never on delivery.
+    // Programs, codes and won auctions are paid online, never on delivery.
     settings:
       programs.length + auctions.length > 0 && settings.data
         ? { ...settings.data, cashOnDelivery: false }
@@ -1163,15 +1178,23 @@ const useAuctionsInCart = () => {
   };
 };
 
-/** The cart's program installments, and their names. */
+/**
+ * The cart's program installments and digital codes, and their names:
+ * paid online, nothing delivered, never a gift.
+ */
 const useProgramsInCart = () => {
   const locale = useLocale();
   const programs = useCartProgramLines();
+  const codes = useCartDigitalLines(locale);
   return {
+    codeNames: codes.map((line) =>
+      line.quantity > 1 ? `${line.name} × ${line.quantity}` : line.name
+    ),
+    codes,
     programNames: programs.map((line) =>
       line.title ? localized(line.title, "title", locale) : ""
     ),
-    programs,
+    programs: [...programs, ...codes],
   };
 };
 
@@ -1187,6 +1210,13 @@ const giftBlocked = (
   programs ||
   kit !== null ||
   summary.lines.some((line) => isRentLine(line.item));
+
+/** Digital codes are bought on the website, never in the apps. */
+const withoutAppCodes = (
+  summary: ReturnType<typeof summarizeCart>,
+  codes: boolean,
+  inApp: boolean | null
+) => (codes && inApp !== false ? { ...summary, canCheckout: false } : summary);
 
 /** Plus months go as a gift, which rentals, kits and programs can't be. */
 const orderableSummary = (
@@ -1319,7 +1349,8 @@ export const Checkout = () => {
   const { address, setForm } = book;
   const { kit, kitName } = useKitInCart();
   const { plus, plusName } = usePlusInCart();
-  const { programNames, programs } = useProgramsInCart();
+  const { codeNames, codes, programNames, programs } = useProgramsInCart();
+  const inApp = useInApp();
   const { auctionNames, auctions } = useAuctionsInCart();
   const [fieldErrors, setFieldErrors] = useState<AddressField[]>([]);
   const [error, setError] = useState<CheckoutError | null>(null);
@@ -1548,6 +1579,7 @@ export const Checkout = () => {
               auctionNames={auctionNames}
               busy={busy}
               cash={cash}
+              codeNames={codeNames}
               error={
                 <CheckoutErrorNote
                   error={error}
@@ -1560,11 +1592,15 @@ export const Checkout = () => {
               plusName={plusName}
               programNames={programNames}
               quote={quote ?? null}
-              summary={orderableSummary(
-                summary,
-                kit,
-                plus !== null,
-                programs.length > 0
+              summary={withoutAppCodes(
+                orderableSummary(
+                  summary,
+                  kit,
+                  plus !== null,
+                  programs.length > 0
+                ),
+                codes.length > 0,
+                inApp
               )}
             />
           </form>

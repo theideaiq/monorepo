@@ -35,6 +35,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { type ReactNode, useEffect, useState } from "react";
 import { PageHeader } from "@/components/page-header";
 import { ErrorState, SectionSpinner } from "@/components/states";
+import { OrderCodes } from "@/components/store/digital-codes";
 import { GiftOrderCard } from "@/components/store/gift-order";
 import { OrderReturns, ReturnLine } from "@/components/store/order-returns";
 import { OrderStatusBadge } from "@/components/store/order-status-badge";
@@ -146,6 +147,10 @@ const AddressCard = ({
 }) => {
   const t = useTranslations("app.orders.detail");
   const locale = useLocale();
+  // Nothing delivered (program installments, digital codes): no address.
+  if (!(order.is_gift || address.address)) {
+    return null;
+  }
   let body: ReactNode = <Address address={address} />;
   if (order.is_gift) {
     body = (
@@ -374,6 +379,12 @@ const OrderView = ({
       {order.is_gift ? (
         <GiftOrderCard orderId={order.id} status={order.status} />
       ) : null}
+
+      <OrderCodes
+        hasCodes={order.order_items.some((item) => item.kind === "digital")}
+        names={names}
+        orderId={order.id}
+      />
 
       {orderProgress(order.status, order.payment_method) >= 0 ? (
         <Card>

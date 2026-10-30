@@ -17,6 +17,20 @@ export interface ReloadlyOrder {
   transactionId: number;
 }
 
+/** A gift card product, as listed by Reloadly. */
+export interface ReloadlyProduct {
+  brand: { brandName: string } | null;
+  country: { isoName: string } | null;
+  denominationType: "FIXED" | "RANGE";
+  fixedRecipientDenominations: number[];
+  fixedSenderDenominations: number[];
+  productId: number;
+  productName: string;
+  recipientCurrencyCode: string;
+  redeemInstruction?: { concise?: string | null } | null;
+  senderCurrencyCode: string;
+}
+
 export interface ReloadlyCard {
   cardNumber: string | null;
   pinCode: string | null;
@@ -137,6 +151,22 @@ export const createReloadlyClient = ({
         senderName: "The IDEA",
         unitPrice,
       }),
+    /** Every product, page by page. */
+    products: async () => {
+      const all: ReloadlyProduct[] = [];
+      for (let page = 1; page <= 50; page += 1) {
+        // biome-ignore lint/performance/noAwaitInLoops: pages are sequential
+        const result = await call<{
+          content: ReloadlyProduct[];
+          totalPages: number;
+        }>("GET", `/products?size=200&page=${page}`);
+        all.push(...result.content);
+        if (page >= result.totalPages) {
+          break;
+        }
+      }
+      return all;
+    },
   };
 };
 

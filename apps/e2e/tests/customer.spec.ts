@@ -14,6 +14,7 @@ import {
 import { urls } from "../playwright.config";
 import {
   resetCustomer,
+  resetDigitalCodes,
   resetDuo,
   resetFriend,
   resetFriendForPlus,
@@ -196,6 +197,7 @@ const PLACE_CASH_ORDER = /^Place order · /;
 const PLACE_ORDER = /^Place order and pay /;
 const CART_PAGE = /\/cart$/;
 const ORDER_PAGE = /\/pass\/orders\/[^/]+$/;
+const PAYMENT_OR_ORDER = /mock-checkout|\/pass\/orders\//;
 const STUDENT_NUDGE = /^Verify as a student/;
 
 test.describe("a signed-in customer", () => {
@@ -583,6 +585,73 @@ test.describe("a signed-in customer", () => {
       cancel_at_period_end: true,
       provider: "gift",
     });
+    noErrors();
+  });
+
+  test("buys a digital code and reveals it", async ({ page }) => {
+    const customerId = await resetDigitalCodes();
+    const startedAt = new Date().toISOString();
+    const browsing = watchConsole(page);
+    await page.goto(`${urls.web}/store/codes`);
+    await expect(
+      page.getByRole("heading", { level: 1, name: "Gift cards and codes" })
+    ).toBeVisible();
+    await expectAccessible(page);
+    const code = page.locator("li", { hasText: "USD 20" }).first();
+    await code.getByRole("button", { name: "Add to cart" }).click();
+
+    await page.goto(`${urls.web}/cart`);
+    await expect(
+      page.getByText("PlayStation · US store · USD 20")
+    ).toBeVisible();
+    browsing();
+    await page.getByRole("link", { name: "Checkout" }).click();
+    // Paid online, nothing to deliver.
+    await expect(page.getByText("Nothing to deliver")).toBeVisible();
+    const paying = page.waitForResponse((response) =>
+      response.url().endsWith("/orders/checkout")
+    );
+    await page.getByRole("button", { name: PLACE_ORDER }).click();
+    await paying;
+    // Off to the (mock) payment page; paid below as the webhook would.
+    await page.waitForURL(PAYMENT_OR_ORDER);
+
+    const db = admin();
+    const placed = async () =>
+      (
+        await db
+          .from("orders")
+          .select("id")
+          .eq("user_id", customerId)
+          .gte("created_at", startedAt)
+          .order("created_at", { ascending: false })
+          .limit(1)
+          .maybeSingle()
+      ).data;
+    await expect.poll(placed, { timeout: 30_000 }).not.toBeNull();
+    const orderId = (await placed())?.id ?? "";
+    expect(
+      (await db.rpc("complete_order_payment", { order_id: orderId })).error
+    ).toBeNull();
+    // What the API's job does with the supplier's answer.
+    const taken = await db.rpc("take_digital_codes", { batch: 5 });
+    expect(taken.data).toHaveLength(1);
+    expect(
+      (
+        await db.rpc("deliver_digital_code", {
+          code: "E2E-CODE-0001",
+          pin: "4321",
+          target: taken.data?.[0]?.code_id ?? "",
+        })
+      ).error
+    ).toBeNull();
+
+    const noErrors = watchConsole(page);
+    await page.goto(`${urls.web}/pass/orders/${orderId}`);
+    await expect(page.getByText("Your codes")).toBeVisible();
+    await page.getByRole("button", { name: "Reveal code" }).click();
+    await expect(page.getByText("E2E-CODE-0001")).toBeVisible();
+    await expectAccessible(page);
     noErrors();
   });
 

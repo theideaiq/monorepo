@@ -9,6 +9,7 @@ import { PageHero } from "@/components/page-hero";
 import { Pagination } from "@/components/pagination";
 import { ProductCard } from "@/components/product-card";
 import { EmptyState, Section } from "@/components/section";
+import { CodesLink } from "@/components/store/digital-codes";
 import { env } from "@/env";
 import { getCategories, getFormats, getProducts, getRatings } from "@/lib/data";
 import { appLink } from "@/lib/links";
@@ -229,6 +230,8 @@ const Store = async ({ params, searchParams }: StoreProps) => {
             </a>
           </p>
         ) : null}
+
+        {query.q || query.category ? null : <CodesLink />}
 
         {query.q ? (
           <p className="mb-4 text-muted-foreground">

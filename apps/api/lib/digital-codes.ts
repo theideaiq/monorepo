@@ -126,3 +126,108 @@ export const buyDigitalCodes = async ({
   }
   return run;
 };
+
+const PLATFORMS: [RegExp, string][] = [
+  [/playstation|psn/i, "playstation"],
+  [/xbox/i, "xbox"],
+  [/nintendo/i, "nintendo"],
+  [/steam/i, "steam"],
+  [/itunes|apple/i, "apple"],
+  [/google play/i, "google"],
+];
+
+const slugify = (text: string) =>
+  text
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+
+export interface DigitalSync {
+  brands: number;
+  denominations: number;
+}
+
+/**
+ * Reloadly's catalog into brands (one per brand and country, added
+ * switched off for an editor to name in Arabic and turn on) and
+ * denominations (fixed amounts priced in USD; costs refreshed, what's on
+ * sale kept as it was).
+ */
+export const syncReloadlyCatalog = async ({
+  admin,
+  reloadly,
+}: {
+  admin: AdminClient;
+  reloadly: ReloadlyClient;
+}): Promise<DigitalSync> => {
+  const products = (await reloadly.products()).filter(
+    (product) =>
+      product.denominationType === "FIXED" &&
+      product.senderCurrencyCode === "USD" &&
+      product.country?.isoName
+  );
+  const brandRows = new Map<string, Record<string, unknown>>();
+  for (const product of products) {
+    const name = product.brand?.brandName ?? product.productName;
+    const region = String(product.country?.isoName).toUpperCase();
+    const slug = slugify(`${name}-${region}`);
+    brandRows.set(slug, {
+      kind: PLATFORMS.some(([pattern]) => pattern.test(name))
+        ? "gaming"
+        : "other",
+      name_ar: name,
+      name_en: name,
+      platform: PLATFORMS.find(([pattern]) => pattern.test(name))?.[1] ?? null,
+      redeem_en: product.redeemInstruction?.concise ?? null,
+      region,
+      region_ar: `متجر ${region}`,
+      region_en: `${region} store`,
+      slug,
+    });
+  }
+  const brands = await admin
+    .from("digital_brands")
+    .upsert([...brandRows.values()] as never, {
+      ignoreDuplicates: true,
+      onConflict: "slug",
+    })
+    .select("id, slug");
+  if (brands.error) {
+    throw new Error(`digital_brands: ${brands.error.message}`);
+  }
+  const ids = new Map(
+    (
+      await admin
+        .from("digital_brands")
+        .select("id, slug")
+        .in("slug", [...brandRows.keys()])
+    ).data?.map((row) => [row.slug, row.id]) ?? []
+  );
+
+  const denominations = products.flatMap((product) => {
+    const name = product.brand?.brandName ?? product.productName;
+    const brandId = ids.get(
+      slugify(`${name}-${String(product.country?.isoName).toUpperCase()}`)
+    );
+    return brandId
+      ? product.fixedRecipientDenominations.map((value, index) => ({
+          brand_id: brandId,
+          cost_usd: product.fixedSenderDenominations[index] ?? value,
+          face_currency: product.recipientCurrencyCode,
+          face_value: value,
+          supplier: "reloadly",
+          supplier_product_id: String(product.productId),
+        }))
+      : [];
+  });
+  const saved = await admin
+    .from("digital_products")
+    .upsert(denominations, {
+      onConflict: "supplier,supplier_product_id,face_value",
+    })
+    .select("id");
+  if (saved.error) {
+    throw new Error(`digital_products: ${saved.error.message}`);
+  }
+  return { brands: brandRows.size, denominations: saved.data.length };
+};

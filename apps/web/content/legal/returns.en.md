@@ -125,6 +125,14 @@ Orders by organizations through Partners follow this policy, unless your agreeme
 
 - **Age ratings.** Games show their PEGI age rating (3, 7, 12, 16 or 18). Games rated PEGI 18 and other mature items are hidden from and not sold to members under 18, by The IDEA or by shops.
 
+## 17. Digital codes
+
+- A gift card or store code is sold for one store region, which its name shows ("PlayStation · US store"). Check that you shop in that store before you buy.
+- Your code appears in Pass → Orders once payment clears. Until you reveal it, you can ask for a refund through Help.
+- Once revealed, a code can't be returned or refunded, because it can't be taken back.
+- If a code doesn't work and the supplier confirms it's invalid, we replace it with a new one.
+- Codes are paid online. They don't earn or take Bulbs, and coupons don't apply.
+
 ## Contact us
 
 Returns, refunds, condition and warranty: [hi@theideaiq.com](mailto:hi@theideaiq.com). Please include your order number.
