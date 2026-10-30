@@ -25,7 +25,7 @@ form.
 ```mermaid
 flowchart LR
   subgraph Clients
-    W["apps/web: theideaiq.com<br/>site · The IDEA Pass · checkout"]
+    W["apps/app: theideaiq.com<br/>site · The IDEA Pass · checkout"]
     A["apps/partners: The IDEA Partners<br/>organizations"]
     S["apps/staff: Staff<br/>The IDEA's team · The IDEA Design"]
     N["iOS / Android shell<br/>(WebView loads the website)"]
@@ -55,7 +55,7 @@ flowchart LR
 
 | App | Port | What it is | How it is deployed |
 | --- | --- | --- | --- |
-| `apps/web` | 3001 | **theideaiq.com**, everything customers see (see [The website](#the-website)): the public pages (The IDEA Store: home, catalog and product pages; The IDEA Plus; The IDEA Club: posts and events; `/partners` for organizations; saved products; help and contact; careers; legal in `apps/web/content/legal`), **The IDEA Pass** (sign-in, authenticator app, and its pages at `/pass`: the card, orders, Bulbs and invites, settings), the cart and checkout. Public pages are Server Components with ISR; the signed-in parts are client components. Its `proxy.ts` adds the locale, refreshes the cookie session and sets the security headers. | Vercel; the iOS/Android apps load it in a WebView (section 3) |
+| `apps/app` | 3001 | **theideaiq.com**, everything customers see (see [The website](#the-website)): the public pages (The IDEA Store: home, catalog and product pages; The IDEA Plus; The IDEA Club: posts and events; `/partners` for organizations; saved products; help and contact; careers; legal in `apps/app/content/legal`), **The IDEA Pass** (sign-in, authenticator app, and its pages at `/pass`: the card, orders, Bulbs and invites, settings), the cart and checkout. Public pages are Server Components with ISR; the signed-in parts are client components. Its `proxy.ts` adds the locale, refreshes the cookie session and sets the security headers. | Vercel; the iOS/Android apps load it in a WebView (section 3) |
 | `apps/partners` | 3000 | **The IDEA Partners** (`partners.theideaiq.com`), the organization dashboard at its root (see [The IDEA Partners](#the-idea-partners)). No sign-in of its own: it sends people to The IDEA Pass on the website. | Vercel (`theideaiq-partners`) |
 | `apps/staff` | 3003 | **Staff** (`staff.theideaiq.com`), everything The IDEA's team uses, at its root (see [Staff](#staff)), and **The IDEA Design** at `/design` (see [The IDEA Design](#the-idea-design)). No sign-in of its own: it sends people to The IDEA Pass on the website. Storybook dev runs on port 6006. | Vercel (`theideaiq-staff`) |
 | `apps/api` | 3002 | Everything that needs a secret: Wayl checkout and webhooks, cron jobs, account and organization deletion, push notifications, Staff's privileged steps (`app/admin/*`), the website's contact form and status badge. Route handlers only. | Vercel |
@@ -101,7 +101,7 @@ exactly as Resend sends them; add a story there with every new template.
 
 ### The website
 
-`apps/web` (port 3001, `theideaiq.com`) holds every customer feature, in
+`apps/app` (port 3001, `theideaiq.com`) holds every customer feature, in
 one Next.js app. Messages come from the `web`, `app`, `pass`, `auth`,
 `store`, `billing` and `common` namespaces. Analytics and the ad pixels
 load on every page (never inside the iOS/Android apps).
@@ -246,7 +246,7 @@ namespaces.
   `POKEMONTCG_API_KEY`. Open Library, MusicBrainz and Scryfall need none.
 - **Import your list.** Pass → Saved → Lists → a list → Import your list
   takes a Goodreads, The StoryGraph or Letterboxd export (read in the
-  browser, `apps/web/lib/list-import.ts`: the to-read shelf or the
+  browser, `apps/app/lib/list-import.ts`: the to-read shelf or the
   watchlist) or a public Discogs wantlist or Steam wishlist (read by
   `POST /lists/import` in `apps/api`; `DISCOGS_TOKEN` raises Discogs' rate
   limit, Steam needs no key). `import_list_items` adds what the store has
@@ -365,10 +365,10 @@ session in the shared cookie.
   Server): Supabase sends people to an authorization page (for example
   `/{locale}/oauth/consent?authorization_id=…`), which shows the client and
   scopes and calls `supabase.auth.oauth.approveAuthorization` or
-  `denyAuthorization`. Add it under `apps/web/app/[locale]/(pass)`;
+  `denyAuthorization`. Add it under `apps/app/app/[locale]/(pass)`;
   the sign-in redirect with return_to already brings people back to it.
 - **The card.** `/pass` opens with the membership card
-  (`apps/web/components/pass`): an ID-1 card with guilloché drawn from
+  (`apps/app/components/pass`): an ID-1 card with guilloché drawn from
   formulas, a sheen that follows the pointer, the member's name and
   number (`profiles.member_number`, from 100001) and a QR code with a
   6-digit code that changes every 30 seconds. The code is TOTP (RFC 6238,
@@ -629,11 +629,11 @@ retired on 2026-10-24 and their data kept in the `archive` schema.
    Postgres with the signed-in user's token, so the database decides what each
    user can read and write. Client-side checks such as `RequireAuth` or
    `canManage` only decide what to *show*.
-2. **Secrets live in `apps/api` and Supabase, never in `apps/web`,
+2. **Secrets live in `apps/api` and Supabase, never in `apps/app`,
    `apps/partners` or `apps/staff`.** Anything a browser or the iOS/Android
    shell loads can be extracted, so they only have `NEXT_PUBLIC_*`
    variables. When they need a privileged action, they call `apps/api` with
-   `callApi()` (`apps/web/lib/api.ts`, `apps/partners/lib/api.ts`; Staff's
+   `callApi()` (`apps/app/lib/api.ts`, `apps/partners/lib/api.ts`; Staff's
    `apps/staff/lib/admin/api.ts`), which sends the user's
    access token as `Authorization: Bearer …` and the client platform as
    `x-client-platform`. The API verifies the token (`authenticateRequest`),
@@ -660,7 +660,7 @@ retired on 2026-10-24 and their data kept in the `archive` schema.
 | Flow | Path |
 | --- | --- |
 | Sign in | The IDEA Pass on the website: email → `supabase.auth.signInWithOtp` → email with a 6-digit code (Resend SMTP) → code → `verifyOtp` (`type: "email"`) → session in the shared cookie (the browser's, or the WebView's in the apps). |
-| Read or write data | Screen → TanStack Query hook (`apps/web/lib/queries.ts`, `apps/partners/lib/queries.ts`) → `supabase.from(…)` with the user's JWT → RLS policies. |
+| Read or write data | Screen → TanStack Query hook (`apps/app/lib/queries.ts`, `apps/partners/lib/queries.ts`) → `supabase.from(…)` with the user's JWT → RLS policies. |
 | Create an organization | The IDEA Partners → New (`/new`) → `rpc("create_organization")`, which inserts the organization and the caller's `owner` membership in one transaction. |
 | Privileged action | Screen → `callApi(supabase, "/checkout", …)` → `apps/api` verifies the token and role → admin client or third-party API. |
 | Payment | `/checkout` → Wayl payment link → customer pays on Wayl → signed webhook → `/webhooks/payments` → payment and subscription updated → purchase reported to analytics. |
@@ -670,7 +670,7 @@ retired on 2026-10-24 and their data kept in the `archive` schema.
 See [The website](#the-website): the proxy adds the locale, and
 `app/[locale]/layout.tsx` is the root layout (server-rendered `lang` and
 `dir`). Unknown paths render the localized 404 (`[...rest]`). Inside
-`apps/web`, `apps/partners` and `apps/staff`, link with `Link` and `useRouter` from
+`apps/app`, `apps/partners` and `apps/staff`, link with `Link` and `useRouter` from
 `@repo/internationalization/navigation` so URLs keep their language prefix.
 
 ---
@@ -1098,9 +1098,9 @@ In the Supabase dashboard:
 
 | Where | Client | RLS |
 | --- | --- | --- |
-| `apps/web` and `apps/partners` client components (browser and the apps' WebView) | `useAuth().supabase` (from `getSupabase()`) | applies |
-| `apps/web` and `apps/partners` Server Components and Server Actions (The IDEA Pass and its pages), and Staff's (`apps/staff`) | `@repo/auth/server` | applies |
-| `apps/web` public pages (catalog, editorial) | the anonymous publishable-key client | applies |
+| `apps/app` and `apps/partners` client components (browser and the apps' WebView) | `useAuth().supabase` (from `getSupabase()`) | applies |
+| `apps/app` and `apps/partners` Server Components and Server Actions (The IDEA Pass and its pages), and Staff's (`apps/staff`) | `@repo/auth/server` | applies |
+| `apps/app` public pages (catalog, editorial) | the anonymous publishable-key client | applies |
 | `apps/api` endpoints called by users | verify with `authenticateRequest`, check `membershipRole`, then the admin client for the privileged step | bypassed: check access yourself |
 | Webhooks, cron jobs | `@repo/database/admin` | bypassed |
 
@@ -1140,7 +1140,7 @@ permissions, icons, `capacitor.config.ts`).
 | --- | --- | --- |
 | Pages | the website on Vercel | the same website, in a WebView |
 | Session | Supabase cookie shared across `*.theideaiq.com` | the same cookie, kept by the WebView |
-| Detecting the shell | — | client: `isNativeApp()` (`apps/web/lib/platform.ts`); server: `isNativeShellUserAgent()` (`lib/native/user-agent.ts`, the WebView appends `TheIDEA/1`) |
+| Detecting the shell | — | client: `isNativeApp()` (`apps/app/lib/platform.ts`); server: `isNativeShellUserAgent()` (`lib/native/user-agent.ts`, the WebView appends `TheIDEA/1`) |
 | Ad pixels | load when configured | never load |
 | Digital goods (The IDEA Plus) | Wayl checkout | only when `allowNativeCheckout` is on (`canSellDigitalGoods()`) |
 | Physical store orders | Wayl checkout | Wayl checkout in the system browser |
@@ -1148,22 +1148,22 @@ permissions, icons, `capacitor.config.ts`).
 
 **Files:**
 
-- `apps/web/capacitor.config.ts`: app id (`project.bundleId`), name "The
+- `apps/app/capacitor.config.ts`: app id (`project.bundleId`), name "The
   IDEA", `server.url`, `allowNavigation`, offline page, splash,
   status bar, push presentation, user-agent marker.
-- `apps/web/native/www/`: the only bundled web assets: `offline.html`
+- `apps/app/native/www/`: the only bundled web assets: `offline.html`
   (`server.errorPath`), `index.html` (Capacitor requires one; it forwards to
   the website) and `shell.js`, generated by `native/prepare.ts` on every
   `cap:sync` with the website URL and the offline text from the messages
   files (`app.native.offline`). `shell.js` is git-ignored.
-- `apps/web/native/assets/`: icon and splash sources for
+- `apps/app/native/assets/`: icon and splash sources for
   `@capacitor/assets`: the yellow bulb on The IDEA Pink (`#D81B60`), rendered
   from `docs/brand/logos` (brand v1.0).
-- `apps/web/lib/native/`: client helpers: `push.ts` and
+- `apps/app/lib/native/`: client helpers: `push.ts` and
   `use-native-push.ts` (push registration), `share.ts` (share sheet with
   Web Share and clipboard fallbacks), `checkout.ts`
   (`canSellDigitalGoods()`), `user-agent.ts`, `secure-storage.ts`.
-- `apps/web/public/.well-known/`: `apple-app-site-association` and
+- `apps/app/public/.well-known/`: `apple-app-site-association` and
   `assetlinks.json` for app links (3.6).
 - `apps/api/app/push/*`, `apps/api/app/webhooks/notifications`,
   `apps/api/app/cron/push`, `apps/api/lib/push/*`: push delivery (3.5).
@@ -1174,7 +1174,7 @@ The IDEA Partners, Staff, the API). Every other URL, Wayl checkout included, ope
 in the system browser, so the WebView never shows a third-party page.
 
 **Plugins in use** (keep every `@capacitor/*` package on the same major
-version as `@capacitor/core`; `bun run --cwd apps/web cap:doctor` lists
+version as `@capacitor/core`; `bun run --cwd apps/app cap:doctor` lists
 them):
 
 - `@capacitor/app`: app links, the Android back button, foreground and
@@ -1199,15 +1199,15 @@ them):
 ### 3.3 Create the native projects (once)
 
 ```sh
-cd apps/web
+cd apps/app
 bun run cap:add       # writes native/www/shell.js, then cap add ios + android
 bun run cap:assets    # icons and splash screens from native/assets
 ```
 
-Commit `apps/web/ios` and `apps/web/android`: they hold signing settings,
+Commit `apps/app/ios` and `apps/app/android`: they hold signing settings,
 icons, capabilities, permissions and the app-link setup. Never commit
 `google-services.json` or `GoogleService-Info.plist` (both are in
-`apps/web/.gitignore`); each machine or CI job copies them in (3.5).
+`apps/app/.gitignore`); each machine or CI job copies them in (3.5).
 
 **Recommended hardening (Android).** Set `android:allowBackup="false"` on
 `<application>` in `AndroidManifest.xml`.
@@ -1216,11 +1216,11 @@ icons, capabilities, permissions and the app-link setup. Never commit
 
 ```sh
 bun run cap:sync                       # from the root (turbo), or:
-bun run --cwd apps/web cap:sync        # prepare.ts + cap sync
-bun run --cwd apps/web cap:open:ios    # Xcode
-bun run --cwd apps/web cap:open:android
-bun run --cwd apps/web cap:run:ios     # simulator or device
-bun run --cwd apps/web cap:doctor      # versions of the Capacitor packages
+bun run --cwd apps/app cap:sync        # prepare.ts + cap sync
+bun run --cwd apps/app cap:open:ios    # Xcode
+bun run --cwd apps/app cap:open:android
+bun run --cwd apps/app cap:run:ios     # simulator or device
+bun run --cwd apps/app cap:doctor      # versions of the Capacitor packages
 ```
 
 There is no web build step: `cap sync` copies `native/www` and the config
@@ -1232,8 +1232,8 @@ changing `capacitor.config.ts`, the offline page or a plugin.
 | Variable | Use | Example |
 | --- | --- | --- |
 | none | production | `https://theideaiq.com` |
-| `NEXT_PUBLIC_WEB_URL` | a preview or staging website | `NEXT_PUBLIC_WEB_URL=https://web-git-x.vercel.app bun run --cwd apps/web cap:sync` |
-| `CAP_SERVER_URL` | live reload against `next dev` on your LAN (allows cleartext HTTP) | `CAP_SERVER_URL=http://192.168.1.20:3001 bun run --cwd apps/web cap:sync` |
+| `NEXT_PUBLIC_WEB_URL` | a preview or staging website | `NEXT_PUBLIC_WEB_URL=https://web-git-x.vercel.app bun run --cwd apps/app cap:sync` |
+| `CAP_SERVER_URL` | live reload against `next dev` on your LAN (allows cleartext HTTP) | `CAP_SERVER_URL=http://192.168.1.20:3001 bun run --cwd apps/app cap:sync` |
 
 A preview host outside `*.theideaiq.com` works as the start URL, but links to
 other The IDEA hosts open in the system browser. Run `cap:sync` again
@@ -1332,9 +1332,9 @@ Staff: the push arrives and tapping it opens the order.
 open in the app when it is installed. `NativeBridge` receives them
 (`appUrlOpen`) and routes to the path, keeping the language.
 
-The website serves both verification files from `apps/web/public/.well-known/`
+The website serves both verification files from `apps/app/public/.well-known/`
 (`apple-app-site-association` with `Content-Type: application/json`, set
-in `apps/web/vercel.json`). Fill in the placeholders before the first
+in `apps/app/vercel.json`). Fill in the placeholders before the first
 release:
 
 | File | Placeholder | Where to find the value |
@@ -1377,7 +1377,7 @@ persists like Safari's or Chrome's. Google and Apple block their OAuth
 pages inside embedded WebViews, so OAuth sign-in (if ever added) must go
 through the system browser and an app link back.
 
-**Digital goods.** Call `canSellDigitalGoods()` (`apps/web/lib/native/checkout.ts`)
+**Digital goods.** Call `canSellDigitalGoods()` (`apps/app/lib/native/checkout.ts`)
 on every screen that sells a digital good (The IDEA Plus, plans). With
 `project.commerce.allowNativeCheckout: false` it returns false in the shell:
 show the plan as managed on the website, with no purchase button and no
@@ -1413,7 +1413,7 @@ banners for ad pixels, links to the desktop site).
   **Build** (`CURRENT_PROJECT_VERSION`).
 - Android: `android/app/build.gradle` → `versionName` and `versionCode`.
 
-**iOS (App Store / TestFlight):** `bun run --cwd apps/web cap:sync` →
+**iOS (App Store / TestFlight):** `bun run --cwd apps/app cap:sync` →
 `cap:open:ios` → Signing & Capabilities (team, automatic signing) → **Any
 iOS Device (arm64)** → **Product → Archive** → **Distribute App → App Store
 Connect** → TestFlight, then submit.
@@ -1474,7 +1474,7 @@ it and its passwords in the password manager; enable Play App Signing) →
   conversions/       server-side Meta Conversions API and TikTok Events API
 ```
 
-`<AnalyticsProvider>` is rendered once in the root layouts of `apps/web` and
+`<AnalyticsProvider>` is rendered once in the root layouts of `apps/app` and
 `apps/partners` (Staff loads no analytics). Code never calls `gtag`, `fbq` or `ttq` directly. It calls
 
 ```ts
@@ -1904,7 +1904,7 @@ free-delivery threshold applies to every zone.
 
 ```mermaid
 sequenceDiagram
-  participant U as Customer (apps/web)
+  participant U as Customer (apps/app)
   participant API as apps/api
   participant W as Wayl
   participant DB as Supabase
@@ -2188,7 +2188,7 @@ Create four Vercel projects from the same repository:
 
 | Project | Root Directory | Domain | Notes |
 | --- | --- | --- | --- |
-| web | `apps/web` | `theideaiq.com` | The website: public pages, The IDEA Pass and its pages, cart and checkout; the iOS/Android apps load it |
+| web | `apps/app` | `theideaiq.com` | The website: public pages, The IDEA Pass and its pages, cart and checkout; the iOS/Android apps load it |
 | theideaiq-partners | `apps/partners` | `partners.theideaiq.com` | The IDEA Partners: the organization dashboard |
 | api | `apps/api` | `api.theideaiq.com` | Cron jobs are defined in `apps/api/vercel.json` |
 | theideaiq-staff | `apps/staff` | `staff.theideaiq.com` | Staff and The IDEA Design at `/design` (the project that used to serve the Storybook design site). Its `build` script runs Storybook, then Next.js. No Vercel Authentication: the proxy and the pages are the gate. |
@@ -2235,7 +2235,7 @@ Legend: **Build**: the deployment fails without it. **Feature**: the
 deployment succeeds, but the named feature is off or broken without it.
 **Optional**: enables an extra integration.
 
-### 5.3 `web` (apps/web)
+### 5.3 `web` (apps/app)
 
 Public values only. **Secrets live only in `api`** (`bun run check:secrets`
 fails otherwise): the contact form posts to `POST /contact` on the API and
@@ -2379,15 +2379,15 @@ What is free to set up now; everything here needs the owner's accounts.
 - **Product markup:** each product page has schema.org `Product` data (a
   `ProductGroup` with one `Product` per version when it comes in several)
   with price in IQD, availability, condition, GTIN, and ratings from real
-  reviews (`apps/web/lib/product.ts`).
+  reviews (`apps/app/lib/product.ts`).
 - **Sitemaps:** `/sitemap.xml` lists every page in Arabic and English with
-  hreflang alternates (`apps/web/app/sitemap.ts`); `/robots.txt` points to
+  hreflang alternates (`apps/app/app/sitemap.ts`); `/robots.txt` points to
   it. Personal links (`/r/<code>`, `/a/<code>`) are never indexed.
 - **Product feed:** `/feeds/products.xml` (English) and
   `/feeds/products.xml?lang=ar` (Arabic): RSS 2.0 with Google's `g:`
   fields, one item per product for sale (its id is the product's, the one
   the Meta Pixel sends; the price is its lowest live version's), refreshed
-  hourly (`apps/web/lib/product-feed.ts`).
+  hourly (`apps/app/lib/product-feed.ts`).
 
 ### 6.2 Google Search Console and Bing Webmaster Tools
 
@@ -2467,7 +2467,7 @@ Document Library and send them to Wayl if asked.
 ### 6.8 Accessibility statement
 
 Published at `/legal/accessibility` (Arabic and English,
-`apps/web/content/legal/accessibility.*.md`) against WCAG 2.2 AA; the
+`apps/app/content/legal/accessibility.*.md`) against WCAG 2.2 AA; the
 end-to-end tests run axe on the main pages. Review it once a year and
 after big design changes.
 

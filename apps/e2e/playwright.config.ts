@@ -94,7 +94,7 @@ export default defineConfig({
       url: `${staff}/robots.txt`,
     },
     {
-      command: `bun run --cwd ../web ${script}${port(web)}`,
+      command: `bun run --cwd ../app ${script}${port(web)}`,
       reuseExistingServer: true,
       timeout: 240_000,
       url: `${web}/en`,

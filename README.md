@@ -6,11 +6,11 @@ digital ecosystem for Iraq — in one repository. Arabic (RTL) first and English
 
 | Product | What it is | Where |
 | --- | --- | --- |
-| The IDEA Store | Gaming, tech, books and lifestyle, delivered across Iraq (`/`, `/store`) | `apps/web` (catalog, cart, checkout) |
-| The IDEA Plus | Monthly membership to rent games, books and movies (`/plus`) | `apps/web/app/[locale]/plus` |
-| The IDEA Club | Posts, events with RSVPs, member submissions and the Telegram rooms (`/club`) | `apps/web/app/[locale]/club` |
-| The IDEA Pass | A person's membership: sign-in, the card, orders, Bulbs and settings (`/pass`) | `apps/web` |
-| The IDEA Partners | Procurement, team Plus, perks and Sign in with The IDEA Pass apps for organizations: `/partners` on the website, the organization dashboard at partners.theideaiq.com | `apps/web/app/[locale]/partners`, `apps/partners` |
+| The IDEA Store | Gaming, tech, books and lifestyle, delivered across Iraq (`/`, `/store`) | `apps/app` (catalog, cart, checkout) |
+| The IDEA Plus | Monthly membership to rent games, books and movies (`/plus`) | `apps/app/app/[locale]/plus` |
+| The IDEA Club | Posts, events with RSVPs, member submissions and the Telegram rooms (`/club`) | `apps/app/app/[locale]/club` |
+| The IDEA Pass | A person's membership: sign-in, the card, orders, Bulbs and settings (`/pass`) | `apps/app` |
+| The IDEA Partners | Procurement, team Plus, perks and Sign in with The IDEA Pass apps for organizations: `/partners` on the website, the organization dashboard at partners.theideaiq.com | `apps/app/app/[locale]/partners`, `apps/partners` |
 | Staff | The tools The IDEA's team uses, and The IDEA Design (every UI component and email template) at `/design`: staff.theideaiq.com | `apps/staff` |
 | The IDEA Droid | Telegram bot: orders and Bulbs for linked members, support, FAQ, product search (also inline) | `packages/droid`, `apps/api/app/telegram` |
 
@@ -28,7 +28,7 @@ theideaiq/monorepo, theideaiq/mono (editorial portal) and theideaiq/droid
 | Auth & database | Supabase (Postgres, Row Level Security, email one-time codes) |
 | Payments | Provider-agnostic `@repo/payments` with Wayl (ZainCash, FIB, Qi Card, cards) |
 | Localization | Arabic + English, RTL-aware design system, `Asia/Baghdad` dates, IQD |
-| Mobile | Capacitor (iOS + Android) shells that load the website (`apps/web`) |
+| Mobile | Capacitor (iOS + Android) shells that load the website (`apps/app`) |
 | Analytics | GA4, Meta Pixel, TikTok Pixel, server-side conversions |
 | Hosting | Vercel (apps) + Cloudflare (DNS, Turnstile, R2) |
 | Quality | Biome via Ultracite, TypeScript strict, Vitest, GitHub Actions |

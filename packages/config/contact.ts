@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 /**
- * The website's contact form, shared by the form (apps/web) and the
+ * The website's contact form, shared by the form (apps/app) and the
  * endpoint that sends it (`POST /contact` in apps/api).
  */
 

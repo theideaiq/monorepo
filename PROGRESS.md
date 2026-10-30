@@ -244,7 +244,7 @@ decisions with a date.
 - [ ] **Plus launch:** turn on the Glow, Shine and Blaze plans (Catalog →
       Plans) when The IDEA Plus opens.
 - [x] **Returns policy:** the 14 public policies in
-      `apps/web/content/legal` (returns replaces refund, 14 days; club
+      `apps/app/content/legal` (returns replaces refund, 14 days; club
       replaces community and conduct), 2026-10-26. Owner step: confirm
       Wayl's refund window and fees.
 
@@ -293,7 +293,7 @@ decisions with a date.
       variables (section 5 of `ARCHITECTURE_AND_INTEGRATIONS.md`) and "skip
       unaffected projects" on. Optional: `TURBO_TOKEN`/`TURBO_TEAM` for the
       remote cache.
-      - `web` (`apps/web`) → `theideaiq.com`
+      - `web` (`apps/app`) → `theideaiq.com`
       - `theideaiq-partners` (root directory `apps/partners`, The IDEA
         Partners) → `partners.theideaiq.com` (DNS: a CNAME to Vercel)
       - `api` (`apps/api`) → the API host
@@ -386,8 +386,8 @@ offline screen, splash/status bar, push, share, app-link files); these
 steps need Xcode, Android Studio and the store/Firebase accounts
 (`ARCHITECTURE_AND_INTEGRATIONS.md`, section 3).
 
-- [ ] `bun run --cwd apps/web cap:add` and `cap:assets`; commit
-      `apps/web/ios` and `apps/web/android`.
+- [ ] `bun run --cwd apps/app cap:add` and `cap:assets`; commit
+      `apps/app/ios` and `apps/app/android`.
 - [ ] Firebase project with the iOS and Android apps; APNs key uploaded;
       `GoogleService-Info.plist` / `google-services.json` copied in (not
       committed); `AppDelegate` hands Capacitor the FCM token (3.5).
@@ -396,7 +396,7 @@ steps need Xcode, Android Studio and the store/Firebase accounts
       `webcredentials:theideaiq.com`); Android `autoVerify` intent
       filter and `allowBackup="false"` (3.3, 3.6).
 - [ ] Fill `APPLE_TEAM_ID` and `PLAY_APP_SIGNING_SHA256_FINGERPRINT` in
-      `apps/web/public/.well-known/` and verify both URLs return JSON.
+      `apps/app/public/.well-known/` and verify both URLs return JSON.
 - [ ] Vercel `api`: `FCM_SERVICE_ACCOUNT`, `PUSH_WEBHOOK_SECRET`; Supabase
       database webhook on `notifications` inserts →
       `/webhooks/notifications` (3.5).
@@ -1772,7 +1772,7 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   shipped, rental due soon, trade-in offer. Off until the owner creates the
   templates and sets `WHATSAPP_ACCESS_TOKEN` and `WHATSAPP_PHONE_NUMBER_ID`
   (`ARCHITECTURE_AND_INTEGRATIONS.md` 4.4).
-- 2026-10-25: **The website and Spark split.** theideaiq.com (`apps/web`)
+- 2026-10-25: **The website and Spark split.** theideaiq.com (`apps/app`)
   holds every customer feature: The IDEA Pass sign-in pages, **My Pass**
   (`/pass`: the membership card, orders, Plus, wishlist, Sell to us,
   events, submissions, support, settings), the cart and checkout, and

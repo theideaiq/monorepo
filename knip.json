@@ -17,7 +17,7 @@
     "apps/api": {
       "entry": ["scripts/*.{js,mjs,ts}"]
     },
-    "apps/web": {
+    "apps/app": {
       "entry": ["lib/native/*.ts"],
       "ignoreDependencies": [
         "@capacitor/android",
@@ -32,7 +32,7 @@
   },
   "ignore": [
     "packages/design-system/components/ui/**",
-    "apps/web/native/www/**",
+    "apps/app/native/www/**",
     "packages/database/supabase/functions/**"
   ]
 }

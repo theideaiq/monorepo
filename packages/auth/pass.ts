@@ -1,6 +1,6 @@
 /**
  * Links to The IDEA Pass (the sign-in, authenticator and "My
- * Pass" pages of the website, apps/web), the only sign-in UI on the web,
+ * Pass" pages of the website, apps/app), the only sign-in UI on the web,
  * and the check of where it may send people back to afterwards.
  *
  * Reads the public URLs straight from `process.env.NEXT_PUBLIC_*` (inlined

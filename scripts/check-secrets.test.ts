@@ -118,10 +118,10 @@ describe("SecretScanner", () => {
     const scanner = repo({
       ...packages,
       "apps/api/route.ts": `import { send } from "@repo/email";\nprocess.env.CRON_SECRET;`,
+      "apps/app/.env.example": `NEXT_PUBLIC_WEB_URL=""\nSENTRY_ORG=""`,
+      "apps/app/env.ts": `import { keys } from "@repo/next-config/keys";\n${KEYS("ANALYZE: z.string(),")}`,
+      "apps/app/page.tsx": `import { T } from "@repo/email/templates/contact";\nimport type { X } from "@repo/email";\nprocess.env.NODE_ENV; env.NEXT_PUBLIC_WEB_URL;`,
       "apps/e2e/setup.ts": "process.env.SUPABASE_SECRET_KEY;",
-      "apps/web/.env.example": `NEXT_PUBLIC_WEB_URL=""\nSENTRY_ORG=""`,
-      "apps/web/env.ts": `import { keys } from "@repo/next-config/keys";\n${KEYS("ANALYZE: z.string(),")}`,
-      "apps/web/page.tsx": `import { T } from "@repo/email/templates/contact";\nimport type { X } from "@repo/email";\nprocess.env.NODE_ENV; env.NEXT_PUBLIC_WEB_URL;`,
     });
     expect(scanner.check()).toEqual([]);
   });
@@ -129,23 +129,23 @@ describe("SecretScanner", () => {
   test("flags declared, listed, read and imported secrets", () => {
     const scanner = repo({
       ...packages,
-      "apps/web/.env.example": `RESEND_TOKEN=""`,
-      "apps/web/action.ts": `import { send } from "@repo/email";`,
-      "apps/web/env.ts": KEYS("CRON_SECRET: z.string(),"),
-      "apps/web/flags.ts": `export { on } from "@repo/flags";`,
-      "apps/web/read.ts": "const t = process.env.STRIPE_API_KEY;",
+      "apps/app/.env.example": `RESEND_TOKEN=""`,
+      "apps/app/action.ts": `import { send } from "@repo/email";`,
+      "apps/app/env.ts": KEYS("CRON_SECRET: z.string(),"),
+      "apps/app/flags.ts": `export { on } from "@repo/flags";`,
+      "apps/app/read.ts": "const t = process.env.STRIPE_API_KEY;",
     });
     const problems = scanner.check().join("\n");
-    expect(problems).toContain("apps/web/.env.example:1 lists RESEND_TOKEN");
+    expect(problems).toContain("apps/app/.env.example:1 lists RESEND_TOKEN");
     expect(problems).toContain(
-      "apps/web/action.ts:1 imports @repo/email, which reaches a secret: packages/email/index.ts → packages/email/keys.ts (declares RESEND_TOKEN)"
+      "apps/app/action.ts:1 imports @repo/email, which reaches a secret: packages/email/index.ts → packages/email/keys.ts (declares RESEND_TOKEN)"
     );
-    expect(problems).toContain("apps/web/env.ts declares CRON_SECRET");
+    expect(problems).toContain("apps/app/env.ts declares CRON_SECRET");
     expect(problems).toContain(
-      "apps/web/flags.ts:1 imports @repo/flags, which reaches a secret: packages/flags/index.ts:1 (reads FLAGS_SECRET)"
+      "apps/app/flags.ts:1 imports @repo/flags, which reaches a secret: packages/flags/index.ts:1 (reads FLAGS_SECRET)"
     );
     // Credential-shaped names count even when no keys.ts declares them.
-    expect(problems).toContain("apps/web/read.ts:1 reads STRIPE_API_KEY");
+    expect(problems).toContain("apps/app/read.ts:1 reads STRIPE_API_KEY");
   });
 
   test("respects package exports", () => {

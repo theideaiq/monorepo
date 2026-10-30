@@ -8,7 +8,7 @@ incidents) is in `docs/platform`.
 
 ## Repository map
 
-- `apps/web` — **theideaiq.com**, everything customers see (Next.js, i18n
+- `apps/app` — **theideaiq.com**, everything customers see (Next.js, i18n
   routes under `app/[locale]`), with a `proxy.ts` (locale, session refresh,
   security headers) and the cookie session (`@repo/auth/server`):
   - the public pages, organised like the menu (Store · Plus · Club · Pass,
@@ -46,7 +46,7 @@ incidents) is in `docs/platform`.
     and `/help/new`); `/careers`; `/about` (the company, the
     version); `/r/<code>` (a member's invite link: 10% off a new member's
     first order) and legal pages at `/legal/<policy>` (Markdown in
-    `apps/web/content/legal`). Each place has one way in. Phones: the top
+    `apps/app/content/legal`). Each place has one way in. Phones: the top
     bar holds the logo, search, Saved (the heart), the bell and the cart;
     the tabs Store · Plus · Club · Pass, with the cart in the top bar (never a
     tab). Wider
@@ -103,7 +103,7 @@ incidents) is in `docs/platform`.
     own sites, with its connect popup at `/pass/embed/connect`; `/lists/<token>`
     is a list a member shared by link; and the cart and checkout (`app/[locale]/(checkout)`): client components that query with
     `useAuth().supabase`; privileged steps go to `apps/api` with the user's
-    token (`callApi` in `apps/web/lib/api.ts`);
+    token (`callApi` in `apps/app/lib/api.ts`);
   - The iOS/Android apps are Capacitor shells whose WebView loads the live
     website (`server.url`), so the same cookie session applies there.
 - `apps/partners` — **Partners** (package `partners`, port 3000,
@@ -251,7 +251,7 @@ local stack (`SUPABASE_INTEGRATION=1`) and the end-to-end journeys.
   installs and runs scripts; Next.js runs on Node (`next build`, not
   `bun --bun next build`).
 - **Auth:** never authorize with `user_metadata` — users can edit it. In
-  the client components of `apps/web` and `apps/partners`, query with
+  the client components of `apps/app` and `apps/partners`, query with
   `useAuth().supabase` (the cookie-based browser client) so Row Level
   Security applies; gates like `RequireAuth` are only UX. Their Server
   Components and Server Actions (The IDEA Pass and its pages), and those
@@ -294,9 +294,9 @@ local stack (`SUPABASE_INTEGRATION=1`) and the end-to-end journeys.
   `@repo/analytics/conversions` with the same event id. Ad pixels never load
   inside the Capacitor apps.
 - **Native apps:** the iOS/Android apps load the live website
-  (`server.url` in `apps/web/capacitor.config.ts`); only the offline screen
-  is bundled (`apps/web/native/www`). Native-only client code lives in
-  `apps/web/lib/native` and must no-op on the web (`isNativeApp()`); keep
+  (`server.url` in `apps/app/capacitor.config.ts`); only the offline screen
+  is bundled (`apps/app/native/www`). Native-only client code lives in
+  `apps/app/lib/native` and must no-op on the web (`isNativeApp()`); keep
   every `@capacitor/*` package on the same major version.
 - **Payments:** in-app (native) checkout is controlled by
   `project.commerce.allowNativeCheckout`. Digital goods must not be sold
