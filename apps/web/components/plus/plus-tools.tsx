@@ -18,6 +18,7 @@ import { ArrowDownIcon, ArrowUpIcon, XIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useId, useState } from "react";
 import { useMyBulbs } from "@/lib/bulbs-queries";
+import { type MyDuo, sharesSwaps, useHouseholdQueue } from "@/lib/duo";
 import { orderPath } from "@/lib/order-checkout";
 import {
   useOpenSwap,
@@ -215,19 +216,41 @@ const SwapTerms = ({ firstDelivery }: { readonly firstDelivery: boolean }) => {
  * Book a home swap: tick what goes back and what comes next (the queue's
  * next items are picked), on the area's delivery day.
  */
-export const SwapPanel = ({ slots }: { readonly slots: number }) => {
+export const SwapPanel = ({
+  duo,
+  inUse,
+  slots,
+}: {
+  /** A Duo shares the slots, the swaps and the holder's address. */
+  readonly duo?: MyDuo | null;
+  /** Slots in use (the household's, on a Duo). */
+  readonly inUse: number;
+  readonly slots: number;
+}) => {
   const t = useTranslations("app.plus.swap");
   const locale = useLocale();
   const rentals = useRentals().data ?? [];
   const { items: queue } = useQueue();
+  const shared = sharesSwaps(duo);
+  const household = useHouseholdQueue(shared).data;
   const swap = useOpenSwap().data;
-  const home = usePlusHome().data;
+  const ownHome = usePlusHome().data;
   const { bookSwap } = usePlusActions();
   const [returns, setReturns] = useState<string[]>([]);
   const [wants, setWants] = useState<string[] | null>(null);
 
   if (swap) {
     return <BookedSwap swap={swap} />;
+  }
+  if (shared && duo?.swapDate) {
+    return (
+      <section className="grid gap-2 rounded-lg border p-4">
+        <h3 className="font-semibold">{t("title")}</h3>
+        <p className="text-sm">
+          {t("duoBooked", { date: formatDate(duo.swapDate, locale) })}
+        </p>
+      </section>
+    );
   }
 
   const holding = rentals.filter(
@@ -237,8 +260,18 @@ export const SwapPanel = ({ slots }: { readonly slots: number }) => {
   );
   const atHome = holding.filter((rental) => rental.status !== "requested");
   const heldProducts = new Set(holding.map((rental) => rental.product_id));
-  const choices = queue.filter((item) => !heldProducts.has(item.product_id));
-  const room = Math.max(0, slots - holding.length + returns.length);
+  // On a Duo, both queues in the order the holder set.
+  const listed = shared
+    ? (household ?? []).map((item) => ({
+        owner: item.first_name,
+        product: { name_ar: item.name_ar, name_en: item.name_en },
+        product_id: item.product_id,
+      }))
+    : queue.map((item) => ({ ...item, owner: null }));
+  const choices = listed.filter((item) => !heldProducts.has(item.product_id));
+  const used = shared ? inUse : holding.length;
+  const home = shared ? duo?.hasHome : Boolean(ownHome);
+  const room = Math.max(0, slots - used + returns.length);
   // Until the member picks, the top of the queue fills the free slots.
   const chosen = wants ?? choices.slice(0, room).map((item) => item.product_id);
   const tooMany = chosen.length > room;
@@ -288,13 +321,18 @@ export const SwapPanel = ({ slots }: { readonly slots: number }) => {
               }
             />
             {item.product ? localized(item.product, "name", locale) : ""}
+            {item.owner ? (
+              <span className="text-muted-foreground text-xs">
+                {t("queuedBy", { name: item.owner })}
+              </span>
+            ) : null}
           </Label>
         ))}
       </fieldset>
       {home ? null : (
         <p className="text-muted-foreground text-sm">{t("errors.needsHome")}</p>
       )}
-      <SwapTerms firstDelivery={holding.length === 0} />
+      <SwapTerms firstDelivery={used === 0} />
       {tooMany ? (
         <p className="text-destructive text-sm" role="alert">
           {t("tooMany", { n: formatNumber(room, locale) })}

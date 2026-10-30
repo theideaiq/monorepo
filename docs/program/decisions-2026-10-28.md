@@ -1302,6 +1302,17 @@ the code.
 - **Gifts:** the monthly Duo plans pass the gift check like the other
   monthly plans; the recipient becomes the holder. A partner who receives
   a gift leaves the Duo before redeeming it.
+- **Website (part 2):** Plans in Your Plus switch between "Just me" and
+  "Duo"; the public Plus page lists the plans for one person and a line on
+  Duo with its lowest price. Your Plus → Plus Duo holds the invite link
+  (copy or share), the second person's state, the swap order and removing
+  or keeping them; the second person sees whose Plus it is and can leave.
+  Their swaps use both queues (`household_queue`), the shared slots and
+  the holder's address; a swap either of them booked shows as booked.
+  `/plus/duo/<code>` shows who invited you to which plan and joins.
+  Guardians approve in Pass → Settings → Guardian. The API's
+  `/cron/plus-duo` runs `end_duo_partners` daily at 06:25 UTC.
+  `20270315000000_plus_duo_on.sql` switches the Duo plans on.
 - **Notifications:** `plus_duo_joined`, `plus_duo_guardian`,
   `plus_duo_approved`, `plus_duo_declined`, `plus_duo_left`,
   `plus_duo_removed` and `plus_duo_ended`; a booked swap notifies both.

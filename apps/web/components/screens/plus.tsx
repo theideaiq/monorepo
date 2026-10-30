@@ -24,6 +24,7 @@ import { CheckIcon, CrownIcon, SearchIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { AgeAwareError } from "@/components/age-aware-error";
+import { DuoPanel } from "@/components/plus/duo";
 import { GivePlus } from "@/components/plus/give-plus";
 import { JoinPlus } from "@/components/plus/join-plus";
 import { ManagePlus, Queue, SwapPanel } from "@/components/plus/plus-tools";
@@ -34,8 +35,10 @@ import {
   hasPendingCheckout,
   reportCompletedCheckout,
 } from "@/lib/checkout-tracking";
+import { isDuoPartner, type MyDuo, useMyDuo } from "@/lib/duo";
 import { toRentalError } from "@/lib/errors";
 import { orderPath, useKeepRental } from "@/lib/order-checkout";
+import { soloPlans } from "@/lib/plus";
 import { plansFor, usePlusStatus } from "@/lib/plus-launch";
 import {
   isLivePlan,
@@ -73,17 +76,21 @@ const RENTAL_BADGE: Record<
 const YourPlan = ({
   allowance,
   confirming,
+  duo,
 }: {
   readonly allowance: RentalAllowance | undefined;
   readonly confirming: boolean;
+  /** The Duo the member shares, when it's someone else's plan. */
+  readonly duo?: MyDuo | null;
 }) => {
   const t = useTranslations("app.plus.yourPlan");
   const tBilling = useTranslations("billing.status");
   const locale = useLocale();
   const plans = usePlans("plus");
   const subscription = usePlusSubscription(confirming ? POLL_MS : false);
+  const shared = isDuoPartner(duo) ? duo : null;
   const plan = plans.data?.find(
-    (item) => item.id === subscription.data?.plan_id
+    (item) => item.id === (shared?.planId ?? subscription.data?.plan_id)
   );
   const live = subscription.data;
 
@@ -114,9 +121,18 @@ const YourPlan = ({
               ) : null}
               {live.provider === "company" ? <span>{t("company")}</span> : null}
             </span>
-          ) : (
-            t("none")
-          )}
+          ) : null}
+          {!live && shared && plan ? (
+            <span className="flex flex-wrap items-center gap-2">
+              <span className="font-medium text-foreground">
+                {t("plan", { plan: planName(plan, locale) })}
+              </span>
+              <span>
+                {t("sharedBy", { name: shared.holderName ?? t("holder") })}
+              </span>
+            </span>
+          ) : null}
+          {live || (shared && plan) ? null : t("none")}
         </CardDescription>
       </CardHeader>
       {confirming ? (
@@ -197,7 +213,9 @@ const Plans = ({ onStarted }: { readonly onStarted: () => void }) => {
   const member = isLivePlan(subscription.data?.status);
   const canJoin = usePlusStatus().data?.canJoin ?? false;
   const [billing, setBilling] = useState<"month" | "year">("month");
-  const shown = plansFor(plans.data ?? undefined, billing);
+  const [duo, setDuo] = useState(false);
+  const shown = plansFor(plans.data ?? undefined, billing, duo);
+  const hasDuo = plans.data?.some((plan) => plan.duo) ?? false;
   const studentPlans = useStudentPlans();
   const isStudent = useMyStudent().data?.verified ?? false;
 
@@ -205,6 +223,23 @@ const Plans = ({ onStarted }: { readonly onStarted: () => void }) => {
     <section className="grid gap-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 className="font-semibold text-lg">{t("title")}</h2>
+        {hasDuo ? (
+          <fieldset className="flex gap-1 rounded-md border p-1">
+            <legend className="sr-only">{t("people")}</legend>
+            {[false, true].map((value) => (
+              <Button
+                aria-pressed={duo === value}
+                key={String(value)}
+                onClick={() => setDuo(value)}
+                size="sm"
+                type="button"
+                variant={duo === value ? "default" : "ghost"}
+              >
+                {t(value ? "duo" : "solo")}
+              </Button>
+            ))}
+          </fieldset>
+        ) : null}
         <fieldset className="flex gap-1 rounded-md border p-1">
           <legend className="sr-only">{t("interval")}</legend>
           {(["month", "year"] as const).map((value) => (
@@ -228,6 +263,9 @@ const Plans = ({ onStarted }: { readonly onStarted: () => void }) => {
       {plans.isError ? <ErrorState onRetry={() => plans.refetch()} /> : null}
       {plans.data?.length === 0 ? (
         <p className="text-muted-foreground">{t("empty")}</p>
+      ) : null}
+      {duo ? (
+        <p className="text-muted-foreground text-sm">{t("duoDescription")}</p>
       ) : null}
       <div className="grid gap-4 md:grid-cols-3">
         {shown.map((listed) => {
@@ -453,7 +491,7 @@ const RentalCatalog = ({
               allowance={allowance}
               key={product.id}
               member={member}
-              plans={plans.data ?? undefined}
+              plans={plans.data ? soloPlans(plans.data) : undefined}
               product={product}
               requiredTier={tiers.data?.get(product.id)}
             />
@@ -671,7 +709,9 @@ const PlusMember = () => {
   const subscription = usePlusSubscription();
   const allowance = useRentalAllowance();
   const payments = usePlusPayments(confirming ? POLL_MS : false);
-  const member = isLivePlan(subscription.data?.status);
+  const duo = useMyDuo().data;
+  const partner = isDuoPartner(duo);
+  const member = isLivePlan(subscription.data?.status) || partner;
   const refetchSubscription = subscription.refetch;
   const refetchAllowance = allowance.refetch;
 
@@ -690,12 +730,17 @@ const PlusMember = () => {
 
   return (
     <div className="flex flex-col gap-8">
-      {member ? null : <JoinPlus />}
-      <YourPlan allowance={allowance.data} confirming={confirming} />
+      {member || duo ? null : <JoinPlus />}
+      <YourPlan allowance={allowance.data} confirming={confirming} duo={duo} />
+      <DuoPanel />
       {member ? (
         <>
-          <ManagePlus />
-          <SwapPanel slots={allowance.data?.slots ?? 0} />
+          {partner ? null : <ManagePlus />}
+          <SwapPanel
+            duo={duo}
+            inUse={allowance.data?.used ?? 0}
+            slots={allowance.data?.slots ?? 0}
+          />
           <Queue />
         </>
       ) : (

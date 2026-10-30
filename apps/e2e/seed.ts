@@ -1,6 +1,8 @@
 import {
   admin,
   customer,
+  duoHolder,
+  duoPartner,
   friend,
   PASSWORD,
   product,
@@ -164,6 +166,65 @@ export const resetFriendForPlus = async () => {
     })
   );
   return id;
+};
+
+/**
+ * Plus Duo: the holder on Shine Duo with a Plus address and no partner;
+ * the second person an adult without Plus of their own.
+ */
+export const resetDuo = async () => {
+  const db = admin();
+  const holderId = await ensureUser(duoHolder.email, duoHolder.name);
+  const partnerId = await ensureUser(duoPartner.email, duoPartner.name);
+  check(
+    await db
+      .from("subscriptions")
+      .update({ status: "expired" })
+      .in("user_id", [holderId, partnerId])
+      .in("status", ["incomplete", "active", "past_due"])
+  );
+  check(
+    await db
+      .from("plus_members")
+      .update({ left_at: new Date().toISOString() })
+      .eq("user_id", partnerId)
+      .is("left_at", null)
+  );
+  check(
+    await db
+      .from("profiles")
+      .update({ birthday: "1994-05-02" })
+      .in("id", [holderId, partnerId])
+  );
+  const { data: area } = await db
+    .from("plus_areas")
+    .select("id")
+    .eq("active", true)
+    .order("position")
+    .limit(1)
+    .single();
+  check(
+    await db.from("plus_homes").upsert({
+      address: "Street 52",
+      area_id: area?.id ?? "",
+      phone: "+9647701234569",
+      user_id: holderId,
+    })
+  );
+  const now = new Date();
+  check(
+    await db.from("subscriptions").insert({
+      current_period_end: new Date(
+        now.getTime() + 30 * 86_400_000
+      ).toISOString(),
+      current_period_start: now.toISOString(),
+      plan_id: "plus-shine-duo",
+      provider: "wayl",
+      status: "active",
+      user_id: holderId,
+    })
+  );
+  return { holderId, partnerId };
 };
 
 /** A staff member (admin role) with no authenticator app linked yet. */

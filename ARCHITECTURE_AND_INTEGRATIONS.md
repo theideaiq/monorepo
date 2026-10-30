@@ -217,6 +217,15 @@ namespaces.
   order. Table `plus_seats`; RPCs `request_plus_seat`, `activate_plus_seat`,
   `decline_plus_seat`, `end_plus_seat`, `run_plus_seat_renewals`; migration
   `20261208000000_team_plus.sql`.
+- **Plus Duo.** A Duo plan's holder invites one more Pass from Your Plus
+  (a link to `/plus/duo/<code>`, open 7 days); the second person shares
+  the rental slots, home swaps and the holder's Plus address, keeps their
+  own queue and has the plan's benefits on their own Pass. A 13–17-year-old
+  needs their guardian's approval (Pass → Settings → Guardian). The
+  partner leaves at any time; the holder removes them from the next
+  renewal. `GET /cron/plus-duo` (daily, 06:25 UTC) ends places that are
+  over (`end_duo_partners`). Table `plus_members`; migration
+  `20270314000000_plus_duo.sql`.
 - **Indexing.** Every page sends `noindex`.
 
 ### The IDEA Pass

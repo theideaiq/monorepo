@@ -33,6 +33,8 @@ Every plan also gets:
 - Members aged 13 to 17 need a guardian to approve Plus from the guardian's own Pass.
 - For rentals we may ask for a verified Pass (identity checked with a national ID card or passport).
 
+- **Plus Duo:** Glow Duo 20,750, Shine Duo 31,750 and Blaze Duo 55,750 IQD a month (yearly: pay 10 months, get 12; 20% off when the plan holder is a verified student). The plan holder pays and invites one more Pass from Your Plus with a link that works for 7 days. The second person must be 13 or over and have no Plus of their own; at 13 to 17 their guardian approves it from their own Pass. They get the plan's Bulbs rate, survey credits, early access, Plus prices, partner perks and the Plus badge on their own Pass, and keep their own queue. The plan's items at a time and home swaps are shared, and home swaps go to the plan holder's Plus address; swaps take turns between the two queues unless the plan holder chooses otherwise. The second person can leave at any time; the plan holder can remove them from the next renewal once their rentals are returned. Items the second person still has at the shared address stay with the plan holder. A Duo can be sent with Send as a gift.
+
 ## 4. How renting works
 
 - Add what you want to your **queue** (Saved → Queue), in order. When you book a home swap, the next items in it are picked for you; change them if you like.

@@ -62,6 +62,13 @@ export const NOTIFICATION_EVENTS = [
   "plus_invite",
   "plus_swap_booked",
   "plus_swap_done",
+  "plus_duo_joined",
+  "plus_duo_guardian",
+  "plus_duo_approved",
+  "plus_duo_declined",
+  "plus_duo_left",
+  "plus_duo_removed",
+  "plus_duo_ended",
   "student_verified",
   "student_rejected",
   "identity_verified",
@@ -264,6 +271,12 @@ const auctionValues = (
   };
 };
 
+/** The other person on a Plus Duo (`plus_duo_*`). */
+const duoValues = (data: Record<string, Json | undefined>) => ({
+  holder: text(data.holder),
+  name: text(data.name),
+});
+
 /** Events whose data needs formatting beyond the common fields. */
 const extraValues: Partial<
   Record<
@@ -305,6 +318,13 @@ const extraValues: Partial<
   opportunity_open: opportunityValues,
   pass_app_approved: (data) => ({ name: text(data.name) }),
   pass_app_declined: (data) => ({ name: text(data.name) }),
+  plus_duo_approved: duoValues,
+  plus_duo_declined: duoValues,
+  plus_duo_ended: duoValues,
+  plus_duo_guardian: duoValues,
+  plus_duo_joined: duoValues,
+  plus_duo_left: duoValues,
+  plus_duo_removed: duoValues,
   plus_invite: (data) => ({ hours: text(data.hours) }),
   plus_seat_active: (data) => ({ plan: text(data.plan) }),
   product_available: (data, locale) => ({ name: itemName(data, locale) }),

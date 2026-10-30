@@ -398,7 +398,8 @@
         "perYear": "per year",
         "slots": "{count, plural, one {{slots} item at a time} other {{slots} items at a time}}",
         "title": "Plans",
-        "bulbs": "{rate}% back in Bulbs"
+        "bulbs": "{rate}% back in Bulbs",
+        "duo": "Plus Duo: share your plan with one more Pass, from {price} a month."
       },
       "catalog": {
         "title": "From the rental catalog",
@@ -1835,7 +1836,9 @@
         "allowance": "Rental slots",
         "slots": "{free} of {slots} free",
         "confirming": "We're confirming your payment…",
-        "company": "Paid by your company"
+        "company": "Paid by your company",
+        "sharedBy": "Shared by {name}",
+        "holder": "the plan holder"
       },
       "plans": {
         "title": "Plans",
@@ -1849,7 +1852,11 @@
         "monthly": "Monthly",
         "yearly": "Yearly · pay 10 months, get 12",
         "studentPrice": "Student price",
-        "studentOffer": "Students: {price} a month. Verify in Settings."
+        "studentOffer": "Students: {price} a month. Verify in Settings.",
+        "people": "Who it's for",
+        "solo": "Just me",
+        "duo": "Duo",
+        "duoDescription": "Duo plans are for two Passes: you invite the second person from Your Plus once you've joined."
       },
       "catalog": {
         "title": "Rental catalog",
@@ -1969,7 +1976,9 @@
           "noPauseDays": "You don't have that many pause days left this year.",
           "notForMinors": "One of these is rated 18+.",
           "failed": "We couldn't do that. Please try again."
-        }
+        },
+        "duoBooked": "A swap is booked for {date}.",
+        "queuedBy": "· {name}"
       },
       "manage": {
         "title": "Your plan",
@@ -2008,6 +2017,65 @@
         "addToCart": "Add to cart",
         "adding": "Adding…",
         "failed": "We couldn't add it to the cart. Try again."
+      },
+      "duo": {
+        "title": "Plus Duo",
+        "description": "Your plan for two Passes: each has the plan's Bulbs, perks and Plus prices, and you share the items and home swaps.",
+        "inviteDescription": "Invite one more Pass to share your Plus. They need a Pass of their own and no Plus of their own.",
+        "invite": "Invite someone",
+        "inviting": "Making the link…",
+        "invited": "Send this link to the person you're inviting. Only they can use it.",
+        "expired": "Your last invite expired. Make a new one.",
+        "inviteExpires": "The link works until {date}.",
+        "copy": "Copy link",
+        "copied": "Copied",
+        "share": "Share",
+        "shareText": "Join my Plus on The IDEA",
+        "cancelInvite": "Cancel the invite",
+        "secondPerson": "your second person",
+        "holder": "the plan holder",
+        "waitingGuardian": "{name} has joined. Their guardian needs to approve it.",
+        "sharing": "{name} shares your Plus.",
+        "ending": "{name}'s place ends on {date}, at your renewal.",
+        "remove": "Remove {name} at the next renewal",
+        "keep": "Keep {name}",
+        "swapOrder": "Whose queue swaps take from",
+        "swapOrders": {
+          "alternate": "Take turns (default)",
+          "holder": "Mine first",
+          "partner": "{name}'s first"
+        },
+        "partnerOf": "You share {name}'s Plus. Your queue is your own; items and home swaps are shared.",
+        "partnerGuardian": "You've joined. Your guardian needs to approve it before your Plus starts.",
+        "partnerEnding": "Your place ends on {date}.",
+        "leave": "Leave the Duo",
+        "leaveConfirm": "Leave {name}'s Plus? Items you have at the shared address stay with them.",
+        "stay": "Stay",
+        "inviteTitle": "Join a Plus Duo",
+        "signedOut": "Sign in with your Pass to accept the invite.",
+        "signIn": "Sign in",
+        "invitedBy": "{name} invites you to share their {plan}.",
+        "whatYouGet": "You get the plan's Bulbs rate, survey credits, early access, Plus prices and partner perks on your own Pass, and your own queue. Items and home swaps are shared with them, delivered to their address.",
+        "join": "Join",
+        "joining": "Joining…",
+        "joined": "You're in. You now share {name}'s Plus.",
+        "joinedGuardian": "You've joined. We've asked your guardian to approve it.",
+        "toPlus": "Go to Your Plus",
+        "approvalsTitle": "Plus Duo",
+        "approval": "{name} wants to join {holder}'s Plus Duo.",
+        "approve": "Approve",
+        "decline": "Decline",
+        "errors": {
+          "alreadyDuo": "You're already on a Duo.",
+          "alreadyPlus": "You already have Plus of your own.",
+          "expired": "This invite has expired or was already used.",
+          "failed": "Something went wrong. Please try again.",
+          "full": "Your Duo already has a second person.",
+          "needsGuardian": "Link your guardian's Pass in Settings first.",
+          "ownInvite": "Send this invite to the person you want to share with.",
+          "rentalsOut": "Their rentals must be returned first.",
+          "tooYoung": "Plus Duo is for 13 and over."
+        }
       }
     },
     "events": {
@@ -4413,6 +4481,34 @@
         "sell_message_shop": {
           "title": "A message from a member",
           "body": "A member wrote about {title}."
+        },
+        "plus_duo_joined": {
+          "title": "Your Duo is shared",
+          "body": "{name} joined your Plus."
+        },
+        "plus_duo_guardian": {
+          "title": "A Plus Duo to approve",
+          "body": "{name} wants to join {holder}'s Plus. Approve or decline it in Settings."
+        },
+        "plus_duo_approved": {
+          "title": "Plus Duo approved",
+          "body": "The guardian approved the place. Plus is on."
+        },
+        "plus_duo_declined": {
+          "title": "Plus Duo declined",
+          "body": "The guardian declined the place."
+        },
+        "plus_duo_left": {
+          "title": "Your Duo partner left",
+          "body": "{name} left your Plus. You can invite someone else."
+        },
+        "plus_duo_removed": {
+          "title": "Your Duo place is ending",
+          "body": "{holder} removed you from their Plus at the next renewal."
+        },
+        "plus_duo_ended": {
+          "title": "Your Duo place has ended",
+          "body": "Your place on {holder}'s Plus has ended."
         }
       },
       "kinds": {

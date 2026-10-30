@@ -22,7 +22,9 @@ incidents) is in `docs/platform`.
     Plus is `/plus`, everything about renting (the rental catalog with
     categories, then plans and tiers), public, with "Your Plus" (joining
     and the waitlist at `#join`; your plan, plan changes, pause and
-    cancel, swaps, the queue and rentals) at `#yours` when signed in; The IDEA
+    cancel, Plus Duo (inviting the second person, sharing, the swap
+    order, leaving), swaps, the queue and rentals) at `#yours` when signed
+    in, and `/plus/duo/<code>` a Duo invite to accept; The IDEA
     Club is `/club` in three parts: Join at `#join` (events,
     opportunities, featured first, and the member's surveys by date or
     deadline, `?show=events|opportunities|surveys`), Read at `#read`

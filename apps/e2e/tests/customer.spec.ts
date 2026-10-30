@@ -3,6 +3,8 @@ import {
   admin,
   clearInbox,
   customer,
+  duoHolder,
+  duoPartner,
   emailedCode,
   friend,
   product,
@@ -12,6 +14,7 @@ import {
 import { urls } from "../playwright.config";
 import {
   resetCustomer,
+  resetDuo,
   resetFriend,
   resetFriendForPlus,
   resetSignUpUser,
@@ -581,6 +584,54 @@ test.describe("a signed-in customer", () => {
       provider: "gift",
     });
     noErrors();
+  });
+
+  test("shares Plus with a second person through Plus Duo", async ({
+    browser,
+  }) => {
+    const { partnerId } = await resetDuo();
+    // The holder invites from Your Plus.
+    const holder = await browser.newContext();
+    await signIn(holder, duoHolder.email);
+    const page = await holder.newPage();
+    const noErrors = watchConsole(page);
+    await page.goto(`${urls.web}/plus#yours`);
+    await expect(page.getByText("Plus Duo", { exact: true })).toBeVisible();
+    await page.getByRole("button", { name: "Invite someone" }).click();
+    const link = page.locator("code", { hasText: "/plus/duo/" });
+    await expect(link).toBeVisible();
+    const url = (await link.textContent()) ?? "";
+    await expectAccessible(page);
+
+    // The second person opens the link and joins.
+    const partner = await browser.newContext();
+    await signIn(partner, duoPartner.email);
+    const invite = await partner.newPage();
+    await invite.goto(url);
+    await expect(
+      invite.getByText("Dana invites you to share their Plus Shine Duo.")
+    ).toBeVisible();
+    await expectAccessible(invite);
+    await invite.getByRole("button", { exact: true, name: "Join" }).click();
+    await expect(
+      invite.getByText("You're in. You now share Dana's Plus.")
+    ).toBeVisible();
+    await invite.goto(`${urls.web}/plus#yours`);
+    await expect(invite.getByText(/You share Dana's Plus/)).toBeVisible();
+    await partner.close();
+
+    // The holder sees them, and the partner has the plan on their own.
+    await page.reload();
+    await expect(page.getByText("Sami shares your Plus.")).toBeVisible();
+    const { data: place } = await admin()
+      .from("plus_members")
+      .select("role, joined_at")
+      .eq("user_id", partnerId)
+      .is("left_at", null)
+      .single();
+    expect(place?.role).toBe("partner");
+    noErrors();
+    await holder.close();
   });
 
   test("finds student verification in /verify", async ({ page }) => {
