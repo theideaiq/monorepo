@@ -2036,6 +2036,30 @@ export type Database = {
           },
         ];
       };
+      music_tastes: {
+        Row: {
+          account: string;
+          artists: string[];
+          provider: string;
+          updated_at: string;
+          user_id: string;
+        };
+        Insert: {
+          account: string;
+          artists?: string[];
+          provider: string;
+          updated_at?: string;
+          user_id: string;
+        };
+        Update: {
+          account?: string;
+          artists?: string[];
+          provider?: string;
+          updated_at?: string;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
       notifications: {
         Row: {
           created_at: string;
@@ -4407,6 +4431,7 @@ export type Database = {
           description_ar: string | null;
           description_en: string | null;
           details: NonNullable<Json>;
+          external_ids: NonNullable<Json>;
           featured: boolean;
           id: string;
           images: string[];
@@ -4438,6 +4463,7 @@ export type Database = {
           description_ar?: string | null;
           description_en?: string | null;
           details?: NonNullable<Json>;
+          external_ids?: NonNullable<Json>;
           featured?: boolean;
           id?: string;
           images?: string[];
@@ -4469,6 +4495,7 @@ export type Database = {
           description_ar?: string | null;
           description_en?: string | null;
           details?: NonNullable<Json>;
+          external_ids?: NonNullable<Json>;
           featured?: boolean;
           id?: string;
           images?: string[];
@@ -7601,6 +7628,69 @@ export type Database = {
         };
         Relationships: [];
       };
+      wanted_items: {
+        Row: {
+          barcode: string | null;
+          created_at: string;
+          creator: string | null;
+          external_ids: NonNullable<Json>;
+          id: string;
+          kind: string;
+          list_id: string | null;
+          matched_at: string | null;
+          product_id: string | null;
+          source: string;
+          title: string;
+          user_id: string;
+          year: number | null;
+        };
+        Insert: {
+          barcode?: string | null;
+          created_at?: string;
+          creator?: string | null;
+          external_ids?: NonNullable<Json>;
+          id?: string;
+          kind: string;
+          list_id?: string | null;
+          matched_at?: string | null;
+          product_id?: string | null;
+          source: string;
+          title: string;
+          user_id: string;
+          year?: number | null;
+        };
+        Update: {
+          barcode?: string | null;
+          created_at?: string;
+          creator?: string | null;
+          external_ids?: NonNullable<Json>;
+          id?: string;
+          kind?: string;
+          list_id?: string | null;
+          matched_at?: string | null;
+          product_id?: string | null;
+          source?: string;
+          title?: string;
+          user_id?: string;
+          year?: number | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "wanted_items_list_id_fkey";
+            columns: ["list_id"];
+            isOneToOne: false;
+            referencedRelation: "saved_lists";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "wanted_items_product_id_fkey";
+            columns: ["product_id"];
+            isOneToOne: false;
+            referencedRelation: "products";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       webhook_events: {
         Row: {
           event_key: string;
@@ -9372,6 +9462,13 @@ export type Database = {
           user_id: string;
         }[];
       };
+      import_list_items: {
+        Args: { items: Json; list: string };
+        Returns: {
+          matched: number;
+          wanted: number;
+        }[];
+      };
       import_products: { Args: { items: Json }; Returns: Json };
       invite_duo_partner: {
         Args: Record<PropertyKey, never>;
@@ -9824,6 +9921,15 @@ export type Database = {
           available: number;
           pending: number;
           rate: number;
+        }[];
+      };
+      music_tastes_to_refresh: {
+        Args: { batch?: number };
+        Returns: {
+          account: string;
+          provider: string;
+          refresh_token: string;
+          user_id: string;
         }[];
       };
       must_pay_online: { Args: Record<PropertyKey, never>; Returns: boolean };
@@ -10956,6 +11062,16 @@ export type Database = {
       };
       run_plus_waitlist: { Args: Record<PropertyKey, never>; Returns: number };
       run_student_expiry: { Args: Record<PropertyKey, never>; Returns: number };
+      save_music_taste: {
+        Args: {
+          account: string;
+          artists: string[];
+          member: string;
+          provider: string;
+          refresh_token?: string;
+        };
+        Returns: undefined;
+      };
       save_survey: {
         Args: { body: Json };
         Returns: {
@@ -11031,6 +11147,7 @@ export type Database = {
           description_ar: string | null;
           description_en: string | null;
           details: NonNullable<Json>;
+          external_ids: NonNullable<Json>;
           featured: boolean;
           id: string;
           images: string[];
@@ -12100,6 +12217,13 @@ export type Database = {
         Returns: undefined;
       };
       use_plus_gift_month: { Args: { subscription: string }; Returns: boolean };
+      vinyl_from_my_artists: {
+        Args: { max_items?: number };
+        Returns: {
+          artist: string;
+          product_id: string;
+        }[];
+      };
       waive_kit_deposit: {
         Args: { target: string };
         Returns: {
