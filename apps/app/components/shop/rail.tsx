@@ -27,7 +27,10 @@ export const Rail = ({ action, children, title }: RailProps) => (
         </Link>
       ) : null}
     </div>
-    <ul className="no-scrollbar -mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 md:mx-0 md:grid md:grid-cols-3 md:overflow-visible md:px-0 lg:grid-cols-4">
+    {/* The row runs to the screen's edges but starts in line with the title:
+        scroll-px keeps the snap points inside that padding (without it, cards
+        snap flush to the edge), and proximity lets a swipe rest anywhere. */}
+    <ul className="no-scrollbar -mx-4 flex snap-x snap-proximity scroll-px-4 gap-4 overflow-x-auto px-4 md:mx-0 md:grid md:scroll-px-0 md:grid-cols-3 md:overflow-visible md:px-0 lg:grid-cols-4">
       {Children.map(children, (child) => (
         <li className="flex w-[44%] shrink-0 snap-start sm:w-[30%] md:w-auto">
           {child}
