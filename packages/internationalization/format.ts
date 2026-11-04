@@ -126,9 +126,12 @@ export const formatNumber = (
 /**
  * Money in whole units of the currency (IQD has no minor unit in practice),
  * with the currency after the number in every language, as the brand
- * writes it: "25,000 IQD", "25,000 د.ع." (docs/brand/BRAND_GUIDELINES.md,
- * section 3).
+ * writes it: "25,000 IQD" in English and "25,000 دينار عراقي" in Arabic
+ * (docs/brand/BRAND_GUIDELINES.md, section 3).
  */
+/** The Iraqi dinar as Arabic copy writes it, in full. */
+const ARABIC_DINAR = "دينار عراقي";
+
 export const formatCurrency = (
   amount: number,
   locale: Locale = defaultLocale,
@@ -139,10 +142,13 @@ export const formatCurrency = (
     maximumFractionDigits: currency === "IQD" ? 0 : undefined,
     style: "currency",
   }).formatToParts(amount);
-  const symbol = parts
-    .filter((part) => part.type === "currency")
-    .map((part) => part.value)
-    .join("");
+  const symbol =
+    locale === "ar" && currency === "IQD"
+      ? ARABIC_DINAR
+      : parts
+          .filter((part) => part.type === "currency")
+          .map((part) => part.value)
+          .join("");
   const number = parts
     .filter((part) => part.type !== "currency" && part.type !== "literal")
     .map((part) => part.value)

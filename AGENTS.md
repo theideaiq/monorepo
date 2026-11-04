@@ -398,15 +398,18 @@ local stack (`SUPABASE_INTEGRATION=1`) and the end-to-end journeys.
   the website, Partners, Staff, Droid, emails and notifications, is
   written as Iraqi Arabic ("ماكو", "هسه", "تگدر", "راح", "شلون"), not
   Modern Standard Arabic. Legal pages (`apps/app/content/legal`), consent
-  and contract wording, and tax and accounting labels stay in Modern
-  Standard Arabic. Words with گ, چ or پ use those letters (تگدر, احچي).
+  and contract wording, printed documents and accounting terms stay in
+  Modern Standard Arabic. Words with گ, چ or پ use those letters (تگدر, احچي).
 - **Language standard** (`docs/brand/BRAND_GUIDELINES.md` section 3,
   enforced by `packages/internationalization/language.test.ts`): American
   English; no exclamation marks; « » quotes, ، ؛ ؟ and tanween on the
   letter (شكرًا) in Arabic; other companies' names in Latin letters
-  (Telegram, WhatsApp); amounts as "25,000 د.ع."; buttons as Iraqi
+  (Telegram, WhatsApp); amounts as "25,000 IQD" and "25,000 دينار عراقي"; buttons as Iraqi
   imperatives from the table (احفظ، عدّل، امسح، شيل); one word per thing
   (الإيميل, طقم, المجموع) and one translation per repeated sentence.
+  Modern Standard Arabic only for legal pages, consent wording, printed
+  documents and accounting terms (`STANDARD_ARABIC` in that test);
+  everything else is Iraqi.
 - **Translations:** every UI string comes from
   `packages/internationalization/messages/{ar,en}.json` (`useTranslations` /
   `getTranslations`), checked by `bun run check:i18n`. Pass numbers and dates
