@@ -186,6 +186,7 @@
         "@react-email/components": "1.0.8",
         "@repo/auth": "workspace:*",
         "@repo/commerce": "workspace:*",
+        "@repo/config": "workspace:*",
         "@repo/database": "workspace:*",
         "@repo/design-system": "workspace:*",
         "@repo/email": "workspace:*",
