@@ -455,6 +455,21 @@ steps need Xcode, Android Studio and the store/Firebase accounts
 
 ## Decisions
 
+- 2026-11-04: **A28, performance budget on a mid-range Android phone.**
+  `apps/e2e/tests/performance.spec.ts` (Playwright project "mid-range
+  Android", in the CI e2e job) loads the home page, store, a product page,
+  Plus and Club in both languages on a Galaxy A55 screen with the CPU four
+  times slower and slow 4G, and holds them to `performance-budget.ts`:
+  460 KB of compressed JavaScript and 760 KB in all until load, LCP 2.5 s,
+  CLS 0.1, blocking time 600 ms. The first measurement found every page
+  downloading 825–890 KB of JavaScript, Plus shifting its layout by 0.8
+  and Store and Plus painting in 7–8 s. Three causes, all fixed: Sentry
+  (with Session Replay) and PostHog were in every page though neither key
+  is set on the website; and `global-error.tsx` imported both whole
+  messages files for three strings. Sentry now loads only with a DSN and
+  Replay once the page is idle; PostHog only with its key; the error page
+  loads its strings when it shows. Measured after: 375–435 KB of
+  JavaScript, CLS 0, LCP 1.4–1.8 s, blocking time under 250 ms.
 - 2026-11-04: **Titles of works stay as published** (owner). In catalogue
   data, album, game, film and book titles, their artists and authors, and
   official program and organization names keep their own script on Arabic

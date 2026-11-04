@@ -21,7 +21,8 @@
       "ignoreDependencies": [
         "@capacitor/ios",
         "@capacitor/splash-screen",
-        "@capacitor/status-bar"
+        "@capacitor/status-bar",
+        "@sentry/nextjs"
       ]
     },
     "packages/email": {

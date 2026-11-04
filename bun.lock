@@ -86,7 +86,6 @@
         "@repo/security": "workspace:*",
         "@repo/seo": "workspace:*",
         "@repo/storage": "workspace:*",
-        "@sentry/nextjs": "^10.42.0",
         "@supabase/supabase-js": "^2.115.0",
         "@t3-oss/env-nextjs": "^0.13.10",
         "@tanstack/react-query": "^5.104.1",
@@ -451,6 +450,7 @@
       "dependencies": {
         "@logtail/next": "^0.4.0",
         "@sentry/nextjs": "^10.42.0",
+        "@sentry/replay": "^10.42.0",
         "@t3-oss/env-nextjs": "^0.13.10",
         "react": "19.3.0",
         "server-only": "^0.0.1",

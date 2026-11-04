@@ -1,5 +1,5 @@
 import { project } from "@repo/config";
-import posthog from "posthog-js";
+import type { PostHog } from "posthog-js";
 import { type ConsentState, toGoogleConsent } from "./consent";
 import {
   type AnalyticsEvent,
@@ -38,7 +38,18 @@ const browser = () =>
 export const isNativeApp = () =>
   browser()?.Capacitor?.isNativePlatform?.() === true;
 
-const posthogReady = () => Boolean(posthog.__loaded);
+/**
+ * PostHog, once `initializeAnalytics` has loaded it: it is downloaded only
+ * when its key is set, so pages without it don't carry the library (A28).
+ */
+let posthogInstance: PostHog | undefined;
+
+/** Called by `initializeAnalytics` once PostHog has started. */
+export const setPostHog = (instance: PostHog) => {
+  posthogInstance = instance;
+};
+
+const posthog = () => (posthogInstance?.__loaded ? posthogInstance : undefined);
 
 /** Records an event in every configured destination. */
 export const track = <E extends AnalyticsEvent>(
@@ -50,9 +61,7 @@ export const track = <E extends AnalyticsEvent>(
   if (!w) {
     return;
   }
-  if (posthogReady()) {
-    posthog.capture(event, properties);
-  }
+  posthog()?.capture(event, properties);
 
   const { currency } = project.region;
   const ga4 = toGa4(event, properties, currency);
@@ -101,27 +110,22 @@ export const setConsent = (consent: ConsentState) => {
   } else {
     w.ttq?.revokeConsent();
   }
-  if (posthogReady()) {
-    if (consent.analytics) {
-      posthog.opt_in_capturing();
-    } else {
-      posthog.opt_out_capturing();
-    }
+  const ph = posthog();
+  if (consent.analytics) {
+    ph?.opt_in_capturing();
+  } else {
+    ph?.opt_out_capturing();
   }
 };
 
 /** Links events to a signed-in user in product analytics (PostHog). */
 export const identify = (userId: string, traits?: Record<string, unknown>) => {
-  if (posthogReady()) {
-    posthog.identify(userId, traits);
-  }
+  posthog()?.identify(userId, traits);
 };
 
 /** Call on sign-out so the next visitor on this device starts fresh. */
 export const resetIdentity = () => {
-  if (posthogReady()) {
-    posthog.reset();
-  }
+  posthog()?.reset();
 };
 
 /** Keeps ad click ids from the landing URL for the rest of the visit. */

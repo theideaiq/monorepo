@@ -1,5 +1,6 @@
 import { execSync } from "node:child_process";
 import { defineConfig, devices } from "@playwright/test";
+import { MID_RANGE_ANDROID } from "./performance-budget";
 
 /**
  * End-to-end journeys against a local Supabase stack and the three Next.js
@@ -60,6 +61,10 @@ const script = process.env.E2E_START === "start" ? "start" : "dev";
 const port = (url: string) =>
   script === "start" ? ` -p ${new URL(url).port}` : "";
 
+const launchOptions = process.env.PLAYWRIGHT_CHROMIUM
+  ? { executablePath: process.env.PLAYWRIGHT_CHROMIUM }
+  : {};
+
 export default defineConfig({
   forbidOnly: Boolean(process.env.CI),
   fullyParallel: false,
@@ -67,12 +72,15 @@ export default defineConfig({
   projects: [
     {
       name: "chromium",
-      use: {
-        ...devices["Desktop Chrome"],
-        launchOptions: process.env.PLAYWRIGHT_CHROMIUM
-          ? { executablePath: process.env.PLAYWRIGHT_CHROMIUM }
-          : {},
-      },
+      testIgnore: /performance\.spec\.ts/,
+      use: { ...devices["Desktop Chrome"], launchOptions },
+    },
+    {
+      // The performance budget (performance-budget.ts), on a mid-range
+      // Android phone; the spec slows the CPU and network itself.
+      name: "mid-range Android",
+      testMatch: /performance\.spec\.ts/,
+      use: { ...devices[MID_RANGE_ANDROID.device], launchOptions },
     },
   ],
   reporter: process.env.CI ? [["github"], ["list"]] : "list",
