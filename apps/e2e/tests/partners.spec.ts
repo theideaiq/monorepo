@@ -166,7 +166,7 @@ test("a company verifies its domain and registers a Pass app", async ({
   const verification = page.locator("#verification");
   await verification.getByRole("button", { exact: true, name: "وثّق" }).click();
   await expect(
-    verification.getByText("وُثّقت في", { exact: false })
+    verification.getByText("انوثّقت", { exact: false })
   ).toBeVisible();
   await expectAccessible(page);
 });

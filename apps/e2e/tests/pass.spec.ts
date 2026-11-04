@@ -61,7 +61,7 @@ test.describe("The IDEA Pass", () => {
     await page.goto(`${urls.web}/ar/verify`);
     await expect(page.locator("html")).toHaveAttribute("dir", "rtl");
     await expect(
-      page.getByRole("heading", { name: "تحقّق من أنك طالب" })
+      page.getByRole("heading", { name: "أكّد إنك طالب" })
     ).toBeVisible();
     await expectAccessible(page);
   });

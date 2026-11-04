@@ -68,8 +68,8 @@ describe("store components", () => {
       { locale: "ar" }
     );
     expect(screen.getByText("انتظار طويل")).toBeTruthy();
-    expect(screen.getByText("يتطلّب Blaze")).toBeTruthy();
+    expect(screen.getByText("يحتاج Blaze")).toBeTruthy();
     expect(screen.queryByText(PRICE)).toBeNull();
-    expect(screen.queryByText("في الپلص")).toBeNull();
+    expect(screen.queryByText("بالپلص")).toBeNull();
   });
 });

@@ -376,6 +376,13 @@ local stack (`SUPABASE_INTEGRATION=1`) and the end-to-end journeys.
     on Arabic pages (the logo and the page-title suffix) is ايديا
     (`localizedName` in `project.json`; `projectName(locale)` from
     `@repo/config`).
+- **Arabic is Iraqi Arabic** (owner decision, 2026-11-04;
+  `docs/brand/BRAND_GUIDELINES.md` section 3): every Arabic string, in
+  the website, Partners, Staff, Droid, emails and notifications, is
+  written as Iraqi Arabic ("ماكو", "هسه", "تگدر", "راح", "شلون"), not
+  Modern Standard Arabic. Legal pages (`apps/app/content/legal`), consent
+  and contract wording, and tax and accounting labels stay in Modern
+  Standard Arabic. Words with گ, چ or پ use those letters (تگدر, احچي).
 - **Translations:** every UI string comes from
   `packages/internationalization/messages/{ar,en}.json` (`useTranslations` /
   `getTranslations`), checked by `bun run check:i18n`. Pass numbers and dates

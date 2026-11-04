@@ -120,7 +120,7 @@ describe("The IDEA Plus launch", () => {
     });
     renderWithApp(<JoinPlus />, { locale: "ar", supabase: db.supabase });
 
-    expect(await screen.findByText("بقيت 3 أماكن")).toBeTruthy();
+    expect(await screen.findByText("باقي 3 أماكن")).toBeTruthy();
   });
 
   test("members don't see the join panel", async () => {

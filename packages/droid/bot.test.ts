@@ -73,7 +73,7 @@ describe("private chats", () => {
     await send(privateText(user(1, { language_code: undefined }), "/start"));
 
     const [reply] = sent();
-    expect(textOf(reply)).toContain("أهلاً User1");
+    expect(textOf(reply)).toContain("هلو User1");
     const [shop, ...menu] = buttonsOf(reply);
     expect(shop?.web_app?.url).toMatch(ARABIC_MINI_APP);
     expect(menu.map((b) => b.callback_data)).toEqual([
@@ -297,8 +297,8 @@ describe("private chats", () => {
     expect(state.members.get(1)?.newsletter_opt_in).toBe(false);
     const answers = calls.filter((c) => c.method === "answerCallbackQuery");
     expect(answers.map((c) => c.payload.text)).toEqual([
-      expect.stringContaining("فعّلت"),
-      expect.stringContaining("أوقفت"),
+      expect.stringContaining("شغّلت"),
+      expect.stringContaining("وگّفت"),
     ]);
   });
 

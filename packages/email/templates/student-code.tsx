@@ -29,13 +29,13 @@ const copy = {
   ar: {
     educatorHeading: "رمز التحقق من صفة عضو هيئة التدريس",
     educatorIntro: (university: string) =>
-      `أدخل هذا الرمز في بطاقة پاسك لتأكيد أنك من هيئة التدريس في ${university}:`,
-    expires: "ينتهي هذا الرمز بعد 15 دقيقة. إن لم تطلبه، تجاهل هذه الرسالة.",
+      `اكتب هذا الرمز ببطاقة پاسك حتى نتأكد إنك من هيئة التدريس بـ${university}:`,
+    expires: "هذا الرمز ينتهي بعد 15 دقيقة. إذا ما طلبته، تجاهل هالرسالة.",
     heading: "رمز التحقق من صفة الطالب",
     intro: (university: string) =>
-      `أدخل هذا الرمز في بطاقة پاسك لتأكيد أنك طالب في ${university}:`,
+      `اكتب هذا الرمز ببطاقة پاسك حتى نتأكد إنك طالب بـ${university}:`,
     partnerIntro: (university: string, partner: string) =>
-      `أدخل هذا الرمز على ايديا لتأكيد أنك طالب في ${university} لدى ${partner}:`,
+      `اكتب هذا الرمز على ايديا حتى نأكد لـ${partner} إنك طالب بـ${university}:`,
     preview: (code: string) => `رمز التحقق: ${code}`,
   },
   en: {

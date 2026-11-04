@@ -165,7 +165,7 @@ describe("pushText", () => {
     );
     expect(
       pushText({ event: "order_delivered", kind: "order" }, "ar").title
-    ).toBe("سُلّم الطلب");
+    ).toBe("توصّل الطلب");
   });
 
   test("falls back to the kind, then to a notice; Kurdish reads Arabic", () => {
@@ -286,7 +286,7 @@ describe("deliverPushNotifications", () => {
     });
     expect(sent.find(({ token }) => token === "v-phone")).toMatchObject({
       data: { notificationId: "n2" },
-      title: "طلبك في الطريق",
+      title: "طلبك بالطريق",
     });
     expect(deleteIn).not.toHaveBeenCalled();
   });
