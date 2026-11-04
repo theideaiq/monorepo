@@ -16,6 +16,7 @@ import {
   Globe,
   GraduationCap,
   Link2,
+  Luggage,
   MapPin,
   MoveLeft,
   Users,
@@ -24,8 +25,14 @@ import {
 import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 import { CoverImage } from "@/components/cover-image";
+import { StartKitButton } from "@/components/travel/start-kit-button";
 import { countryName, joinPath, sourceHost } from "@/lib/club";
-import { editorialUrl, type OpportunityRow, type ProgramRow } from "@/lib/data";
+import {
+  editorialUrl,
+  type OpportunityRow,
+  type ProgramRow,
+  type TravelRouteRow,
+} from "@/lib/data";
 import { Markdown } from "@/lib/markdown";
 import { FollowButton } from "./follow-button";
 import { calendarDay as day, isFeatured } from "./opportunity-card";
@@ -263,6 +270,55 @@ const Details = async ({
 };
 
 /**
+ * The Travel Kit for the trip: one "Start my Travel Kit" per route its
+ * travellers take (a country and visa type).
+ */
+const TravelKit = async ({
+  locale,
+  opportunityId,
+  routes,
+}: {
+  readonly locale: Locale;
+  readonly opportunityId: string;
+  readonly routes: readonly TravelRouteRow[];
+}) => {
+  const t = await getTranslations({ locale, namespace: "web.travel.program" });
+  return (
+    <section
+      aria-labelledby="travel-kit"
+      className="flex flex-col gap-3 border-t pt-4"
+    >
+      <h2
+        className="flex items-center gap-2 font-semibold text-sm"
+        id="travel-kit"
+      >
+        <Luggage aria-hidden="true" className="size-5 text-pink-text" />
+        {t("title")}
+      </h2>
+      <p className="text-muted-foreground text-sm">{t("description")}</p>
+      {routes.map((route) => (
+        <div className="flex flex-col gap-2" key={route.id}>
+          {routes.length > 1 ? (
+            <p className="font-medium text-sm">
+              {t("route", {
+                country: countryName(route.country, intlLocale(locale)),
+                visa: localized(route, "visa", locale),
+              })}
+            </p>
+          ) : null}
+          <StartKitButton
+            className="w-full"
+            opportunityId={opportunityId}
+            routeId={route.id}
+            variant="outline"
+          />
+        </div>
+      ))}
+    </section>
+  );
+};
+
+/**
  * An opportunity: who runs it, where, when applications open and close,
  * what applying costs, where to apply and "Notify me".
  */
@@ -270,11 +326,14 @@ export const OpportunityArticle = async ({
   locale,
   opportunity,
   program = null,
+  travelRoutes = [],
 }: {
   readonly locale: Locale;
   readonly opportunity: OpportunityRow;
   /** The package, for The IDEA's programs sold here. */
   readonly program?: ProgramRow | null;
+  /** The routes its travellers take; each starts a Travel Kit. */
+  readonly travelRoutes?: readonly TravelRouteRow[];
 }) => {
   const t = await getTranslations({ locale, namespace: "web.opportunities" });
   const title = localized(opportunity, "title", locale);
@@ -334,6 +393,13 @@ export const OpportunityArticle = async ({
             program={program}
           />
           <FollowButton opportunityId={opportunity.id} />
+          {travelRoutes.length > 0 ? (
+            <TravelKit
+              locale={locale}
+              opportunityId={opportunity.id}
+              routes={travelRoutes}
+            />
+          ) : null}
         </aside>
       </div>
     </article>

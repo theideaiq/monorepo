@@ -58,7 +58,13 @@ const MOVED: readonly (readonly [string, string, string?])[] = [
 ];
 
 /** The Club's pages at `/club/<part>`; another `/club/<slug>` was a post or an event. */
-const CLUB_PARTS = new Set(["events", "opportunities", "read", "surveys"]);
+const CLUB_PARTS = new Set([
+  "events",
+  "opportunities",
+  "read",
+  "surveys",
+  "travel",
+]);
 
 /** Club → Join's `?show=` filters, each a page now. */
 const CLUB_SHOW: Record<string, string> = {

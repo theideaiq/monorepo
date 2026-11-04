@@ -861,7 +861,8 @@
           "events": "Events",
           "opportunities": "Opportunities",
           "surveys": "Surveys",
-          "read": "Read"
+          "read": "Read",
+          "travel": "Travel"
         },
         "home": {
           "thisWeek": "This week",
@@ -1667,6 +1668,22 @@
       "ask": "Ask us",
       "note": "Times start once your order is confirmed and can be longer around holidays. Plus members on Shine and Blaze get free delivery in Baghdad.",
       "policy": "Read the delivery policy"
+    },
+    "travel": {
+      "title": "Travel Kit",
+      "description": "Pick where you're going and get your folder for the trip: every document, the printouts and a dated schedule. Free with your Pass.",
+      "points": {
+        "documents": "One card per document, each with its source, how sure it is and when we checked it.",
+        "schedule": "Enter your appointment and departure dates, and the schedule works backward from them.",
+        "noScans": "Your Travel Kit never stores documents or scans."
+      },
+      "checked": "Checked {date}",
+      "empty": "No destinations yet. We're checking the first ones.",
+      "program": {
+        "title": "Travel Kit",
+        "description": "Every document, the printouts and a dated schedule for this trip. Free with your Pass.",
+        "route": "{country} · {visa}"
+      }
     }
   },
   "app": {
@@ -1726,7 +1743,8 @@
         "empty": "Nothing matches.",
         "searching": "Searching…",
         "open": "Go to a page"
-      }
+      },
+      "travel": "Travel Kit"
     },
     "roles": {
       "owner": "Owner",
@@ -4823,6 +4841,111 @@
       "payout": {
         "title": "Payout details",
         "description": "Where we send your commission."
+      }
+    },
+    "travel": {
+      "start": {
+        "start": "Start my Travel Kit",
+        "open": "Open my Travel Kit",
+        "failed": "Couldn't open your Travel Kit. Try again."
+      },
+      "facts": {
+        "confidence": {
+          "official": "Official",
+          "secondary": "Other source",
+          "unconfirmed": "Not confirmed"
+        },
+        "source": "Source:",
+        "checked": "Checked {date}"
+      },
+      "kits": {
+        "title": "Travel Kit",
+        "intro": "One folder per trip: the documents, the printouts and a dated schedule. Free with your Pass.",
+        "hint": "Documents, printouts and a schedule for each trip",
+        "empty": "No Travel Kits yet. Start one from a destination or a program's page.",
+        "findDestination": "Find a destination",
+        "route": "{country} · {visa}",
+        "routeGone": "This destination isn't listed anymore",
+        "departs": "Departs {date}",
+        "noDates": "No dates yet"
+      },
+      "kit": {
+        "back": "Your Travel Kits",
+        "kicker": "Travel Kit",
+        "route": "{country} · {visa}",
+        "routeGone": "This destination isn't listed anymore",
+        "notFound": "This Travel Kit isn't here. It may have been deleted.",
+        "progress": "{ready} of {total} documents ready",
+        "noDocuments": "No documents listed for this trip",
+        "applyAt": "Where to apply",
+        "ask": "Who to ask",
+        "dates": "Your dates",
+        "datesHint": "Enter your appointment and departure dates, and the schedule works backward from them.",
+        "appointment": "Visa appointment",
+        "departure": "Departure",
+        "minor": "Under 18",
+        "minorHint": "Adds the guardian steps.",
+        "notes": "Notes",
+        "notesHint": "Anything to remember for this trip",
+        "save": "Save notes",
+        "failed": "That didn't save. Try again.",
+        "noScans": "Your Travel Kit never stores documents or scans, only where you stand with each.",
+        "guardian": "Guardian step",
+        "tabs": {
+          "documents": "Documents",
+          "printouts": "Printouts",
+          "schedule": "Schedule",
+          "questions": "Open questions"
+        },
+        "letters": {
+          "documents": "A",
+          "printouts": "B",
+          "schedule": "C",
+          "questions": "D"
+        },
+        "delete": "Delete this Travel Kit",
+        "deleteTitle": "Delete this Travel Kit?",
+        "deleteDescription": "Its dates, notes and ticks go. Where you stand with each document stays, for your other trips.",
+        "deleteConfirm": "Delete",
+        "cancel": "Keep it"
+      },
+      "documents": {
+        "shared": "Your documents are one list for every trip: mark your passport Ready once and it counts for all your Travel Kits.",
+        "empty": "No documents listed for this trip yet.",
+        "copies": "Print {copies}",
+        "statusLabel": "Where you are with {document}",
+        "status": {
+          "not_started": "Not started",
+          "in_progress": "In progress",
+          "ready": "Ready"
+        },
+        "failed": "That didn't save. Try again."
+      },
+      "printouts": {
+        "intro": "Print these before your appointment, and bring them with you.",
+        "copies": "× {copies}",
+        "total": "{total} sheets in all",
+        "empty": "Nothing to print for this trip."
+      },
+      "schedule": {
+        "intro": "Worked backward from your dates, soonest first.",
+        "empty": "Nothing scheduled for this trip.",
+        "due": "By {date}",
+        "needsAppointment": "Enter your appointment date to date this",
+        "needsDeparture": "Enter your departure date to date this",
+        "anytime": "Any time before you go",
+        "documentStatus": "Document: {status}",
+        "states": {
+          "overdue": "Overdue",
+          "soon": "Soon",
+          "done": "Done"
+        },
+        "failed": "That didn't save. Try again."
+      },
+      "questions": {
+        "intro": "Ask these before you go, and tick each once you have the answer.",
+        "empty": "No open questions for this trip.",
+        "failed": "That didn't save. Try again."
       }
     }
   },

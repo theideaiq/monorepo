@@ -6,8 +6,15 @@ import { Send } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { joinPath, topicPath } from "@/lib/club";
 import { telegram } from "@/lib/links";
+import { travelPath } from "@/lib/travel-kit";
 
-export type ClubPart = "events" | "home" | "opportunities" | "read" | "surveys";
+export type ClubPart =
+  | "events"
+  | "home"
+  | "opportunities"
+  | "read"
+  | "surveys"
+  | "travel";
 
 const PARTS: readonly { href: string; id: ClubPart }[] = [
   { href: joinPath(), id: "home" },
@@ -15,6 +22,7 @@ const PARTS: readonly { href: string; id: ClubPart }[] = [
   { href: joinPath("opportunities"), id: "opportunities" },
   { href: joinPath("surveys"), id: "surveys" },
   { href: topicPath(), id: "read" },
+  { href: travelPath, id: "travel" },
 ];
 
 /** The Club's pages, as links (each part is its own address). */

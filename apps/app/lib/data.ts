@@ -765,6 +765,59 @@ export const getProgram = async (opportunityId: string) => {
   ) as ProgramRow | null;
 };
 
+// ── Travel Kit ──────────────────────────────────────────────────────────────
+
+export type TravelRouteRow = Pick<
+  Tables<"travel_routes">,
+  | "checked_on"
+  | "country"
+  | "id"
+  | "note_ar"
+  | "note_en"
+  | "slug"
+  | "visa_ar"
+  | "visa_en"
+>;
+
+const TRAVEL_ROUTE_COLUMNS =
+  "id, slug, country, visa_ar, visa_en, note_ar, note_en, checked_on";
+
+/** Published Travel Kit routes (a country and visa type), by country. */
+export const getTravelRoutes = () =>
+  fallback("travel_routes", [] as TravelRouteRow[], async () => {
+    const supabase = createPublicClient();
+    if (!supabase) {
+      return [];
+    }
+    return rows(
+      await supabase
+        .from("travel_routes")
+        .select(TRAVEL_ROUTE_COLUMNS)
+        .eq("status", "published")
+        .order("country")
+        .order("visa_en")
+    );
+  });
+
+/** The published routes an opportunity's travellers take (a kit starts from each). */
+export const getOpportunityTravelRoutes = (opportunityId: string) =>
+  fallback("opportunity_travel_routes", [] as TravelRouteRow[], async () => {
+    const supabase = createPublicClient();
+    if (!supabase) {
+      return [];
+    }
+    const links = rows(
+      await supabase
+        .from("opportunity_travel_routes")
+        .select(`route:travel_routes!inner (${TRAVEL_ROUTE_COLUMNS})`)
+        .eq("opportunity_id", opportunityId)
+        .eq("route.status", "published")
+    );
+    return links
+      .map((link) => link.route as TravelRouteRow | null)
+      .filter((route): route is TravelRouteRow => route !== null);
+  });
+
 /** How many people RSVP'd, without revealing who (`event_rsvp_count`). */
 export const getRsvpCount = (eventId: string) =>
   fallback("event_rsvp_count", null as number | null, async () => {

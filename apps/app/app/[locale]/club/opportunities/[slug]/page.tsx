@@ -5,7 +5,12 @@ import { notFound } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
 import { OpportunityArticle } from "@/components/club/opportunity-article";
 import { opportunityPath } from "@/lib/club";
-import { editorialUrl, getOpportunity, getProgram } from "@/lib/data";
+import {
+  editorialUrl,
+  getOpportunity,
+  getOpportunityTravelRoutes,
+  getProgram,
+} from "@/lib/data";
 import { markdownToText } from "@/lib/markdown";
 import { localizedMetadata } from "@/lib/metadata";
 
@@ -41,15 +46,18 @@ const OpportunityPage = async ({ params }: OpportunityProps) => {
     notFound();
   }
   // The IDEA's own programs are sold here as packages.
-  const program =
+  const [program, travelRoutes] = await Promise.all([
     opportunity.kind === "program" && !opportunity.host_name
-      ? await getProgram(opportunity.id)
-      : null;
+      ? getProgram(opportunity.id)
+      : null,
+    getOpportunityTravelRoutes(opportunity.id),
+  ]);
   return (
     <OpportunityArticle
       locale={locale}
       opportunity={opportunity}
       program={program}
+      travelRoutes={travelRoutes}
     />
   );
 };
