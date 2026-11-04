@@ -5530,6 +5530,8 @@
       "staff": "الإعدادات",
       "store": "إعدادات السوگ",
       "audit": "سجلّ التدقيق",
+      "health": "الصحة",
+      "handover": "التسليم",
       "support": "الدعم",
       "reviews": "التقييمات",
       "companies": "الشركاء",
@@ -7761,6 +7763,310 @@
       "details": "التفاصيل",
       "system": "النظام",
       "unknownActor": "ما معروف"
+    },
+    "health": {
+      "title": "الصحة",
+      "description": "المهام المجدولة، الخدمات المربوطة، المراقبة والطوابير.",
+      "checkedAt": "آخر فحص {time}.",
+      "unreachable": "ما گدرنا نوصل للـ API. المهام اللي جوّه من قاعدة البيانات بس، بلا مواعيدها.",
+      "jobs": {
+        "title": "المهام المجدولة · {overdue} متأخرة · {failing} فاشلة",
+        "description": "كل مهمة تسجّل آخر نجاح وآخر فشل. المهمة تعتبر متأخرة إذا آخر نجاح أقدم من المدة المتوقعة، أو ماكو نجاح بعد.",
+        "job": "المهمة",
+        "schedule": "الموعد",
+        "lastOk": "آخر نجاح",
+        "lastFailure": "آخر فشل",
+        "state": "الحالة",
+        "cron": "{cron} UTC · {runner}",
+        "runner": {
+          "vercel": "Vercel",
+          "github": "GitHub Actions"
+        },
+        "gap": "متوقعة خلال {hours} ساعة",
+        "states": {
+          "ok": "تمام",
+          "overdue": "متأخرة",
+          "failing": "فاشلة",
+          "never": "ماكو تشغيل مسجّل"
+        },
+        "unknownJob": "مو موجودة بقائمة المهام",
+        "none": "ماكو مهام.",
+        "readFailed": "ما گدرنا نقرا تشغيلات المهام."
+      },
+      "monitors": {
+        "title": "المراقبة",
+        "description": "مراقبات Better Stack، مثل ما تبيّنها شارة الحالة بالموقع.",
+        "states": {
+          "operational": "كلها شغّالة",
+          "partial": "بعضها واگف",
+          "degraded": "كلها واگفة",
+          "unknown": "ما گدرنا نوصل لـ Better Stack"
+        },
+        "notConfigured": "Better Stack مو مضبوط."
+      },
+      "queues": {
+        "title": "الطوابير",
+        "description": "إشعارات أقدم من ساعة چان لازم تطلع على قناة وما طلعت: باليوم الأخير (يومين لبريد التذكيرات)، ونحسب بس الناس اللي القناة تدزلهم.",
+        "channels": {
+          "push": "الإشعارات",
+          "telegram": "Telegram",
+          "whatsapp": "WhatsApp",
+          "email": "بريد التذكيرات"
+        },
+        "atLeast": "على الأقل {count}",
+        "stuck": "تنتظر",
+        "clear": "فاضي",
+        "notConfigured": "مو مضبوط",
+        "unavailable": "ما گدرنا نحسب الطوابير."
+      },
+      "integrationsTitle": "الخدمات المربوطة",
+      "integrationsDescription": "إذا إعدادات كل وحدة موجودة بالـ API. القيم ما تنعرض أبداً.",
+      "set": "مضبوط",
+      "notSet": "مو مضبوط",
+      "integrations": {
+        "appleWallet": "بطاقات Apple Wallet",
+        "arcjet": "Arcjet (حماية النماذج)",
+        "betterStack": "Better Stack (الحالة)",
+        "boxy": "توصيل Boxy",
+        "boxyWebhook": "الـ webhook مال Boxy",
+        "cron": "سرّ المهام المجدولة",
+        "docs": "توثيق المطورين (Mintlify)",
+        "googleWallet": "بطاقات Google Wallet",
+        "lastfm": "Last.fm",
+        "lookupBgg": "البحث: BoardGameGeek",
+        "lookupDiscogs": "البحث: Discogs",
+        "lookupGoogleBooks": "البحث: Google Books",
+        "lookupIgdb": "البحث: IGDB",
+        "lookupPokemonTcg": "البحث: Pokémon TCG",
+        "lookupTmdb": "البحث: TMDB",
+        "metaConversions": "Meta Conversions API",
+        "newsletter": "مزامنة النشرة (Resend)",
+        "oidc": "تسجيل الدخول بـ ايديا پاس (مفتاح التوقيع)",
+        "push": "الإشعارات (FCM، وللآيفون هم)",
+        "pushWebhook": "الـ webhook مال الإشعارات",
+        "reloadly": "أكواد Reloadly الرقمية",
+        "resend": "بريد Resend",
+        "sentry": "أخطاء Sentry",
+        "spotify": "Spotify",
+        "supabase": "مفتاح خدمة Supabase",
+        "telegram": "بوت Telegram",
+        "telegramLogin": "تسجيل الدخول عبر Telegram",
+        "telegramWebhook": "سرّ الـ webhook مال Telegram",
+        "tiktokEvents": "TikTok Events API",
+        "upstash": "Upstash (حدود الطلبات)",
+        "wayl": "دفع Wayl",
+        "whatsapp": "رسائل WhatsApp"
+      },
+      "jobPurpose": {
+        "boxy": "يتابع طرود Boxy المفتوحة، والتشغيل اليومي هم يحدّث مناطق التوصيل.",
+        "bulbs": "تذكيرات انتهاء الگلوبات وانتهاؤها، وگلوبات عيد الميلاد.",
+        "digital-codes": "يشتري الأكواد الرقمية اللي بعدها تنتظر بعد ما اندفعت.",
+        "keep-alive": "يلمس قاعدة البيانات حتى Supabase ما يوگّف المشروع.",
+        "music": "يحدّث الفنانين من ربط Spotify وLast.fm.",
+        "newsletter-contacts": "يزامن جهات النشرة وإلغاء الاشتراك ويا Resend.",
+        "opportunities": "يگول للمتابعين من تنفتح الفرص أو قربت تنسد، يسد اللي فات موعدها، ويمسح صور الجوازات القديمة.",
+        "plus-credits": "ينطي أعضاء الپلص رصيد الاستبيانات بأول كل شهر.",
+        "plus-duo": "ينهي أماكن Duo بالپلص اللي وصل موعد نهايتها ويمسح الدعوات القديمة.",
+        "plus-seats": "يجدد مقاعد الپلص اللي تدفعها الشركات ويطلّع فواتيرها.",
+        "push": "يدز الإشعارات ورسائل Telegram وWhatsApp اللي فاتت الـ webhook.",
+        "reminders": "طلبات التقييم وتذكيرات السلة، بإشعار وبريد.",
+        "rentals": "يعلّم إيجارات الپلص المتأخرة ويدز تنبيه قرب الموعد.",
+        "selling": "مواعيد الإرجاع والعروض، تقييم المحلات، استرداد المرتجعات وسد الاستبيانات.",
+        "student-checks": "يمسح الپاسات الفارغة، ينظّف تحققات الطلاب مال الشركاء ويعيد إرسال الـ webhooks مالتهم.",
+        "subscriptions": "فواتير التجديد، والاشتراكات المتأخرة والمنتهية.",
+        "telegram-posts": "يرتّب منشورات النادي المجدولة ويدز اللي فات الـ webhook."
+      }
+    },
+    "handover": {
+      "title": "التسليم",
+      "description": "كل شي يحتاجه اللي يستلم الشغل: الصلاحيات، الخدمات، النطاقات ودلائل التشغيل.",
+      "access": {
+        "title": "منو عنده صلاحية ({count})",
+        "description": "كل واحد عنده دور بالستاف، وإذا عنده تطبيق مصادقة (الستاف يحتاجه).",
+        "noFactors": "كل واحد عنده دور بالستاف. ما گدرنا نتأكد من تطبيقات المصادقة.",
+        "manage": "إدارة الفريق",
+        "person": "الشخص",
+        "role": "الدور",
+        "since": "من",
+        "authenticator": "تطبيق المصادقة",
+        "hasApp": "مضبوط",
+        "noApp": "مو مضبوط",
+        "unnamed": "بلا اسم"
+      },
+      "services": {
+        "title": "الخدمات اللي يعتمد عليها الشغل",
+        "description": "كل خدمة خارجية يستخدمها الكود، لوحة تحكمها وأسماء المتغيرات اللي تحتاجها. حالة الضبط من الـ API.",
+        "healthUnavailable": "كل خدمة خارجية يستخدمها الكود. ما گدرنا نوصل للـ API، فما نعرف إذا كل وحدة مضبوطة.",
+        "service": "الخدمة",
+        "dashboard": "لوحة التحكم",
+        "env": "المتغيرات",
+        "configured": "مضبوطة",
+        "noEnv": "تنضبط بلوحة تحكمها",
+        "states": {
+          "set": "مضبوطة",
+          "missing": "ناقصة",
+          "unchecked": "ما تنفحص هنا",
+          "unknown": "ما معروف"
+        },
+        "list": {
+          "supabase": {
+            "name": "Supabase",
+            "use": "قاعدة البيانات، تسجيل الدخول (Auth) وتخزين الملفات."
+          },
+          "vercel": {
+            "name": "Vercel",
+            "use": "يستضيف الموقع والشركاء والستاف والـ API، ويشغّل المهام اليومية."
+          },
+          "github": {
+            "name": "GitHub",
+            "use": "الكود، الـ CI، تحديثات قاعدة البيانات، النسخ الاحتياطية والمواعيد المتكررة (أسرار المستودع)."
+          },
+          "cloudflare": {
+            "name": "Cloudflare",
+            "use": "الـ DNS مال النطاقات الفرعية، وTurnstile بنماذج تسجيل الدخول."
+          },
+          "resend": {
+            "name": "Resend",
+            "use": "بريد المعاملات وجهات النشرة."
+          },
+          "wayl": {
+            "name": "Wayl",
+            "use": "الدفع أونلاين، الاسترداد والـ webhooks مال الدفع."
+          },
+          "boxy": {
+            "name": "Boxy",
+            "use": "التوصيل: الطرود، أماكن الاستلام، التتبع ومناطق التوصيل."
+          },
+          "reloadly": {
+            "name": "Reloadly",
+            "use": "يشتري الأكواد الرقمية وبطاقات الهدايا اللي تنباع بالسوگ."
+          },
+          "telegram": {
+            "name": "Telegram",
+            "use": "الدرويد، غرف النادي ومنشوراته، وتسجيل الدخول عبر Telegram."
+          },
+          "firebase": {
+            "name": "Firebase Cloud Messaging",
+            "use": "الإشعارات لتطبيقات Android وiOS."
+          },
+          "whatsapp": {
+            "name": "WhatsApp Business (Meta)",
+            "use": "تحديثات الطلبات والإيجارات على WhatsApp."
+          },
+          "twilio": {
+            "name": "Twilio Verify",
+            "use": "رموز الموبايل بالـ SMS وWhatsApp، كمزوّد الموبايل بـ Supabase Auth (ينضبط بـ Supabase)."
+          },
+          "appleWallet": {
+            "name": "Apple Developer",
+            "use": "الپاس بـ Apple Wallet."
+          },
+          "googleWallet": {
+            "name": "Google Wallet",
+            "use": "الپاس بـ Google Wallet."
+          },
+          "betterStack": {
+            "name": "Better Stack",
+            "use": "مراقبة التشغيل وصفحة الحالة العامة."
+          },
+          "sentry": {
+            "name": "Sentry",
+            "use": "تقارير الأخطاء من كل التطبيقات."
+          },
+          "upstash": {
+            "name": "Upstash",
+            "use": "حدود الطلبات (Redis)."
+          },
+          "arcjet": {
+            "name": "Arcjet",
+            "use": "حماية النماذج العامة من البوتات والإساءة."
+          },
+          "googleAnalytics": {
+            "name": "Google Analytics",
+            "use": "إحصائيات الموقع (GA4)، تنضبط بمشروع الموقع."
+          },
+          "posthog": {
+            "name": "PostHog",
+            "use": "إحصائيات المنتج، تنضبط بمشروع الموقع."
+          },
+          "meta": {
+            "name": "Meta (Pixel وConversions API)",
+            "use": "قياس الإعلانات: الـ pixel بالموقع والمشتريات المؤكدة من السيرفر."
+          },
+          "tiktok": {
+            "name": "TikTok (Pixel وEvents API)",
+            "use": "قياس الإعلانات: الـ pixel بالموقع والمشتريات المؤكدة من السيرفر."
+          },
+          "spotify": {
+            "name": "Spotify",
+            "use": "الأعضاء يربطون Spotify حتى يشوفون ڤاينل الفنانين اللي يسمعولهم."
+          },
+          "lastfm": {
+            "name": "Last.fm",
+            "use": "الأعضاء يربطون Last.fm حتى يشوفون ڤاينل الفنانين اللي يسمعولهم."
+          },
+          "tmdb": {
+            "name": "TMDB",
+            "use": "تفاصيل الأفلام للبحث عن المنتجات بالستاف."
+          },
+          "igdb": {
+            "name": "IGDB (Twitch)",
+            "use": "تفاصيل الألعاب للبحث عن المنتجات بالستاف."
+          },
+          "discogs": {
+            "name": "Discogs",
+            "use": "تفاصيل الموسيقى للبحث عن المنتجات بالستاف."
+          },
+          "bgg": {
+            "name": "BoardGameGeek",
+            "use": "تفاصيل ألعاب الطاولة للبحث عن المنتجات بالستاف."
+          },
+          "googleBooks": {
+            "name": "Google Books",
+            "use": "تفاصيل الكتب للبحث عن المنتجات بالستاف."
+          },
+          "pokemonTcg": {
+            "name": "Pokémon TCG API",
+            "use": "تفاصيل البطاقات للبحث عن المنتجات بالستاف."
+          },
+          "mintlify": {
+            "name": "Mintlify",
+            "use": "يستضيف توثيق المطورين اللي ينعرض على عنوان الـ API."
+          }
+        }
+      },
+      "domains": {
+        "title": "النطاقات والتطبيقات",
+        "description": "من إعدادات المشروع وبيئة هذا التطبيق.",
+        "main": "النطاق الرئيسي",
+        "website": "الموقع وايديا پاس",
+        "partners": "الشركاء",
+        "staff": "الستاف",
+        "api": "الـ API",
+        "docs": "توثيق المطورين",
+        "supabase": "مشروع Supabase",
+        "appId": "معرّف تطبيق iOS وAndroid",
+        "support": "بريد الدعم",
+        "code": "الكود"
+      },
+      "jobs": {
+        "title": "المهام المجدولة",
+        "description": "كل مهمة مجدولة، موعدها وآخر تشغيل إلها موجودة بصفحة الصحة.",
+        "open": "افتح الصحة"
+      },
+      "runbooks": {
+        "title": "دلائل التشغيل والقرارات",
+        "description": "شلون يشتغل الإنتاج وليش الأشياء هيچ، على GitHub (main).",
+        "list": {
+          "platform": "دلائل تشغيل المنصة",
+          "releases": "الإصدارات وتحديثات قاعدة البيانات",
+          "backups": "النسخ الاحتياطية والاسترجاع",
+          "incidents": "من يصير خلل",
+          "passSignIn": "تسجيل الدخول بـ ايديا پاس (مواقع الشركاء)",
+          "progress": "التقدّم: قائمة الإطلاق، الأشياء المفتوحة والقرارات",
+          "architecture": "البنية والخدمات المربوطة"
+        }
+      }
     },
     "support": {
       "title": "الدعم",

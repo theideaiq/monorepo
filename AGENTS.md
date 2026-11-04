@@ -215,7 +215,12 @@ incidents) is in `docs/platform`.
     coupon codes members enter at checkout; `/finance/settings` also sets
     the commission by category) · Settings
     `/settings` (with `/settings/store`, the store's delivery, checkout,
-    auction and survey settings, and `/settings/audit`), and `/search`.
+    auction and survey settings, `/settings/audit`, `/settings/health`
+    for admins, each cron job's last run from `job_runs` against the job
+    catalogue in `apps/api/lib/jobs.ts` with the integrations, monitors
+    and stuck notifications from `POST /admin/health`, and
+    `/settings/handover` for superadmins, who has access, the services
+    the code depends on, domains and the runbooks), and `/search`.
     Record pages (customer, order, product, ticket, event, team request)
     share one header (`components/admin/record-header.tsx`): breadcrumb ·
     title · status chips · actions at the end (primary last) · key

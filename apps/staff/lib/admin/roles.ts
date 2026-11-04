@@ -22,6 +22,8 @@ export const sections = [
   "staff",
   "store",
   "audit",
+  "health",
+  "handover",
 ] as const;
 
 export type Section = (typeof sections)[number];
@@ -36,6 +38,8 @@ export const sectionHref: Record<Section, string> = {
   dashboard: "/",
   editorial: "/club",
   finance: "/finance",
+  handover: "/settings/handover",
+  health: "/settings/health",
   orders: "/orders",
   rentals: "/plus",
   reviews: "/catalog/reviews",
@@ -65,7 +69,9 @@ const everything = (exclude: Section[] = []): AccessMap =>
   );
 
 const roleAccess: Record<StaffRole, AccessMap> = {
-  admin: everything(["staff"]),
+  // Handing the business over (who has access, services, domains) is the
+  // owner's: superadmins only.
+  admin: everything(["staff", "handover"]),
   editor: { dashboard: "read", editorial: "write" },
   finance: {
     // Finance invoices purchase orders; support handles the rest.
@@ -120,7 +126,10 @@ export const menu = [
   { id: "club", sections: ["editorial", "telegram"] },
   { id: "partners", sections: ["companies"] },
   { id: "finance", sections: ["finance", "affiliates"] },
-  { id: "settings", sections: ["staff", "store", "audit"] },
+  {
+    id: "settings",
+    sections: ["staff", "store", "audit", "health", "handover"],
+  },
 ] as const satisfies readonly { id: string; sections: readonly Section[] }[];
 
 export type MenuId = (typeof menu)[number]["id"];

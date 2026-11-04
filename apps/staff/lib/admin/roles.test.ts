@@ -12,11 +12,20 @@ import {
 } from "./roles";
 
 describe("role → sections", () => {
-  test("superadmins see everything, admins everything but staff", () => {
+  test("superadmins see everything, admins everything but staff and handover", () => {
     expect(visibleSections("superadmin")).toEqual([...sections]);
     expect(visibleSections("admin")).toEqual(
-      sections.filter((section) => section !== "staff")
+      sections.filter(
+        (section) => section !== "staff" && section !== "handover"
+      )
     );
+    expect(canRead("admin", "health")).toBe(true);
+    expect(canRead("admin", "handover")).toBe(false);
+    expect(canRead("superadmin", "handover")).toBe(true);
+    for (const role of ["editor", "finance", "marketing", "support"] as const) {
+      expect(canRead(role, "health")).toBe(false);
+      expect(canRead(role, "handover")).toBe(false);
+    }
     expect(canWrite("admin", "audit")).toBe(true);
     expect(canWrite("admin", "support")).toBe(true);
     expect(canWrite("admin", "reviews")).toBe(true);
@@ -106,7 +115,13 @@ describe("role → sections", () => {
       (entry) => entry.id === "settings"
     );
     // Admins can't manage staff: Settings opens the store's settings.
-    expect(settings?.sections).toEqual(["store", "audit"]);
+    expect(settings?.sections).toEqual(["store", "audit", "health"]);
+    expect(
+      visibleMenu("superadmin").find((entry) => entry.id === "settings")
+        ?.sections
+    ).toEqual(["staff", "store", "audit", "health", "handover"]);
+    expect(sectionHref.health).toBe("/settings/health");
+    expect(sectionHref.handover).toBe("/settings/handover");
     expect(sectionHref.store).toBe("/settings/store");
     expect(sectionHref.rentals).toBe("/plus");
     expect(canRead("support", "store")).toBe(false);

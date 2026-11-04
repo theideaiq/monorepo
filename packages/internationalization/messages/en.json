@@ -5530,6 +5530,8 @@
       "staff": "Settings",
       "store": "Store settings",
       "audit": "Audit log",
+      "health": "Health",
+      "handover": "Handover",
       "support": "Support",
       "reviews": "Reviews",
       "companies": "Partners",
@@ -7761,6 +7763,310 @@
       "details": "Details",
       "system": "System",
       "unknownActor": "Unknown"
+    },
+    "health": {
+      "title": "Health",
+      "description": "Scheduled jobs, integrations, monitors and queues.",
+      "checkedAt": "Checked {time}.",
+      "unreachable": "Couldn't reach the API. The jobs below come from the database only, without their schedules.",
+      "jobs": {
+        "title": "Scheduled jobs · {overdue} overdue · {failing} failing",
+        "description": "Each job records its last success and failure. A job is overdue when its last success is older than its expected gap, or there isn't one yet.",
+        "job": "Job",
+        "schedule": "Schedule",
+        "lastOk": "Last success",
+        "lastFailure": "Last failure",
+        "state": "State",
+        "cron": "{cron} UTC · {runner}",
+        "runner": {
+          "vercel": "Vercel",
+          "github": "GitHub Actions"
+        },
+        "gap": "Expected within {hours} h",
+        "states": {
+          "ok": "OK",
+          "overdue": "Overdue",
+          "failing": "Failing",
+          "never": "No run recorded"
+        },
+        "unknownJob": "Not in the job list",
+        "none": "No jobs to show.",
+        "readFailed": "Couldn't read the job runs."
+      },
+      "monitors": {
+        "title": "Monitors",
+        "description": "The Better Stack monitors, as the website's status badge shows them.",
+        "states": {
+          "operational": "All up",
+          "partial": "Some down",
+          "degraded": "All down",
+          "unknown": "Couldn't reach Better Stack"
+        },
+        "notConfigured": "Better Stack isn't configured."
+      },
+      "queues": {
+        "title": "Queues",
+        "description": "Notifications older than an hour that should have gone out on a channel and haven't: in the last day (two days for reminder emails), counting only recipients the channel sends to.",
+        "channels": {
+          "push": "Push",
+          "telegram": "Telegram",
+          "whatsapp": "WhatsApp",
+          "email": "Reminder emails"
+        },
+        "atLeast": "At least {count}",
+        "stuck": "Waiting",
+        "clear": "Clear",
+        "notConfigured": "Not configured",
+        "unavailable": "Couldn't count the queues."
+      },
+      "integrationsTitle": "Integrations",
+      "integrationsDescription": "Whether each one's settings are present in the API. Values are never shown.",
+      "set": "Set",
+      "notSet": "Not set",
+      "integrations": {
+        "appleWallet": "Apple Wallet passes",
+        "arcjet": "Arcjet (form protection)",
+        "betterStack": "Better Stack (status)",
+        "boxy": "Boxy delivery",
+        "boxyWebhook": "Boxy webhook",
+        "cron": "Cron secret",
+        "docs": "Developer docs (Mintlify)",
+        "googleWallet": "Google Wallet passes",
+        "lastfm": "Last.fm",
+        "lookupBgg": "Lookups: BoardGameGeek",
+        "lookupDiscogs": "Lookups: Discogs",
+        "lookupGoogleBooks": "Lookups: Google Books",
+        "lookupIgdb": "Lookups: IGDB",
+        "lookupPokemonTcg": "Lookups: Pokémon TCG",
+        "lookupTmdb": "Lookups: TMDB",
+        "metaConversions": "Meta Conversions API",
+        "newsletter": "Newsletter sync (Resend segment)",
+        "oidc": "Sign in with The IDEA Pass (signing key)",
+        "push": "Push (FCM, also to iPhones)",
+        "pushWebhook": "Notifications webhook",
+        "reloadly": "Reloadly digital codes",
+        "resend": "Resend email",
+        "sentry": "Sentry errors",
+        "spotify": "Spotify",
+        "supabase": "Supabase service key",
+        "telegram": "Telegram bot",
+        "telegramLogin": "Sign in with Telegram",
+        "telegramWebhook": "Telegram webhook secret",
+        "tiktokEvents": "TikTok Events API",
+        "upstash": "Upstash (rate limits)",
+        "wayl": "Wayl payments",
+        "whatsapp": "WhatsApp messages"
+      },
+      "jobPurpose": {
+        "boxy": "Follows open Boxy parcels; the daily run also refreshes the delivery areas.",
+        "bulbs": "Bulb expiry reminders and expiry, and birthday Bulbs.",
+        "digital-codes": "Buys the digital codes still waiting after their payment.",
+        "keep-alive": "Touches the database so Supabase doesn't pause the project.",
+        "music": "Refreshes the artists of Spotify and Last.fm connections.",
+        "newsletter-contacts": "Syncs newsletter contacts and unsubscribes with Resend.",
+        "opportunities": "Tells followers when opportunities open or close soon, closes past listings and deletes old passport scans.",
+        "plus-credits": "Gives Plus members their survey credits on the 1st of the month.",
+        "plus-duo": "Ends Plus Duo places that are due to end and clears old invites.",
+        "plus-seats": "Renews company-paid Plus seats and invoices the companies.",
+        "push": "Sends the push, Telegram and WhatsApp messages the webhook missed.",
+        "reminders": "Review requests and cart reminders, by notification and email.",
+        "rentals": "Flags overdue Plus rentals and sends due-soon notices.",
+        "selling": "Return and offer deadlines, shop scores, return refunds and closing surveys.",
+        "student-checks": "Removes empty bare Passes, sweeps partners' student verifications and retries their webhooks.",
+        "subscriptions": "Renewal invoices, and past-due and expired subscriptions.",
+        "telegram-posts": "Queues scheduled Club posts and sends what the webhook missed."
+      }
+    },
+    "handover": {
+      "title": "Handover",
+      "description": "What someone taking over the business needs: access, services, domains and runbooks.",
+      "access": {
+        "title": "Who has access ({count})",
+        "description": "Everyone with a Staff role, and whether they have an authenticator app (Staff needs one).",
+        "noFactors": "Everyone with a Staff role. Authenticator apps couldn't be checked.",
+        "manage": "Manage staff",
+        "person": "Person",
+        "role": "Role",
+        "since": "Since",
+        "authenticator": "Authenticator app",
+        "hasApp": "Set up",
+        "noApp": "Not set up",
+        "unnamed": "No name"
+      },
+      "services": {
+        "title": "Services the business depends on",
+        "description": "Every outside service the code uses, its dashboard and the variable names it needs. Configured is read from the API.",
+        "healthUnavailable": "Every outside service the code uses. Couldn't reach the API, so whether each is configured is unknown.",
+        "service": "Service",
+        "dashboard": "Dashboard",
+        "env": "Variables",
+        "configured": "Configured",
+        "noEnv": "Set in its own dashboard",
+        "states": {
+          "set": "Configured",
+          "missing": "Missing",
+          "unchecked": "Not checked here",
+          "unknown": "Unknown"
+        },
+        "list": {
+          "supabase": {
+            "name": "Supabase",
+            "use": "The database, sign-in (Auth) and file storage."
+          },
+          "vercel": {
+            "name": "Vercel",
+            "use": "Hosts the website, Partners, Staff and the API, and runs the daily cron jobs."
+          },
+          "github": {
+            "name": "GitHub",
+            "use": "The code, CI, database migrations, backups and the frequent schedules (repository secrets)."
+          },
+          "cloudflare": {
+            "name": "Cloudflare",
+            "use": "DNS for the subdomains, and Turnstile on the sign-in forms."
+          },
+          "resend": {
+            "name": "Resend",
+            "use": "Transactional email and the newsletter segment."
+          },
+          "wayl": {
+            "name": "Wayl",
+            "use": "Online payments, refunds and payment webhooks."
+          },
+          "boxy": {
+            "name": "Boxy",
+            "use": "Delivery: parcels, pickup locations, tracking and delivery areas."
+          },
+          "reloadly": {
+            "name": "Reloadly",
+            "use": "Buys the digital codes and gift cards sold in the Store."
+          },
+          "telegram": {
+            "name": "Telegram",
+            "use": "Droid, the Club's rooms and posts, and sign-in with Telegram."
+          },
+          "firebase": {
+            "name": "Firebase Cloud Messaging",
+            "use": "Push notifications to the Android and iOS apps."
+          },
+          "whatsapp": {
+            "name": "WhatsApp Business (Meta)",
+            "use": "Order and rental updates on WhatsApp."
+          },
+          "twilio": {
+            "name": "Twilio Verify",
+            "use": "Phone codes by SMS and WhatsApp, as Supabase Auth's phone provider (set in Supabase)."
+          },
+          "appleWallet": {
+            "name": "Apple Developer",
+            "use": "The Pass in Apple Wallet."
+          },
+          "googleWallet": {
+            "name": "Google Wallet",
+            "use": "The Pass in Google Wallet."
+          },
+          "betterStack": {
+            "name": "Better Stack",
+            "use": "Uptime monitors and the public status page."
+          },
+          "sentry": {
+            "name": "Sentry",
+            "use": "Error reports from every app."
+          },
+          "upstash": {
+            "name": "Upstash",
+            "use": "Rate limits (Redis)."
+          },
+          "arcjet": {
+            "name": "Arcjet",
+            "use": "Bot and abuse protection on public forms."
+          },
+          "googleAnalytics": {
+            "name": "Google Analytics",
+            "use": "Website analytics (GA4), set on the website project."
+          },
+          "posthog": {
+            "name": "PostHog",
+            "use": "Product analytics, set on the website project."
+          },
+          "meta": {
+            "name": "Meta (Pixel and Conversions API)",
+            "use": "Ad measurement: the website's pixel and server-confirmed purchases."
+          },
+          "tiktok": {
+            "name": "TikTok (Pixel and Events API)",
+            "use": "Ad measurement: the website's pixel and server-confirmed purchases."
+          },
+          "spotify": {
+            "name": "Spotify",
+            "use": "Members connect Spotify for vinyl from artists they listen to."
+          },
+          "lastfm": {
+            "name": "Last.fm",
+            "use": "Members connect Last.fm for vinyl from artists they listen to."
+          },
+          "tmdb": {
+            "name": "TMDB",
+            "use": "Film details for product lookups in Staff."
+          },
+          "igdb": {
+            "name": "IGDB (Twitch)",
+            "use": "Game details for product lookups in Staff."
+          },
+          "discogs": {
+            "name": "Discogs",
+            "use": "Music details for product lookups in Staff."
+          },
+          "bgg": {
+            "name": "BoardGameGeek",
+            "use": "Board game details for product lookups in Staff."
+          },
+          "googleBooks": {
+            "name": "Google Books",
+            "use": "Book details for product lookups in Staff."
+          },
+          "pokemonTcg": {
+            "name": "Pokémon TCG API",
+            "use": "Card details for product lookups in Staff."
+          },
+          "mintlify": {
+            "name": "Mintlify",
+            "use": "Hosts the developer docs served at the API's address."
+          }
+        }
+      },
+      "domains": {
+        "title": "Domains and apps",
+        "description": "From the project settings and this app's environment.",
+        "main": "Main domain",
+        "website": "Website and The IDEA Pass",
+        "partners": "Partners",
+        "staff": "Staff",
+        "api": "API",
+        "docs": "Developer docs",
+        "supabase": "Supabase project",
+        "appId": "iOS and Android app ID",
+        "support": "Support email",
+        "code": "Code"
+      },
+      "jobs": {
+        "title": "Scheduled jobs",
+        "description": "Every cron job, its schedule and its last run are on Health.",
+        "open": "Open Health"
+      },
+      "runbooks": {
+        "title": "Runbooks and decisions",
+        "description": "How production runs and why things are the way they are, on GitHub (main).",
+        "list": {
+          "platform": "Platform runbooks",
+          "releases": "Releases and migrations",
+          "backups": "Backups and restore",
+          "incidents": "When something breaks",
+          "passSignIn": "Sign in with The IDEA Pass (partner sites)",
+          "progress": "Progress: launch checklist, open items and decisions",
+          "architecture": "Architecture and integrations"
+        }
+      }
     },
     "support": {
       "title": "Support",
