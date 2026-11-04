@@ -27,6 +27,20 @@ describe("the command bar's pages", () => {
     expect(support).not.toContain("/plus/plans");
     expect(commandPages(null)).toEqual([]);
   });
+
+  test("Health for admins, Handover for superadmins only", () => {
+    const superadmin = commandPages("superadmin").map((page) => page.href);
+    expect(superadmin).toContain("/settings/health");
+    expect(superadmin).toContain("/settings/handover");
+    const admin = commandPages("admin").map((page) => page.href);
+    expect(admin).toContain("/settings/health");
+    expect(admin).not.toContain("/settings/handover");
+    for (const role of ["editor", "finance", "marketing", "support"] as const) {
+      const hrefs = commandPages(role).map((page) => page.href);
+      expect(hrefs).not.toContain("/settings/health");
+      expect(hrefs).not.toContain("/settings/handover");
+    }
+  });
 });
 
 describe("matchPages", () => {

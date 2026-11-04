@@ -11,11 +11,19 @@ import { Link } from "@repo/internationalization/navigation";
 import { JsonLd } from "@repo/seo/json-ld";
 import { CalendarDays, MapPin, MoveLeft, Users } from "lucide-react";
 import { getTranslations } from "next-intl/server";
+import { AddToCalendar } from "@/components/club/add-to-calendar";
 import { CoverImage } from "@/components/cover-image";
 import { Dock } from "@/components/dock";
 import { RsvpButton } from "@/components/rsvp-button";
+import { ShareButton } from "@/components/share-button";
+import { env } from "@/env";
 import { eventPath, joinPath } from "@/lib/club";
 import { editorialUrl, type getEvent, getRsvpCount } from "@/lib/data";
+import {
+  eventIcsUrl,
+  googleCalendarUrl,
+  outlookCalendarUrl,
+} from "@/lib/event-calendar";
 import { seatsLeft } from "@/lib/events";
 import { Markdown, markdownToText } from "@/lib/markdown";
 import { siteUrl } from "@/lib/metadata";
@@ -48,6 +56,23 @@ export const EventArticle = async ({
   const description = localized(event, "description", locale);
   const cover = editorialUrl(event.cover_image);
   const ended = new Date(event.ends_at ?? event.starts_at) < new Date();
+  const url = new URL(localePath(locale, eventPath(event.slug)), siteUrl())
+    .href;
+  const calendarEvent = {
+    description: description ? markdownToText(description, 500) : null,
+    endsAt: event.ends_at,
+    location: event.location,
+    startsAt: event.starts_at,
+    title,
+    url,
+  };
+  const calendarLinks = {
+    google: googleCalendarUrl(calendarEvent),
+    ics: env.NEXT_PUBLIC_API_URL
+      ? eventIcsUrl(env.NEXT_PUBLIC_API_URL, event.slug, locale)
+      : null,
+    outlook: outlookCalendarUrl(calendarEvent),
+  };
 
   return (
     <article className="container mx-auto max-w-4xl px-4 py-10">
@@ -73,8 +98,7 @@ export const EventArticle = async ({
             url: siteUrl().href,
           },
           startDate: event.starts_at,
-          url: new URL(localePath(locale, eventPath(event.slug)), siteUrl())
-            .href,
+          url,
         }}
       />
       <Link
@@ -143,6 +167,18 @@ export const EventArticle = async ({
               </div>
             </div>
           ) : null}
+          <div className="flex flex-wrap gap-2">
+            {ended ? null : (
+              <AddToCalendar eventId={event.id} links={calendarLinks} />
+            )}
+            <ShareButton
+              contentType="event"
+              itemId={event.id}
+              label={t("share")}
+              title={title}
+              url={url}
+            />
+          </div>
           {ended ? (
             <p className="text-muted-foreground text-sm">{t("ended")}</p>
           ) : (

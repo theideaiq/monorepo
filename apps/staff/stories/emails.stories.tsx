@@ -1,6 +1,11 @@
 import { render } from "@react-email/components";
 import { ContactTemplate } from "@repo/email/templates/contact";
 import {
+  type DeadlineReminderProps,
+  DeadlineReminderTemplate,
+  deadlineReminderSubject,
+} from "@repo/email/templates/deadline-reminder";
+import {
   type OrderConfirmationProps,
   OrderConfirmationTemplate,
   orderConfirmationSubject,
@@ -13,7 +18,11 @@ import {
   StudentVerificationTemplate,
   studentVerificationSubject,
 } from "@repo/email/templates/student-verification";
-import { formatCurrency, formatDate } from "@repo/internationalization/format";
+import {
+  formatCurrency,
+  formatDate,
+  formatNumber,
+} from "@repo/internationalization/format";
 import type { Meta, StoryObj } from "@storybook/react";
 import type { ReactElement } from "react";
 
@@ -204,4 +213,34 @@ export const CartReminder = email((lang) => ({
     />
   ),
   subject: reminderSubject("cart", lang),
+}));
+
+/** Three days before an opportunity the member follows closes. */
+const closing = (lang: Lang): DeadlineReminderProps => ({
+  date: formatDate("2027-01-12T20:59:00Z", lang, "long"),
+  href: "https://theideaiq.com/club/opportunities/chevening",
+  kind: "opportunity",
+  locale: lang,
+  title: lang === "ar" ? "منحة تشيفنينغ" : "Chevening Scholarship",
+});
+
+export const OpportunityDeadline = email((lang) => ({
+  email: <DeadlineReminderTemplate {...closing(lang)} />,
+  subject: deadlineReminderSubject(closing(lang)),
+}));
+
+/** Travel Kit lines due in the next three days: the first and how many more. */
+const travelDue = (lang: Lang): DeadlineReminderProps => ({
+  country: lang === "ar" ? "ألمانيا" : "Germany",
+  date: formatDate("2027-01-10T12:00:00Z", lang, "long"),
+  href: "https://theideaiq.com/pass/travel/7c1e",
+  kind: "travel",
+  locale: lang,
+  more: formatNumber(2, lang),
+  title: lang === "ar" ? "احجز موعد الفيزا" : "Book the visa appointment",
+});
+
+export const TravelDue = email((lang) => ({
+  email: <DeadlineReminderTemplate {...travelDue(lang)} />,
+  subject: deadlineReminderSubject(travelDue(lang)),
 }));

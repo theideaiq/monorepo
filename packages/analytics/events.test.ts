@@ -80,6 +80,35 @@ describe("event mapping", () => {
     });
   });
 
+  it("sends shares and calendar saves to GA4 only", () => {
+    expect(
+      toGa4(
+        "share",
+        { contentType: "event", itemId: "e1", method: "copy" },
+        "IQD"
+      )
+    ).toEqual({
+      name: "share",
+      params: { content_type: "event", item_id: "e1", method: "copy" },
+    });
+    expect(
+      toGa4("add_to_calendar", { itemId: "e1", method: "ics" }, "IQD")
+    ).toEqual({
+      name: "add_to_calendar",
+      params: { item_id: "e1", method: "ics" },
+    });
+    expect(
+      toMeta(
+        "share",
+        { contentType: "event", itemId: "e1", method: "share" },
+        "IQD"
+      )
+    ).toBeNull();
+    expect(
+      toTikTok("add_to_calendar", { itemId: "e1", method: "google" }, "IQD")
+    ).toBeNull();
+  });
+
   it("derives a stable event id from the order", () => {
     expect(defaultEventId("purchase", purchase)).toBe("purchase:pay_123");
     expect(defaultEventId("search", { query: "x" })).toBeUndefined();
