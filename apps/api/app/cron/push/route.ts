@@ -3,6 +3,7 @@ import { parseError } from "@repo/observability/error";
 import { log } from "@repo/observability/log";
 import { NextResponse } from "next/server";
 import { isAuthorizedCronRequest, unauthorized } from "@/lib/cron";
+import { recordJobRun } from "@/lib/job-runs";
 import { getPushSender } from "@/lib/push";
 import { deliverPushNotifications } from "@/lib/push/deliver";
 import { getDroid } from "@/lib/telegram";
@@ -15,11 +16,7 @@ import { deliverWhatsAppNotifications } from "@/lib/whatsapp/deliver";
  * webhook missed (API down, webhook not set up yet): sends unsent
  * notifications of the last day on each configured channel.
  */
-export const GET = async (request: Request): Promise<Response> => {
-  if (!isAuthorizedCronRequest(request)) {
-    return unauthorized();
-  }
-
+const catchUp = async (): Promise<Response> => {
   const pushSender = getPushSender();
   const whatsappSender = getWhatsAppSender();
   const droid = getDroid();
@@ -63,4 +60,11 @@ export const GET = async (request: Request): Promise<Response> => {
     ...(whatsapp.value ? { whatsapp: whatsapp.value } : {}),
     ...(telegram.value ? { telegram: telegram.value } : {}),
   });
+};
+
+export const GET = (request: Request) => {
+  if (!isAuthorizedCronRequest(request)) {
+    return unauthorized();
+  }
+  return recordJobRun(createAdminClient, "push", catchUp);
 };
