@@ -3125,6 +3125,235 @@ export type Database = {
         };
         Relationships: [];
       };
+      partner_deals: {
+        Row: {
+          created_at: string;
+          expected_on: string | null;
+          id: string;
+          kind: Database["public"]["Enums"]["partner_deal_kind"];
+          notes: string | null;
+          opportunity_id: string | null;
+          org_id: string;
+          stage: Database["public"]["Enums"]["partner_deal_stage"];
+          title: string;
+          updated_at: string;
+          value_iqd: number | null;
+        };
+        Insert: {
+          created_at?: string;
+          expected_on?: string | null;
+          id?: string;
+          kind: Database["public"]["Enums"]["partner_deal_kind"];
+          notes?: string | null;
+          opportunity_id?: string | null;
+          org_id: string;
+          stage?: Database["public"]["Enums"]["partner_deal_stage"];
+          title: string;
+          updated_at?: string;
+          value_iqd?: number | null;
+        };
+        Update: {
+          created_at?: string;
+          expected_on?: string | null;
+          id?: string;
+          kind?: Database["public"]["Enums"]["partner_deal_kind"];
+          notes?: string | null;
+          opportunity_id?: string | null;
+          org_id?: string;
+          stage?: Database["public"]["Enums"]["partner_deal_stage"];
+          title?: string;
+          updated_at?: string;
+          value_iqd?: number | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "partner_deals_opportunity_id_fkey";
+            columns: ["opportunity_id"];
+            isOneToOne: false;
+            referencedRelation: "opportunities";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "partner_deals_org_id_fkey";
+            columns: ["org_id"];
+            isOneToOne: false;
+            referencedRelation: "partner_orgs";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      partner_orgs: {
+        Row: {
+          city: string | null;
+          country: string | null;
+          created_at: string;
+          email: string | null;
+          id: string;
+          kind: Database["public"]["Enums"]["partner_kind"];
+          name: string;
+          name_ar: string | null;
+          next_action: string | null;
+          next_action_on: string | null;
+          notes: string | null;
+          organization_id: string | null;
+          owner_id: string | null;
+          priority: number;
+          source_url: string | null;
+          stage: Database["public"]["Enums"]["partner_stage"];
+          tags: string[];
+          updated_at: string;
+          website: string | null;
+        };
+        Insert: {
+          city?: string | null;
+          country?: string | null;
+          created_at?: string;
+          email?: string | null;
+          id?: string;
+          kind?: Database["public"]["Enums"]["partner_kind"];
+          name: string;
+          name_ar?: string | null;
+          next_action?: string | null;
+          next_action_on?: string | null;
+          notes?: string | null;
+          organization_id?: string | null;
+          owner_id?: string | null;
+          priority?: number;
+          source_url?: string | null;
+          stage?: Database["public"]["Enums"]["partner_stage"];
+          tags?: string[];
+          updated_at?: string;
+          website?: string | null;
+        };
+        Update: {
+          city?: string | null;
+          country?: string | null;
+          created_at?: string;
+          email?: string | null;
+          id?: string;
+          kind?: Database["public"]["Enums"]["partner_kind"];
+          name?: string;
+          name_ar?: string | null;
+          next_action?: string | null;
+          next_action_on?: string | null;
+          notes?: string | null;
+          organization_id?: string | null;
+          owner_id?: string | null;
+          priority?: number;
+          source_url?: string | null;
+          stage?: Database["public"]["Enums"]["partner_stage"];
+          tags?: string[];
+          updated_at?: string;
+          website?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "partner_orgs_organization_id_fkey";
+            columns: ["organization_id"];
+            isOneToOne: false;
+            referencedRelation: "organizations";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      partner_people: {
+        Row: {
+          created_at: string;
+          email: string | null;
+          id: string;
+          name: string;
+          notes: string | null;
+          org_id: string;
+          phone: string | null;
+          role: string | null;
+          source: string | null;
+          updated_at: string;
+        };
+        Insert: {
+          created_at?: string;
+          email?: string | null;
+          id?: string;
+          name: string;
+          notes?: string | null;
+          org_id: string;
+          phone?: string | null;
+          role?: string | null;
+          source?: string | null;
+          updated_at?: string;
+        };
+        Update: {
+          created_at?: string;
+          email?: string | null;
+          id?: string;
+          name?: string;
+          notes?: string | null;
+          org_id?: string;
+          phone?: string | null;
+          role?: string | null;
+          source?: string | null;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "partner_people_org_id_fkey";
+            columns: ["org_id"];
+            isOneToOne: false;
+            referencedRelation: "partner_orgs";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      partner_touches: {
+        Row: {
+          channel: Database["public"]["Enums"]["partner_touch_channel"];
+          created_at: string;
+          happened_at: string;
+          id: string;
+          inbound: boolean;
+          org_id: string;
+          person_id: string | null;
+          staff_id: string | null;
+          summary: string;
+        };
+        Insert: {
+          channel: Database["public"]["Enums"]["partner_touch_channel"];
+          created_at?: string;
+          happened_at?: string;
+          id?: string;
+          inbound?: boolean;
+          org_id: string;
+          person_id?: string | null;
+          staff_id?: string | null;
+          summary: string;
+        };
+        Update: {
+          channel?: Database["public"]["Enums"]["partner_touch_channel"];
+          created_at?: string;
+          happened_at?: string;
+          id?: string;
+          inbound?: boolean;
+          org_id?: string;
+          person_id?: string | null;
+          staff_id?: string | null;
+          summary?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "partner_touches_org_id_fkey";
+            columns: ["org_id"];
+            isOneToOne: false;
+            referencedRelation: "partner_orgs";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "partner_touches_person_id_fkey";
+            columns: ["person_id"];
+            isOneToOne: false;
+            referencedRelation: "partner_people";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       partner_webhook_events: {
         Row: {
           attempts: number;
@@ -13061,6 +13290,49 @@ export type Database = {
         | "cancelled"
         | "refunded";
       org_role: "owner" | "admin" | "member";
+      partner_deal_kind:
+        | "delegation"
+        | "listing"
+        | "info_session"
+        | "sponsorship"
+        | "perk"
+        | "agreement"
+        | "other";
+      partner_deal_stage:
+        | "idea"
+        | "proposed"
+        | "negotiating"
+        | "agreed"
+        | "done"
+        | "lost";
+      partner_kind:
+        | "university"
+        | "school"
+        | "embassy"
+        | "cultural_centre"
+        | "foundation"
+        | "program_organizer"
+        | "ngo"
+        | "company"
+        | "government"
+        | "media"
+        | "other";
+      partner_stage:
+        | "prospect"
+        | "contacted"
+        | "talking"
+        | "partner"
+        | "paused"
+        | "declined";
+      partner_touch_channel:
+        | "email"
+        | "call"
+        | "meeting"
+        | "whatsapp"
+        | "telegram"
+        | "event"
+        | "letter"
+        | "other";
       payment_status:
         | "pending"
         | "paid"
@@ -13399,6 +13671,54 @@ export const Constants = {
         "refunded",
       ],
       org_role: ["owner", "admin", "member"],
+      partner_deal_kind: [
+        "delegation",
+        "listing",
+        "info_session",
+        "sponsorship",
+        "perk",
+        "agreement",
+        "other",
+      ],
+      partner_deal_stage: [
+        "idea",
+        "proposed",
+        "negotiating",
+        "agreed",
+        "done",
+        "lost",
+      ],
+      partner_kind: [
+        "university",
+        "school",
+        "embassy",
+        "cultural_centre",
+        "foundation",
+        "program_organizer",
+        "ngo",
+        "company",
+        "government",
+        "media",
+        "other",
+      ],
+      partner_stage: [
+        "prospect",
+        "contacted",
+        "talking",
+        "partner",
+        "paused",
+        "declined",
+      ],
+      partner_touch_channel: [
+        "email",
+        "call",
+        "meeting",
+        "whatsapp",
+        "telegram",
+        "event",
+        "letter",
+        "other",
+      ],
       payment_status: [
         "pending",
         "paid",
