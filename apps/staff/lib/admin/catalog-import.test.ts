@@ -67,7 +67,7 @@ describe("variants", () => {
       sheet(
         header,
         "adele-21,Adele – 21,أديل – 21,69750,1,0602527000000,LP-1,Vinyl,أسطوانة فينيل,Vinyl",
-        "adele-21,,,39750,2,,CD-1,CD,قرص CD,CD"
+        "adele-21,,,39750,2,,CD-1,CD,قرص سي دي,CD"
       ),
       categorySlugs
     );
@@ -88,7 +88,7 @@ describe("variants", () => {
       },
       {
         attributes: { Format: "CD" },
-        label_ar: "قرص CD",
+        label_ar: "قرص سي دي",
         label_en: "CD",
         price: 39_750,
         sku: "CD-1",
