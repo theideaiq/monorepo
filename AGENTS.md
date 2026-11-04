@@ -374,7 +374,10 @@ local stack (`SUPABASE_INTEGRATION=1`) and the end-to-end journeys.
   decision, 2026-11-04): the plans are گلو، شاين، بليز، ديو in Arabic
   ("ايديا پلص شاين"), other companies and formats are in Arabic letters
   (تلگرام، واتساب، پي دي إف); Latin stays only for values typed exactly
-  (inside « ») and for links and emails.
+  (inside « ») and for links and emails. Catalogue data is the exception:
+  titles of works (albums, games, films, books), their artists and authors,
+  and official program and organization names stay as published; formats
+  and versions are Arabic (قرص سي دي، پلايستيشن 5، بلو راي).
   - English: always "The IDEA", never a bare "IDEA". Full names (The IDEA
     Store, The IDEA Plus, The IDEA Club, The IDEA Pass) go in titles and
     first mentions outside our own surfaces; inside the website, apps and

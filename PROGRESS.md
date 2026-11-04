@@ -447,7 +447,7 @@ steps need Xcode, Android Studio and the store/Firebase accounts
 - [x] `author_name` is handled as nullable in the website's review types
       (the generated function type can't express it).
 
-- [ ] Brand v1.0 follow-ups: rename The Club / Droid in the legal
+- [x] Brand v1.0 follow-ups: rename The Club / Droid in the legal
       Markdown documents, and the retired names there (Megastore → The
       IDEA Store, The IDEA Suite and The IDEA Business → The IDEA
       Partners, the Academy's programs). (Poppins removed 2026-10-25; the
@@ -455,6 +455,13 @@ steps need Xcode, Android Studio and the store/Firebase accounts
 
 ## Decisions
 
+- 2026-11-04: **Titles of works stay as published** (owner). In catalogue
+  data, album, game, film and book titles, their artists and authors, and
+  official program and organization names keep their own script on Arabic
+  pages, because that is how people recognize and search for them. Our own
+  words around them are Arabic: migration `20270331000000_arabic_format_labels`
+  writes the versions' labels قرص سي دي، پلايستيشن 5، بلو راي، نينتندو سويتش
+  (287 versions in production); the Staff import template follows.
 - 2026-11-04: **Programs, part 4: the partner CRM in Staff** (PR 6d, after
   the schema in #1219, migration `20270329000000_partner_crm.sql`).
   Staff → Partners → Partner CRM (`/partners/crm`, editors, marketing and

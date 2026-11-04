@@ -73,7 +73,7 @@ Arabic copy uses the official Arabic names, never the English names in Latin let
 
 - **Possessives:** پاسك، پلصي، گلوباتك.
 - **Letters:** always پ (U+067E) and گ (U+06AF), never ب, ك or ق in their place. Search treats ب/پ, ك/ق/گ/ک, ا/أ/إ/آ and ي/ی/ى as the same letter, so people find these names however they type them.
-- **No Latin letters in Arabic copy** (owner decision, 2026-11-04): the plans, other companies, formats and every word are in Arabic letters: "ايديا پلص شاين"، "على تلگرام"، "ملف پي دي إف". Latin stays only for what someone types or follows exactly (column names, codes, examples, inside « ») and for links and emails. English copy has no Arabic either.
+- **No Latin letters in Arabic copy** (owner decision, 2026-11-04): the plans, other companies, formats and every word are in Arabic letters: "ايديا پلص شاين"، "على تلگرام"، "ملف پي دي إف". Latin stays only for what someone types or follows exactly (column names, codes, examples, inside « ») and for links and emails. English copy has no Arabic either. **Titles of works stay as published** (owner decision, 2026-11-04): in catalogue data, an album, game, film or book title, its artist or author, and the official name of a program or organization keep their own script ("Radiohead – A Moon Shaped Pool"، "منحة Chevening"), because that is how people recognize and search for them. Our own words around them, such as formats and versions, are Arabic: قرص سي دي، پلايستيشن 5، بلو راي.
 - **Bulbs with numbers:** "اكسب 340 گلوب", "2,340 گلوب = خصم 2,340 دينار".
 
 **Channels and usernames**
