@@ -56,6 +56,17 @@ export const signIn = async (context: BrowserContext, email: string) => {
   await context.addCookies(await sessionCookies(email, urls.web));
 };
 
+/**
+ * The sign-in form's email field. Hydration can briefly show the form
+ * twice, so this waits until there is one field (it still fails if a
+ * second one stays).
+ */
+export const emailField = async (page: Page, label = "Email") => {
+  const field = page.getByLabel(label);
+  await expect(field).toHaveCount(1);
+  return field;
+};
+
 /** Your Pass, signed in: the page and its notifications bell. */
 export const expectSignedInHome = async (page: Page) => {
   await expect(page).toHaveURL(new RegExp(`${urls.web}/pass$`));
