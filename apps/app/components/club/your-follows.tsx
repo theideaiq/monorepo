@@ -1,5 +1,6 @@
 "use client";
 
+import { datesAtSource } from "@repo/commerce/opportunities";
 import { Button } from "@repo/design-system/components/ui/button";
 import type { Locale } from "@repo/internationalization";
 import { formatDate } from "@repo/internationalization/format";
@@ -14,7 +15,9 @@ import { useFollowOpportunity, useMyFollows } from "@/lib/opportunity-queries";
 const followState = (
   opportunity: {
     deadline: string | null;
+    last_checked_on: string | null;
     opens_at: string | null;
+    source_url: string | null;
     status: string;
   },
   now: number
@@ -25,7 +28,10 @@ const followState = (
   if (opportunity.opens_at && new Date(opportunity.opens_at).getTime() > now) {
     return "opens" as const;
   }
-  return opportunity.deadline ? ("closes" as const) : ("open" as const);
+  if (opportunity.deadline) {
+    return "closes" as const;
+  }
+  return datesAtSource(opportunity) ? ("source" as const) : ("open" as const);
 };
 
 /** Club → Yours → Following: the opportunities the member follows. */

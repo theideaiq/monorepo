@@ -1,4 +1,5 @@
 import { formatPrice, localized } from "@repo/commerce";
+import { datesAtSource, opportunityCost } from "@repo/commerce/opportunities";
 import { Button } from "@repo/design-system/components/ui/button";
 import type { Locale } from "@repo/internationalization";
 import {
@@ -205,9 +206,18 @@ const Details = async ({
   const notOpenYet = Boolean(
     opportunity.opens_at && new Date(opportunity.opens_at) > now
   );
-  const deadline = opportunity.deadline
-    ? formatDate(opportunity.deadline, locale)
-    : t("rolling");
+  let deadline = t("rolling");
+  if (opportunity.deadline) {
+    deadline = formatDate(opportunity.deadline, locale);
+  } else if (datesAtSource(opportunity)) {
+    deadline = t("checkSource");
+  }
+  const cost = opportunityCost(opportunity);
+  const costParts = [
+    cost === "price" ? formatPrice(opportunity.applicant_fee, locale) : null,
+    cost === "free" ? t("free") : null,
+    opportunity.fee_note,
+  ].filter(Boolean);
   let dates: string | null = null;
   if (opportunity.starts_on) {
     dates = opportunity.ends_on
@@ -235,12 +245,9 @@ const Details = async ({
           {dates}
         </Fact>
       ) : null}
-      {program ? null : (
+      {program || costParts.length === 0 ? null : (
         <Fact icon={Wallet} label={t("cost")}>
-          {opportunity.applicant_fee > 0
-            ? formatPrice(opportunity.applicant_fee, locale)
-            : t("free")}
-          {opportunity.fee_note ? ` · ${opportunity.fee_note}` : ""}
+          {costParts.join(" · ")}
         </Fact>
       )}
       <CatalogFacts locale={locale} opportunity={opportunity} />

@@ -1,4 +1,5 @@
 import { localized } from "@repo/commerce";
+import { datesAtSource } from "@repo/commerce/opportunities";
 import { Button } from "@repo/design-system/components/ui/button";
 import {
   Table,
@@ -31,7 +32,7 @@ export const generateMetadata = async (): Promise<Metadata> => {
 };
 
 const COLUMNS =
-  "id, kind, title_ar, title_en, status, deadline, submitted_at, featured_until, host_name" as const;
+  "id, kind, title_ar, title_en, status, deadline, submitted_at, featured_until, host_name, source_url, last_checked_on" as const;
 
 /**
  * Opportunities: organizations' listings waiting for review first (oldest
@@ -96,6 +97,12 @@ const OpportunitiesPage = async ({
     (list ?? []).map((row) => {
       const featured =
         row.featured_until && new Date(row.featured_until).getTime() > now;
+      let deadline = t("opportunities.rolling");
+      if (row.deadline) {
+        deadline = format.dateTime(row.deadline);
+      } else if (datesAtSource(row)) {
+        deadline = t("opportunities.checkSource");
+      }
       return (
         <TableRow key={row.id}>
           <TableCell>
@@ -113,11 +120,7 @@ const OpportunitiesPage = async ({
           </TableCell>
           <TableCell>{t(`opportunities.kinds.${row.kind}`)}</TableCell>
           <TableCell>{row.host_name ?? t("opportunities.theIdea")}</TableCell>
-          <TableCell className="whitespace-nowrap">
-            {row.deadline
-              ? format.dateTime(row.deadline)
-              : t("opportunities.rolling")}
-          </TableCell>
+          <TableCell className="whitespace-nowrap">{deadline}</TableCell>
           <TableCell>
             <StatusBadge status={row.status}>
               {t(
