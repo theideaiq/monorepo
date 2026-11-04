@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
 import { EventArticle } from "@/components/club/event-article";
 import { eventPath } from "@/lib/club";
-import { editorialUrl, getEvent, getEvents } from "@/lib/data";
+import { getEvent, getEvents } from "@/lib/data";
 import { markdownToText } from "@/lib/markdown";
 import { localizedMetadata } from "@/lib/metadata";
 
@@ -19,6 +19,8 @@ interface EventProps {
 export const generateStaticParams = async () =>
   (await getEvents({ limit: 100 })).map(({ slug }) => ({ slug }));
 
+// The share image is `opengraph-image.tsx` next to this page (title, date,
+// place and cover), so no image is passed here.
 export const generateMetadata = async ({
   params,
 }: EventProps): Promise<Metadata> => {
@@ -29,7 +31,6 @@ export const generateMetadata = async ({
   }
   return localizedMetadata(locale, eventPath(slug), {
     description: markdownToText(localized(event, "description", locale), 160),
-    image: editorialUrl(event.cover_image),
     title: localized(event, "title", locale),
   });
 };
