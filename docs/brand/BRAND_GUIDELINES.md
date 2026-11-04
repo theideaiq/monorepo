@@ -48,7 +48,7 @@ A branded house: one masterbrand, a few plain product names, and one color syste
 - **Full names in titles and first mentions:** The IDEA Store, The IDEA Plus, The IDEA Club, The IDEA Pass. Use them in titles, in ads, store listings and social bios, and the first time a product is named somewhere The IDEA isn't already the context (a press note, a partner's site, a poster).
 - **Short names everywhere The IDEA is already the context:** inside our website and apps, our emails, our documents and our own channels, write Store, Plus, Club and Pass. "Rent with Plus", "Open the Club".
 - **Partners, Droid and Staff are always short.** Never "The IDEA Partners", "The IDEA Droid" or "The IDEA Staff".
-- **Always capitalized:** Store, Plus, Club, Pass, Partners, Droid, Staff, Bulbs, and the plans Glow, Shine, Blaze and Duo, in English copy. The plans keep their Latin names inside Arabic copy too.
+- **Always capitalized:** Store, Plus, Club, Pass, Partners, Droid, Staff, Bulbs, and the plans Glow, Shine, Blaze and Duo, in English copy. In Arabic copy the plans are written in Arabic letters: گلو، شاين، بليز، ديو (owner decision, 2026-11-04).
 - **Someone's own:** use the short name with a possessive: your Pass, my Plus, his Pass, your Saved list. Never "your The IDEA Pass".
 - **The product itself:** when you talk about the product rather than someone's own, use its full name outside our surfaces ("The IDEA Plus lets you rent games…") and "the" + short name inside them ("the Club has three parts").
 - **People:** people on Plus are Plus members. Never "account", "membership" or "users" in customer copy.
@@ -73,7 +73,7 @@ Arabic copy uses the official Arabic names, never the English names in Latin let
 
 - **Possessives:** پاسك، پلصي، گلوباتك.
 - **Letters:** always پ (U+067E) and گ (U+06AF), never ب, ك or ق in their place. Search treats ب/پ, ك/ق/گ/ک, ا/أ/إ/آ and ي/ی/ى as the same letter, so people find these names however they type them.
-- **Latin letters stay** for the plans (Glow, Shine, Blaze, Duo) and for product and model names: "ايديا پلص Shine".
+- **No Latin letters in Arabic copy** (owner decision, 2026-11-04): the plans, other companies, formats and every word are in Arabic letters: "ايديا پلص شاين"، "على تلگرام"، "ملف پي دي إف". Latin stays only for what someone types or follows exactly (column names, codes, examples, inside « ») and for links and emails. English copy has no Arabic either.
 - **Bulbs with numbers:** "اكسب 340 گلوب", "2,340 گلوب = خصم 2,340 دينار".
 
 **Channels and usernames**
@@ -122,7 +122,7 @@ One way to write each thing, in both languages, so the same thing always reads t
 - **English is American English:** canceled, color, behavior, license, catalog, organization, favorite.
 - **Punctuation:** no exclamation marks in the product (a message may only quote one, as in a password hint); one ellipsis character (…), never three dots. English uses straight quotes ("…"); Arabic uses « » and its own comma, semicolon and question mark (، ؛ ؟).
 - **Arabic spelling:** Latin digits; tanween on the letter before the alef (شكرًا، مجانًا، حاليًا, never شكراً).
-- **Other companies' names** stay in Latin letters in Arabic too: Telegram, WhatsApp, Google, Spotify, ZainCash (على Telegram, رقم WhatsApp). Our own names follow section 2.
+- **Other companies' names** are written in Arabic letters in Arabic copy, one spelling each: تلگرام، واتساب، گوگل، سبوتيفاي، زين كاش، بوكسي، وايل (see the spellings table below). Formats too: پي دي إف، سي إس ڤي، رمز كيو آر، ردمك.
 - **Money:** the currency follows the number, IQD in English ("25,000 IQD", "Price (IQD)") and دينار عراقي in full in Arabic ("25,000 دينار عراقي", "السعر (دينار عراقي)"), never د.ع. or a bare دينار after a number. "دينار" alone is for prose ("قيمة الگلوب دينار واحد").
 - **Buttons** are verbs, in Arabic the Iraqi imperative, one word per action:
 
@@ -138,6 +138,20 @@ One way to write each thing, in both languages, so the same thing always reads t
 
   Tabs, page titles and statuses keep nouns (الاستيراد، تسجيل الخروج، ملغى).
 - **One word per thing:** email is الإيميل (إيميلك) in Iraqi copy; a game night kit is طقم (أطقم); Total is المجموع; a weekend is عطلة; a comma (in instructions) is فارزة. A sentence repeated in English is translated the same way everywhere ("Something went wrong. Please try again." is always "صارت مشكلة. جرّب مرة ثانية.").
+
+**Spellings of names in Arabic copy** (one each)
+
+| Name | Arabic | Name | Arabic |
+| --- | --- | --- | --- |
+| Glow / Shine / Blaze / Duo | گلو / شاين / بليز / ديو | Free / Pro (Partners) | مجاني / پرو |
+| Telegram | تلگرام | WhatsApp | واتساب |
+| Google | گوگل | Apple | آبل |
+| Google Wallet / Apple Wallet | محفظة گوگل / محفظة آبل | Spotify | سبوتيفاي |
+| ZainCash | زين كاش | Qi Card | كي كارد |
+| FIB | المصرف العراقي الأول | Boxy | بوكسي |
+| Wayl | وايل | PDF / CSV | پي دي إف / سي إس ڤي |
+| QR code | رمز كيو آر | ISBN | ردمك |
+| PS5 | پلايستيشن 5 | API | الواجهة البرمجية |
 
 **Iraqi or Modern Standard Arabic** (checked by the same test)
 
@@ -248,7 +262,7 @@ Print: the screen values above are the reference. Match them to Pantone spot col
 | Body large · Body · Body Arabic | 18/30 · 16/26 · 17/30 | 400 |
 | Label · Caption | 14/20 · 12/16 | 600 · 500 |
 
-Never set Arabic below 14px; never letter-space, italicize or fake-bold Arabic; product and model names stay in Latin inside Arabic copy.
+Never set Arabic below 14px; never letter-space, italicize or fake-bold Arabic; product and model names in Arabic copy are written in Arabic letters too.
 
 ## 8. Layout, space and shape
 

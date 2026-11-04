@@ -5990,7 +5990,7 @@
           "barcode": "On a version row, the version's barcode; otherwise saved in the specifications as Barcode.",
           "sku": "On a version row, the version's SKU; otherwise saved in the specifications as SKU.",
           "variant_en": "A version's name, e.g. Vinyl. Rows sharing a slug, each with its own version, become one product; their price, stock, SKU, barcode and images are the version's.",
-          "variant_ar": "The version's Arabic name, e.g. أسطوانة فينيل.",
+          "variant_ar": "The version's name in Arabic, for example the Arabic for \"Vinyl record\".",
           "format": "The version's format for the store filter: CD, Vinyl, Cassette, Blu-ray…",
           "description_en": "English description.",
           "description_ar": "Arabic description.",

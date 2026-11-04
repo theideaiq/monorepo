@@ -69,7 +69,13 @@ const EXCLAMATION = /!/;
 const ARABIC_MARKS =
   /[\u0600-\u06FF][,;?]|"|[\u0660-\u0669\u06F0-\u06F9]|\.\.\./;
 const TANWEEN_ON_ALEF = /ا\u064B/;
-const ARABIZED_NAMES = /تيليغرام|تيليجرام|تلگرام|واتساب|واتس اب/;
+/** What may stay in Latin letters in Arabic copy: links, emails, {arguments}
+ * and ICU syntax, and values typed exactly, which sit inside « ». */
+const TYPED_OR_LINKS =
+  /«[^»]*»|https?:\/\/\S+|[\w.+-]+@[\w.-]+|\b[\w-]+(?:\.[\w-]+)*\.(?:com|iq|org|net|io|fm|cz|edu)\b(?:\/\S*)?|\{\w+\}|\{\w+,\s*(?:plural|select|selectordinal),|(?<=[\s{}])(?:zero|one|two|few|many|other|=\d+|[a-z_]+)\s*(?=\{)|<\/?\w+>/g;
+const LATIN = /[A-Za-z]/;
+/** Arabic in English copy. */
+const ARABIC = /[\u0600-\u06FF]/;
 const MSA_EMAIL = /البريد الإلكتروني|بريدك الإلكتروني/;
 const SHORT_DINAR = /د\.ع/;
 const DINAR_WITHOUT_IRAQI =
@@ -137,8 +143,13 @@ describe("language standard", () => {
     expect(offending(arabic, TANWEEN_ON_ALEF)).toEqual([]);
   });
 
-  test("other companies' names stay in Latin letters in Arabic", () => {
-    expect(offending(arabic, ARABIZED_NAMES)).toEqual([]);
+  test("no Arabic in English copy and no English in Arabic copy", () => {
+    expect(offending(english, ARABIC)).toEqual([]);
+    expect(
+      arabic
+        .filter(([, text]) => LATIN.test(text.replace(TYPED_OR_LINKS, "")))
+        .map(([path, text]) => `${path}: ${text}`)
+    ).toEqual([]);
   });
 
   test("one word for email and one way to write the currency in Arabic", () => {
