@@ -22,8 +22,13 @@ import { BusinessShell } from "@/components/business/business-shell";
 import { useActiveOrganization } from "@/components/organization-provider";
 import { ErrorState, SectionSpinner } from "@/components/states";
 import {
+  OPPORTUNITY_ELIGIBILITY,
+  OPPORTUNITY_FUNDING,
   OPPORTUNITY_KINDS,
+  OPPORTUNITY_LEVELS,
   type Opportunity,
+  type OpportunityEligibility,
+  type OpportunityFunding,
   type OpportunityInput,
   type OpportunityKind,
   type OpportunityStatus,
@@ -32,6 +37,7 @@ import {
   useOpportunityFollowers,
   useSaveOpportunity,
   useSetOpportunityStatus,
+  validFilterFields,
 } from "@/lib/opportunity-queries";
 
 const selectClassName =
@@ -49,18 +55,32 @@ const baghdadDay = (iso: string | null) =>
 const dayStart = (day: string) => (day ? `${day}T00:00:00+03:00` : null);
 const dayEnd = (day: string) => (day ? `${day}T23:59:00+03:00` : null);
 
+/** An age field's value: empty or not a number is no limit. */
+const ageOf = (value: string) => {
+  const age = Number.parseInt(value, 10);
+  return Number.isNaN(age) ? null : Math.min(99, Math.max(1, age));
+};
+
 const emptyInput = (): OpportunityInput => ({
   applicantFee: 0,
   applyUrl: "",
+  countries: "",
   deadline: null,
   descriptionAr: "",
   descriptionEn: "",
+  eligibility: null,
   endsOn: null,
   feeNote: "",
+  funding: "unknown",
   kind: "internship",
+  lastCheckedOn: null,
+  levels: [],
   location: "",
+  maxAge: null,
+  minAge: null,
   opensAt: null,
   remote: false,
+  sourceUrl: "",
   startsOn: null,
   summaryAr: "",
   summaryEn: "",
@@ -71,15 +91,23 @@ const emptyInput = (): OpportunityInput => ({
 const inputOf = (row: Opportunity): OpportunityInput => ({
   applicantFee: row.applicant_fee,
   applyUrl: row.apply_url ?? "",
+  countries: row.destination_countries?.join(", ") ?? "",
   deadline: row.deadline,
   descriptionAr: row.description_ar ?? "",
   descriptionEn: row.description_en ?? "",
+  eligibility: row.iraqi_eligibility ?? null,
   endsOn: row.ends_on,
   feeNote: row.fee_note ?? "",
+  funding: row.funding_type ?? "unknown",
   kind: row.kind,
+  lastCheckedOn: row.last_checked_on ?? null,
+  levels: row.levels ?? [],
   location: row.location ?? "",
+  maxAge: row.max_age ?? null,
+  minAge: row.min_age ?? null,
   opensAt: row.opens_at,
   remote: row.remote,
+  sourceUrl: row.source_url ?? "",
   startsOn: row.starts_on,
   summaryAr: row.summary_ar ?? "",
   summaryEn: row.summary_en ?? "",
@@ -115,6 +143,9 @@ const Editor = ({
 }) => {
   const t = useTranslations("app.company.opportunities.form");
   const kinds = useTranslations("app.company.opportunities.kinds");
+  const levels = useTranslations("app.company.opportunities.levelNames");
+  const funding = useTranslations("app.company.opportunities.fundingTypes");
+  const grades = useTranslations("app.company.opportunities.eligibilityGrades");
   const { active } = useActiveOrganization();
   const save = useSaveOpportunity(active.id);
   const id = useId();
@@ -131,7 +162,8 @@ const Editor = ({
     form.titleAr.trim().length >= 2 &&
     form.titleEn.trim().length >= 2 &&
     (form.remote || form.location.trim().length >= 2) &&
-    (!form.applyUrl.trim() || form.applyUrl.trim().startsWith("https://"));
+    (!form.applyUrl.trim() || form.applyUrl.trim().startsWith("https://")) &&
+    validFilterFields(form);
 
   const submit = (send: boolean) => (event?: FormEvent) => {
     event?.preventDefault();
@@ -293,7 +325,143 @@ const Editor = ({
                 value={form.applicantFee || ""}
               />
             </Field>
+            <Field id={`${id}-funding`} label={t("funding")}>
+              <select
+                className={selectClassName}
+                id={`${id}-funding`}
+                onChange={(event) =>
+                  set("funding", event.target.value as OpportunityFunding)
+                }
+                value={form.funding}
+              >
+                {OPPORTUNITY_FUNDING.map((value) => (
+                  <option key={value} value={value}>
+                    {funding(value)}
+                  </option>
+                ))}
+              </select>
+            </Field>
+            <Field
+              hint={t("eligibilityHint")}
+              id={`${id}-eligibility`}
+              label={t("eligibility")}
+            >
+              <select
+                className={selectClassName}
+                id={`${id}-eligibility`}
+                onChange={(event) =>
+                  set(
+                    "eligibility",
+                    (event.target.value ||
+                      null) as OpportunityEligibility | null
+                  )
+                }
+                value={form.eligibility ?? ""}
+              >
+                <option value="">{t("eligibilityNone")}</option>
+                {OPPORTUNITY_ELIGIBILITY.map((value) => (
+                  <option key={value} value={value}>
+                    {grades(value)}
+                  </option>
+                ))}
+              </select>
+            </Field>
+            <Field
+              hint={t("agesHint")}
+              id={`${id}-min-age`}
+              label={t("minAge")}
+            >
+              <Input
+                dir="ltr"
+                id={`${id}-min-age`}
+                inputMode="numeric"
+                max={99}
+                min={1}
+                onChange={(event) => set("minAge", ageOf(event.target.value))}
+                type="number"
+                value={form.minAge ?? ""}
+              />
+            </Field>
+            <Field
+              hint={t("agesHint")}
+              id={`${id}-max-age`}
+              label={t("maxAge")}
+            >
+              <Input
+                dir="ltr"
+                id={`${id}-max-age`}
+                inputMode="numeric"
+                max={99}
+                min={1}
+                onChange={(event) => set("maxAge", ageOf(event.target.value))}
+                type="number"
+                value={form.maxAge ?? ""}
+              />
+            </Field>
+            <Field
+              hint={t("countriesHint")}
+              id={`${id}-countries`}
+              label={t("countries")}
+            >
+              <Input
+                dir="ltr"
+                id={`${id}-countries`}
+                onChange={(event) => set("countries", event.target.value)}
+                value={form.countries}
+              />
+            </Field>
+            <Field
+              hint={t("lastCheckedHint")}
+              id={`${id}-checked`}
+              label={t("lastChecked")}
+            >
+              <Input
+                id={`${id}-checked`}
+                onChange={(event) =>
+                  set("lastCheckedOn", event.target.value || null)
+                }
+                type="date"
+                value={form.lastCheckedOn ?? ""}
+              />
+            </Field>
+            <Field
+              hint={t("sourceUrlHint")}
+              id={`${id}-source`}
+              label={t("sourceUrl")}
+            >
+              <Input
+                dir="ltr"
+                id={`${id}-source`}
+                maxLength={500}
+                onChange={(event) => set("sourceUrl", event.target.value)}
+                type="url"
+                value={form.sourceUrl}
+              />
+            </Field>
           </div>
+          <fieldset className="grid gap-2">
+            <legend className="font-medium text-sm">{t("levels")}</legend>
+            <div className="flex flex-wrap gap-x-6 gap-y-2">
+              {OPPORTUNITY_LEVELS.map((level) => (
+                <label className="flex items-center gap-2 text-sm" key={level}>
+                  <input
+                    checked={form.levels.includes(level)}
+                    className="size-4 accent-primary"
+                    onChange={(event) =>
+                      set(
+                        "levels",
+                        event.target.checked
+                          ? [...form.levels, level]
+                          : form.levels.filter((item) => item !== level)
+                      )
+                    }
+                    type="checkbox"
+                  />
+                  {levels(level)}
+                </label>
+              ))}
+            </div>
+          </fieldset>
           <label className="flex items-center gap-2 text-sm">
             <input
               checked={form.remote}

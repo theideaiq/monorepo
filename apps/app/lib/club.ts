@@ -1,4 +1,4 @@
-import type { Enums } from "@repo/database";
+import { Constants, type Enums, type Tables } from "@repo/database";
 
 /**
  * The IDEA Club, one page for each part:
@@ -101,6 +101,80 @@ export const byDateOrDeadline = <T extends Dated>(items: readonly T[]) =>
     }
     return a.at.localeCompare(b.at);
   });
+
+/** The filters of `/club/opportunities`, from its query string. */
+export interface OpportunityFilters {
+  age: number | null;
+  country: string | null;
+  eligibility: Enums<"opportunity_eligibility"> | null;
+  funding: Enums<"opportunity_funding"> | null;
+  kind: Enums<"opportunity_kind"> | null;
+  level: Enums<"opportunity_level"> | null;
+}
+
+type FilteredOpportunity = Pick<
+  Tables<"opportunities">,
+  | "destination_countries"
+  | "funding_type"
+  | "iraqi_eligibility"
+  | "kind"
+  | "levels"
+  | "max_age"
+  | "min_age"
+>;
+
+const COUNTRY_CODE = /^[A-Z]{2}$/;
+
+const oneOf = <T extends string>(values: readonly T[], value: unknown) =>
+  values.includes(value as T) ? (value as T) : null;
+
+/** Reads the filters; anything not recognized is no filter. */
+export const opportunityFilters = (params: {
+  readonly [key: string]: string | string[] | undefined;
+}): OpportunityFilters => {
+  const { Enums: values } = Constants.public;
+  const age = typeof params.age === "string" ? Number(params.age) : Number.NaN;
+  const country =
+    typeof params.country === "string" ? params.country.toUpperCase() : "";
+  return {
+    age: Number.isInteger(age) && age >= 1 && age <= 99 ? age : null,
+    country: COUNTRY_CODE.test(country) ? country : null,
+    eligibility: oneOf(values.opportunity_eligibility, params.eligibility),
+    funding: oneOf(values.opportunity_funding, params.funding),
+    kind: oneOf(values.opportunity_kind, params.kind),
+    level: oneOf(values.opportunity_level, params.level),
+  };
+};
+
+/**
+ * Whether an opportunity passes the filters. Levels, countries, funding
+ * and eligibility must be stated to match; no age limit fits every age.
+ */
+export const matchesOpportunityFilters = (
+  row: FilteredOpportunity,
+  filters: OpportunityFilters
+) =>
+  (!filters.kind || row.kind === filters.kind) &&
+  (!filters.level || (row.levels ?? []).includes(filters.level)) &&
+  (!filters.country ||
+    (row.destination_countries ?? []).includes(filters.country)) &&
+  (!filters.funding || row.funding_type === filters.funding) &&
+  (!filters.eligibility || row.iraqi_eligibility === filters.eligibility) &&
+  (filters.age === null ||
+    ((row.min_age ?? 1) <= filters.age && (row.max_age ?? 99) >= filters.age));
+
+/** A country's name in the page's language, from its ISO code. */
+export const countryName = (code: string, locale: string) =>
+  new Intl.DisplayNames([locale], { type: "region" }).of(code) ?? code;
+
+/** The site a source link goes to; the database only checks for https://. */
+export const sourceHost = (url: string) => {
+  try {
+    return new URL(url).hostname;
+  } catch {
+    return url;
+  }
+};
 
 const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
 

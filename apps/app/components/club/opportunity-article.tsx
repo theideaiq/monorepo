@@ -4,28 +4,32 @@ import type { Locale } from "@repo/internationalization";
 import {
   formatCalendarDate,
   formatDate,
+  intlLocale,
 } from "@repo/internationalization/format";
 import { Link } from "@repo/internationalization/navigation";
 import {
+  BadgeCheck,
   Briefcase,
   CalendarDays,
   ExternalLink,
+  Globe,
+  GraduationCap,
+  Link2,
   MapPin,
   MoveLeft,
+  Users,
   Wallet,
 } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 import { CoverImage } from "@/components/cover-image";
-import { joinPath } from "@/lib/club";
+import { countryName, joinPath, sourceHost } from "@/lib/club";
 import { editorialUrl, type OpportunityRow, type ProgramRow } from "@/lib/data";
 import { Markdown } from "@/lib/markdown";
 import { FollowButton } from "./follow-button";
-import { isFeatured } from "./opportunity-card";
+import { calendarDay as day, isFeatured } from "./opportunity-card";
 import { ProgramApply } from "./program-apply";
 import { ProgramPackage } from "./program-package";
-
-const day = (value: string) => new Date(`${value}T12:00:00`);
 
 const Fact = ({
   children,
@@ -47,6 +51,88 @@ const Fact = ({
     </div>
   </div>
 );
+
+/**
+ * The catalog's facts: funding, who it's for, where people go, how firmly
+ * Iraqis can apply, and the source with when it was last checked. Each
+ * shows only once it's stated.
+ */
+const CatalogFacts = async ({
+  locale,
+  opportunity,
+}: {
+  readonly locale: Locale;
+  readonly opportunity: OpportunityRow;
+}) => {
+  const t = await getTranslations({ locale, namespace: "web.opportunities" });
+  const {
+    destination_countries: countries,
+    funding_type: funding,
+    iraqi_eligibility: eligibility,
+    last_checked_on: lastChecked,
+    levels,
+    max_age: maxAge,
+    min_age: minAge,
+    source_url: source,
+  } = opportunity;
+  let ages: string | null = null;
+  if (minAge && maxAge) {
+    ages = t("ages.range", { max: String(maxAge), min: String(minAge) });
+  } else if (minAge) {
+    ages = t("ages.from", { min: String(minAge) });
+  } else if (maxAge) {
+    ages = t("ages.upTo", { max: String(maxAge) });
+  }
+  return (
+    <>
+      {funding && funding !== "unknown" ? (
+        <Fact icon={Wallet} label={t("facts.funding")}>
+          {t(`fundingTypes.${funding}`)}
+        </Fact>
+      ) : null}
+      {eligibility ? (
+        <Fact icon={BadgeCheck} label={t("facts.eligibility")}>
+          {t(`eligibilityGrades.${eligibility}`)}
+        </Fact>
+      ) : null}
+      {levels?.length ? (
+        <Fact icon={GraduationCap} label={t("facts.levels")}>
+          {levels.map((level) => t(`levelNames.${level}`)).join(" · ")}
+        </Fact>
+      ) : null}
+      {ages ? (
+        <Fact icon={Users} label={t("facts.ages")}>
+          {ages}
+        </Fact>
+      ) : null}
+      {countries?.length ? (
+        <Fact icon={Globe} label={t("facts.countries")}>
+          {countries
+            .map((code) => countryName(code, intlLocale(locale)))
+            .join(" · ")}
+        </Fact>
+      ) : null}
+      {source ? (
+        <Fact icon={Link2} label={t("facts.source")}>
+          <a
+            className="underline"
+            dir="ltr"
+            href={source}
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            {sourceHost(source)}
+          </a>
+        </Fact>
+      ) : null}
+      {lastChecked ? (
+        <Fact icon={CalendarDays} label={t("facts.lastChecked")}>
+          {formatCalendarDate(day(lastChecked), locale)}
+        </Fact>
+      ) : null}
+    </>
+  );
+};
 
 /**
  * Whether it's open, and where to apply: the organization's link, or here
@@ -157,6 +243,7 @@ const Details = async ({
           {opportunity.fee_note ? ` · ${opportunity.fee_note}` : ""}
         </Fact>
       )}
+      <CatalogFacts locale={locale} opportunity={opportunity} />
       <WhereToApply
         closed={closed}
         locale={locale}

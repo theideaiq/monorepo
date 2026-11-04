@@ -455,6 +455,22 @@ steps need Xcode, Android Studio and the store/Firebase accounts
 
 ## Decisions
 
+- 2026-11-04: Opportunities, part 7 (owner's approved proposal and D8: a catalog
+  of programs for Iraqis in Club → Opportunities;
+  `20270325000000_opportunity_catalog.sql`). External programs are listed
+  under an unclaimed organization, an ordinary `organizations` row with no
+  members: editors create one from Staff's new opportunity form
+  (`create_unclaimed_organization`), `host_name` still comes from the
+  organization and nobody types it, and no organization still means The IDEA.
+  An editor hands it over once they've checked who is asking, by Pass email
+  (`claim_organization`, on the opportunity's page); it's then an organization
+  like any other, with reviews. New filter fields on `opportunities`: levels,
+  ages, destination countries (ISO codes), funding type, Iraqi eligibility
+  grade (null: not graded), source URL and last checked date, in Staff's and
+  Partners' forms (a change to a listed one goes back for review) and on the
+  Club's list and page, with filters at `/club/opportunities`. Staff shows
+  `host_name`, since editors can't read organizations. The import of the
+  catalog itself, the partner CRM tables and the Travel Kit are not in this.
 - 2026-11-04: **Owner decisions after the design inspiration review and the
   audit of commit 532ce1b** (the work is split into seven pull requests:
   PR 1 now, PR 2 store trust, PR 3 Plus and Pass, PR 4 Partners, PR 5 the
@@ -479,7 +495,6 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   - **Promises:** the five promises show only with the policy behind them.
     Four link to their policy section (`/legal/<policy>#section-<n>`); "a
     human answers" waits for a support policy.
-
 - 2026-10-30: **UX overhaul across the website, Partners and Staff, in one
   PR** (`docs/program/ux-overhaul.md`). Four tabs stay (Store · Plus · Club ·
   Pass); the Library sits at the top of the Pass (`/pass/at-home`, `/queue`,

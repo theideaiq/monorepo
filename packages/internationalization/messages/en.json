@@ -1393,6 +1393,59 @@
         "hint": "We'll tell you when it opens and three days before it closes.",
         "following": "You're following it: we'll tell you when it opens and three days before it closes.",
         "failed": "That didn't work. Please try again."
+      },
+      "facts": {
+        "funding": "Funding",
+        "eligibility": "For Iraqis",
+        "levels": "Who it's for",
+        "ages": "Ages",
+        "countries": "Destination",
+        "source": "Source",
+        "lastChecked": "Last checked"
+      },
+      "ages": {
+        "range": "{min}–{max}",
+        "from": "{min} and over",
+        "upTo": "Up to {max}"
+      },
+      "checkedOn": "Last checked {date}",
+      "filters": {
+        "label": "Filter opportunities",
+        "kind": "Kind",
+        "level": "Level",
+        "country": "Destination",
+        "funding": "Funding",
+        "eligibility": "For Iraqis",
+        "age": "Your age",
+        "any": "Any",
+        "apply": "Show results",
+        "clear": "Clear filters",
+        "noMatches": "Nothing matches these filters. Try fewer of them.",
+        "more": "Showing {shown} of {total}. Use the filters to narrow them down."
+      },
+      "levelNames": {
+        "high_school": "High school",
+        "undergraduate": "Undergraduate",
+        "masters": "Master's",
+        "phd": "PhD",
+        "postdoc": "Postdoctoral",
+        "professional": "Working professionals"
+      },
+      "fundingTypes": {
+        "fully_funded": "Fully funded",
+        "partly_funded": "Partly funded",
+        "stipend_only": "Stipend only",
+        "free_to_enter": "Free to enter",
+        "fee_charging": "Charges a fee",
+        "self_funded": "Self funded",
+        "unknown": "Not known"
+      },
+      "eligibilityGrades": {
+        "named_official": "Iraq named on the official page",
+        "named_relay": "Iraq named by an embassy or partner office",
+        "named_secondary": "Iraq named by another source",
+        "inferred": "Iraqis seem eligible (not stated)",
+        "unconfirmed": "Not confirmed for Iraqis"
       }
     },
     "programs": {
@@ -4186,7 +4239,45 @@
           "saveAndReview": "Save and send for review",
           "sendForReview": "Send for review",
           "cancel": "Cancel",
-          "failed": "That didn't save. Check the details and try again."
+          "failed": "That didn't save. Check the details and try again.",
+          "levels": "Levels",
+          "minAge": "Youngest age",
+          "maxAge": "Oldest age",
+          "agesHint": "Leave empty if there is no limit.",
+          "countries": "Destination countries",
+          "countriesHint": "Two-letter country codes, separated by commas (DE, TR).",
+          "funding": "Funding",
+          "eligibility": "Eligibility for Iraqis",
+          "eligibilityHint": "How clearly your own page says Iraqis can apply. The IDEA checks this in review.",
+          "eligibilityNone": "Not graded",
+          "sourceUrl": "Source",
+          "sourceUrlHint": "The page these details come from (https://). Shown publicly.",
+          "lastChecked": "Last checked",
+          "lastCheckedHint": "The day you checked the details against the source. Shown publicly."
+        },
+        "levelNames": {
+          "high_school": "High school",
+          "undergraduate": "Undergraduate",
+          "masters": "Master's",
+          "phd": "PhD",
+          "postdoc": "Postdoctoral",
+          "professional": "Working professionals"
+        },
+        "fundingTypes": {
+          "fully_funded": "Fully funded",
+          "partly_funded": "Partly funded",
+          "stipend_only": "Stipend only",
+          "free_to_enter": "Free to enter",
+          "fee_charging": "Charges a fee",
+          "self_funded": "Self funded",
+          "unknown": "Not known"
+        },
+        "eligibilityGrades": {
+          "named_official": "Iraq named on the official page",
+          "named_relay": "Iraq named by an embassy or partner office",
+          "named_secondary": "Iraq named by another source",
+          "inferred": "Iraqis seem eligible (not stated)",
+          "unconfirmed": "Not confirmed for Iraqis"
         }
       },
       "shopAuctions": {
@@ -6901,7 +6992,52 @@
         "descriptionEn": "Description in English",
         "cover": "Cover image",
         "listed": "Listed in the Club",
-        "listedHint": "The IDEA's own opportunities need no review."
+        "listedHint": "The IDEA's own and unclaimed organizations' opportunities need no review.",
+        "host": "Run by",
+        "hostHint": "An unclaimed organization, or The IDEA for its own. It can't be changed after saving.",
+        "hostNew": "Or a new organization",
+        "hostNewHint": "Its exact name, for a program listed on its behalf. It has no members until it's claimed.",
+        "levels": "Levels",
+        "levelNames": {
+          "high_school": "High school",
+          "undergraduate": "Undergraduate",
+          "masters": "Master's",
+          "phd": "PhD",
+          "postdoc": "Postdoctoral",
+          "professional": "Working professionals"
+        },
+        "minAge": "Youngest age",
+        "maxAge": "Oldest age",
+        "countries": "Destination countries",
+        "countriesHint": "Two-letter country codes, separated by commas (DE, TR).",
+        "funding": "Funding",
+        "fundingTypes": {
+          "fully_funded": "Fully funded",
+          "partly_funded": "Partly funded",
+          "stipend_only": "Stipend only",
+          "free_to_enter": "Free to enter",
+          "fee_charging": "Charges a fee",
+          "self_funded": "Self funded",
+          "unknown": "Not known"
+        },
+        "eligibility": "Eligibility for Iraqis",
+        "eligibilityHint": "How firmly the source says Iraqis can apply. Shown publicly.",
+        "eligibilityNone": "Not graded",
+        "eligibilityGrades": {
+          "named_official": "Iraq named on the official page",
+          "named_relay": "Iraq named by an embassy or partner office",
+          "named_secondary": "Iraq named by another source",
+          "inferred": "Iraqis seem eligible (not stated)",
+          "unconfirmed": "Not confirmed for Iraqis"
+        },
+        "sourceUrl": "Source",
+        "sourceUrlHint": "The page these details come from (https://). Shown publicly.",
+        "lastChecked": "Last checked",
+        "lastCheckedHint": "The day someone checked the details against the source. Shown publicly.",
+        "claimTitle": "Hand over to the organization",
+        "claimDescription": "Nobody has claimed this organization. Once you've checked who is asking, enter their Pass email: they become its owner and manage its listings in Partners.",
+        "claimEmail": "Their Pass email",
+        "claimSend": "Hand over"
       },
       "programs": {
         "package": "Package",

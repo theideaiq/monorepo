@@ -1,4 +1,5 @@
 import type { Locale } from "@repo/internationalization";
+import { formatNumber } from "@repo/internationalization/format";
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { ClubNav } from "@/components/club/club-nav";
@@ -6,18 +7,26 @@ import {
   isFeatured,
   OpportunityCard,
 } from "@/components/club/opportunity-card";
+import { OpportunityFiltersForm } from "@/components/club/opportunity-filters";
 import { PageHero } from "@/components/page-hero";
 import { EmptyState, Section } from "@/components/section";
-import { byDateOrDeadline, joinPath } from "@/lib/club";
+import {
+  byDateOrDeadline,
+  joinPath,
+  matchesOpportunityFilters,
+  opportunityFilters,
+} from "@/lib/club";
 import { getOpportunities } from "@/lib/data";
 import { telegram } from "@/lib/links";
 import { localizedMetadata } from "@/lib/metadata";
 
 interface OpportunitiesProps {
   params: Promise<{ locale: Locale }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }
 
-export const revalidate = 60;
+/** The most cards on the page at once; the filters narrow down the rest. */
+const SHOWN = 96;
 
 export const generateMetadata = async ({
   params,
@@ -35,21 +44,30 @@ export const generateMetadata = async ({
 
 /**
  * `/club/opportunities`: jobs, internships, scholarships, competitions and
- * programs, featured first, then by deadline.
+ * programs, featured first, then by deadline, with filters in the query
+ * string (a plain form, so they work without JavaScript).
  */
-const OpportunitiesPage = async ({ params }: OpportunitiesProps) => {
-  const { locale } = await params;
+const OpportunitiesPage = async ({
+  params,
+  searchParams,
+}: OpportunitiesProps) => {
+  const [{ locale }, query] = await Promise.all([params, searchParams]);
   setRequestLocale(locale);
-  const [t, opportunities] = await Promise.all([
+  const filters = opportunityFilters(query);
+  const [t, tOpportunities, opportunities] = await Promise.all([
     getTranslations({ locale, namespace: "web.club" }),
-    getOpportunities({ limit: 96 }),
+    getTranslations({ locale, namespace: "web.opportunities" }),
+    getOpportunities({ limit: 500 }),
   ]);
+  const filtered = Object.values(filters).some((value) => value !== null);
   const ordered = byDateOrDeadline(
-    opportunities.map((opportunity) => ({
-      at: opportunity.deadline,
-      key: opportunity.id,
-      opportunity,
-    }))
+    opportunities
+      .filter((opportunity) => matchesOpportunityFilters(opportunity, filters))
+      .map((opportunity) => ({
+        at: opportunity.deadline,
+        key: opportunity.id,
+        opportunity,
+      }))
   ).sort(
     (a, b) =>
       Number(isFeatured(b.opportunity)) - Number(isFeatured(a.opportunity))
@@ -63,9 +81,22 @@ const OpportunitiesPage = async ({ params }: OpportunitiesProps) => {
       />
       <Section className="flex flex-col gap-8">
         <ClubNav current="opportunities" locale={locale} />
+        <OpportunityFiltersForm
+          filters={filters}
+          locale={locale}
+          opportunities={opportunities}
+        />
+        {ordered.length > SHOWN ? (
+          <p className="text-muted-foreground text-sm">
+            {tOpportunities("filters.more", {
+              shown: formatNumber(SHOWN, locale),
+              total: formatNumber(ordered.length, locale),
+            })}
+          </p>
+        ) : null}
         {ordered.length > 0 ? (
           <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {ordered.map(({ key, opportunity }) => (
+            {ordered.slice(0, SHOWN).map(({ key, opportunity }) => (
               <li className="flex" key={key}>
                 <OpportunityCard locale={locale} opportunity={opportunity} />
               </li>
@@ -73,13 +104,19 @@ const OpportunitiesPage = async ({ params }: OpportunitiesProps) => {
           </ul>
         ) : (
           <EmptyState
-            action={{
-              external: true,
-              href: telegram.club,
-              label: t("join.empty.opportunitiesAction"),
-            }}
+            action={
+              filtered
+                ? undefined
+                : {
+                    external: true,
+                    href: telegram.club,
+                    label: t("join.empty.opportunitiesAction"),
+                  }
+            }
           >
-            {t("join.empty.opportunities")}
+            {filtered
+              ? tOpportunities("filters.noMatches")
+              : t("join.empty.opportunities")}
           </EmptyState>
         )}
       </Section>
