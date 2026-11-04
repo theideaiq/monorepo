@@ -455,6 +455,23 @@ steps need Xcode, Android Studio and the store/Firebase accounts
 
 ## Decisions
 
+- 2026-11-04: **Programs, part 1: Travel Kit and package costs, schema
+  first** (PR 6a, taking over the exchange programs work's approved
+  proposal; migration `20270327000000_travel_kit.sql`). The Travel Kit
+  (A18): `travel_routes` (a country and visa type, published only once
+  checked) and `travel_requirements` (documents, tasks and open questions,
+  each with a source link, confidence (official, secondary, not confirmed)
+  and checked date, printed copies, days before the appointment or
+  departure, under-18 only), entered by editors; a program adds its own
+  extras as requirements of its opportunity, and `opportunity_travel_routes`
+  links the routes its travellers take. A member's `travel_kits` (dates,
+  under-18 switch, notes), `travel_documents` (a status per kind of
+  document, shared by all their kits) and `travel_kit_ticks` are private to
+  them; nothing stores a document or scan (scans stay in paid programs,
+  deleted after 30 days). Programs gain `itinerary` (day by day) and
+  `costs` (each included in the price or paid on top, amount unknown
+  allowed) for the package page (C20). The website, Staff and the
+  reminders follow in the next pull requests.
 - 2026-11-04: **Switch on moment and shelves** (PR 5): Home's bulb waits
   unlit above the headline with "Tap the bulb"; one tap lights it (the
   bulb itself is unchanged) and reveals the brand line ("Switch on." /
