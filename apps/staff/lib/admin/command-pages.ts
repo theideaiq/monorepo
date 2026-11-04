@@ -44,6 +44,8 @@ export const subPages = [
   { href: "/partners/orders", id: "partnerOrders", section: "companies" },
   { href: "/partners/invoices", id: "invoices", section: "companies" },
   { href: "/partners/perks", id: "perks", section: "companies" },
+  { href: "/partners/crm/new", id: "crmNew", section: "partnerCrm" },
+  { href: "/partners/crm/import", id: "crmImport", section: "partnerCrm" },
   { href: "/finance/payouts", id: "payouts", section: "finance" },
   { href: "/finance/coupons", id: "coupons", section: "finance" },
   { href: "/finance/codes", id: "codes", section: "finance" },

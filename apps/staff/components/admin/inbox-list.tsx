@@ -23,6 +23,7 @@ import {
 import {
   type InboxRow,
   isLate,
+  ownedKinds,
   stepSelection,
   waitingFor,
 } from "@/lib/admin/inbox-kinds";
@@ -197,7 +198,7 @@ export const InboxList = ({
                 </span>
                 <span className="truncate text-muted-foreground text-xs">
                   {row.assigneeName ??
-                    (row.kind === "support" || row.kind === "submissions"
+                    (ownedKinds.includes(row.kind)
                       ? t("unassigned")
                       : t("noOwner"))}
                 </span>

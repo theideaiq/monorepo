@@ -3,6 +3,7 @@ import "server-only";
 import { HOUSE_SELLER_ID } from "@repo/commerce";
 import type { StaffRole } from "@repo/database";
 import { cache } from "react";
+import { todayInBaghdad } from "./dates";
 import { awaitingFulfilment } from "./fulfilment";
 import { type InboxKind, kindSection } from "./inbox-kinds";
 import { canRead, type MenuId } from "./roles";
@@ -11,7 +12,7 @@ import type { ServerClient } from "./session";
 /**
  * What's waiting on staff, for the sections the role can open. The
  * decisions (tickets, verifications, checks, returns, shops, applications,
- * submissions) are the Inbox's list (see `inbox-rows.tsx`); this counts
+ * submissions, partner follow-ups) are the Inbox's list (see `inbox-rows.tsx`); this counts
  * them for the menu, and counts the other work that has its own page
  * ("Other work" under the list).
  */
@@ -84,84 +85,102 @@ const sum = async (allowed: boolean, queries: Count[]) =>
 /** How many decisions of each kind wait (the Inbox's list, for the menu). */
 const loadDecisionCounts = async (
   supabase: ServerClient,
-  role: StaffRole
+  role: StaffRole,
+  userId: string
 ): Promise<Record<InboxKind, number>> => {
   const can = (kind: InboxKind) => canRead(role, kindSection[kind]);
-  const [support, verifications, checks, returns, shops, applications, queue] =
-    await Promise.all([
-      counted(can("support"), () =>
-        supabase.from("support_tickets").select("id", head).eq("status", "open")
-      ),
-      sum(can("verifications"), [
-        () =>
-          supabase
-            .from("verification_requests")
-            .select("id", head)
-            .eq("status", "pending")
-            .or("kind.eq.identity,method.eq.documents"),
-        () =>
-          supabase
-            .from("organization_verifications")
-            .select("organization_id", head)
-            .eq("status", "pending"),
-        () =>
-          supabase
-            .from("student_requests")
-            .select("id", head)
-            .eq("method", "card")
-            .eq("status", "pending"),
-        () =>
-          supabase
-            .from("student_verifications")
-            .select("id", head)
-            .eq("status", "pending"),
-      ]),
-      sum(can("checks"), [
-        () =>
-          supabase
-            .from("product_checks")
-            .select("id", head)
-            .is("resolved_at", null),
-        () =>
-          supabase
-            .from("product_flags")
-            .select("id", head)
-            .is("resolved_at", null),
-      ]),
-      sum(can("returns"), [
-        () =>
-          supabase.from("returns").select("id", head).eq("status", "disputed"),
-        ...(seesMoney(role)
-          ? [
-              () =>
-                supabase
-                  .from("returns")
-                  .select("id", head)
-                  .eq("status", "refund_due"),
-            ]
-          : []),
-      ]),
-      counted(can("shops"), () =>
+  const [
+    support,
+    verifications,
+    checks,
+    returns,
+    shops,
+    applications,
+    queue,
+    followUps,
+  ] = await Promise.all([
+    counted(can("support"), () =>
+      supabase.from("support_tickets").select("id", head).eq("status", "open")
+    ),
+    sum(can("verifications"), [
+      () =>
         supabase
-          .from("sellers")
+          .from("verification_requests")
           .select("id", head)
-          .eq("is_house", false)
           .eq("status", "pending")
-      ),
-      // A minor's application waits for the guardian before review.
-      counted(can("applications"), () =>
+          .or("kind.eq.identity,method.eq.documents"),
+      () =>
         supabase
-          .from("program_applications")
+          .from("organization_verifications")
+          .select("organization_id", head)
+          .eq("status", "pending"),
+      () =>
+        supabase
+          .from("student_requests")
           .select("id", head)
-          .eq("status", "submitted")
-          .or("guardian_status.is.null,guardian_status.eq.approved")
-      ),
-      can("submissions") ? supabase.rpc("review_queue") : null,
-    ]);
+          .eq("method", "card")
+          .eq("status", "pending"),
+      () =>
+        supabase
+          .from("student_verifications")
+          .select("id", head)
+          .eq("status", "pending"),
+    ]),
+    sum(can("checks"), [
+      () =>
+        supabase
+          .from("product_checks")
+          .select("id", head)
+          .is("resolved_at", null),
+      () =>
+        supabase
+          .from("product_flags")
+          .select("id", head)
+          .is("resolved_at", null),
+    ]),
+    sum(can("returns"), [
+      () =>
+        supabase.from("returns").select("id", head).eq("status", "disputed"),
+      ...(seesMoney(role)
+        ? [
+            () =>
+              supabase
+                .from("returns")
+                .select("id", head)
+                .eq("status", "refund_due"),
+          ]
+        : []),
+    ]),
+    counted(can("shops"), () =>
+      supabase
+        .from("sellers")
+        .select("id", head)
+        .eq("is_house", false)
+        .eq("status", "pending")
+    ),
+    // A minor's application waits for the guardian before review.
+    counted(can("applications"), () =>
+      supabase
+        .from("program_applications")
+        .select("id", head)
+        .eq("status", "submitted")
+        .or("guardian_status.is.null,guardian_status.eq.approved")
+    ),
+    can("submissions") ? supabase.rpc("review_queue") : null,
+    // The viewer's own partner organizations with a next action due.
+    counted(can("followUps"), () =>
+      supabase
+        .from("partner_orgs")
+        .select("id", head)
+        .eq("owner_id", userId)
+        .lte("next_action_on", todayInBaghdad())
+    ),
+  ]);
 
   return {
     applications,
     checks,
+    followUps,
     returns,
     shops,
     submissions: (queue?.data ?? []).filter(
@@ -315,9 +334,13 @@ export interface InboxSummary {
 
 /** Everything waiting on the role, loaded once per request. */
 export const loadInbox = cache(
-  async (supabase: ServerClient, role: StaffRole): Promise<InboxSummary> => {
+  async (
+    supabase: ServerClient,
+    role: StaffRole,
+    userId: string
+  ): Promise<InboxSummary> => {
     const [decisions, other] = await Promise.all([
-      loadDecisionCounts(supabase, role),
+      loadDecisionCounts(supabase, role, userId),
       loadOtherWork(supabase, role),
     ]);
     return { decisions, other };

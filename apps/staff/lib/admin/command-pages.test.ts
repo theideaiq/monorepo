@@ -16,16 +16,38 @@ describe("the command bar's pages", () => {
     expect(editor).toEqual([
       "/",
       "/club",
+      "/partners/crm",
       "/club/events",
       "/club/opportunities",
       "/club/submissions",
       "/club/travel",
+      "/partners/crm/new",
+      "/partners/crm/import",
     ]);
     // Support runs Plus but not the catalog, which holds the plans.
     const support = commandPages("support").map((page) => page.href);
     expect(support).toContain("/plus/demand");
     expect(support).not.toContain("/plus/plans");
     expect(commandPages(null)).toEqual([]);
+  });
+
+  test("the partner CRM for editors, marketing and admins", () => {
+    for (const role of [
+      "superadmin",
+      "admin",
+      "editor",
+      "marketing",
+    ] as const) {
+      const hrefs = commandPages(role).map((page) => page.href);
+      expect(hrefs).toContain("/partners/crm");
+      expect(hrefs).toContain("/partners/crm/import");
+    }
+    for (const role of ["finance", "support"] as const) {
+      const hrefs = commandPages(role).map((page) => page.href);
+      expect(hrefs.some((href) => href.startsWith("/partners/crm"))).toBe(
+        false
+      );
+    }
   });
 
   test("Health for admins, Handover for superadmins only", () => {

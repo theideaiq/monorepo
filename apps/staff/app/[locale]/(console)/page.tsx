@@ -41,6 +41,7 @@ import {
   inboxHref,
   kindHref,
   mineOnly,
+  ownedKinds,
   parseInboxFilter,
   visibleKinds,
 } from "@/lib/admin/inbox-kinds";
@@ -73,9 +74,6 @@ const head = { count: "exact", head: true } as const;
 
 /** How many weeks of key numbers the Inbox shows. */
 const WEEKS = 8;
-
-/** Kinds with an owner: the only ones "Mine" can hold. */
-const OWNED: readonly InboxKind[] = ["support", "submissions"];
 
 /** Runs a count only when the role can see it (RLS would hide it anyway). */
 const countIf = async (
@@ -253,17 +251,18 @@ const InboxPage = async ({
   const wanted = kinds.filter(
     (kind) =>
       (!filter.kind || kind === filter.kind) &&
-      (!filter.mine || OWNED.includes(kind))
+      (!filter.mine || ownedKinds.includes(kind))
   );
   const [stats, summary, loaded, { data: weeks }] = await Promise.all([
     loadStats(supabase, can),
-    loadInbox(supabase, role),
+    loadInbox(supabase, role, staff.userId),
     loadInboxItems(
       supabase,
       role,
       locale,
       wanted,
-      filter.mine ? staff.userId : null
+      filter.mine ? staff.userId : null,
+      staff.userId
     ),
     supabase.rpc("staff_metrics", { weeks: WEEKS }),
   ]);

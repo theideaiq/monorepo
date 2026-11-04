@@ -26,7 +26,7 @@ const ConsoleLayout = async ({ children }: ConsoleLayoutProps) => {
   const { staff, supabase } = await requireStaff();
   const [cookieStore, summary] = await Promise.all([
     cookies(),
-    loadInbox(supabase, staff.role),
+    loadInbox(supabase, staff.role, staff.userId),
   ]);
   const defaultOpen = cookieStore.get("sidebar_state")?.value !== "false";
 
