@@ -455,6 +455,22 @@ steps need Xcode, Android Studio and the store/Firebase accounts
 
 ## Decisions
 
+- 2026-11-04: **Programs, part 4: the partner CRM in Staff** (PR 6d, after
+  the schema in #1219, migration `20270329000000_partner_crm.sql`).
+  Staff → Partners → Partner CRM (`/partners/crm`, editors, marketing and
+  admins): organizations (kind, country, website, stage, priority, owner,
+  next action and its date, source, tags, notes), sorted with due follow-ups
+  first; each organization's page with its people (work contacts with their
+  source), activity (each email, call or meeting, logged as oneself, which
+  can set the next action) and deals (delegations, listings, info sessions,
+  sponsorships; IQD in 250s; linked to an opportunity). Due follow-ups show
+  in the owner's Inbox ("Follow-ups"). `/partners/crm/import` takes the
+  outreach workbook as CSV (organizations, and people by organization
+  website or name): a preview with every row's problems, then an upsert by
+  website or exact name that never overwrites a value with a blank. Only
+  admins delete an organization. Owner: export the workbook from Google
+  Sheets as CSV, import it, then assign owners (imported organizations have
+  none) and add the real contacts for CYSC, ATAST and BUCA IMSEF.
 - 2026-11-04: **Programs, part 3: reminders, event sharing, Staff health
   and handover** (PR 6c, after the schema in #1216, migration
   `20270328000000_reminders_and_health.sql`). Reminders (A19): the daily

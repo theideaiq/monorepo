@@ -31,9 +31,15 @@ describe("role → sections", () => {
     expect(canWrite("admin", "reviews")).toBe(true);
   });
 
-  test("editors only get editorial", () => {
-    expect(visibleSections("editor")).toEqual(["dashboard", "editorial"]);
+  test("editors get editorial and the partner CRM", () => {
+    expect(visibleSections("editor")).toEqual([
+      "dashboard",
+      "partnerCrm",
+      "editorial",
+    ]);
     expect(canWrite("editor", "editorial")).toBe(true);
+    expect(canWrite("editor", "partnerCrm")).toBe(true);
+    expect(canRead("editor", "companies")).toBe(false);
     expect(canRead("editor", "orders")).toBe(false);
     expect(canRead("editor", "support")).toBe(false);
   });
@@ -56,9 +62,11 @@ describe("role → sections", () => {
     expect(visibleSections("marketing")).toEqual([
       "dashboard",
       "customers",
+      "partnerCrm",
       "affiliates",
     ]);
     expect(canWrite("marketing", "affiliates")).toBe(true);
+    expect(canWrite("marketing", "partnerCrm")).toBe(true);
     expect(canWrite("marketing", "customers")).toBe(false);
     expect(canRead("marketing", "support")).toBe(false);
   });
@@ -80,6 +88,35 @@ describe("role → sections", () => {
     expect(canRead("support", "finance")).toBe(false);
   });
 
+  test("the partner CRM: editors, marketing and admins, under Partners", () => {
+    for (const role of [
+      "superadmin",
+      "admin",
+      "editor",
+      "marketing",
+    ] as const) {
+      expect(canWrite(role, "partnerCrm")).toBe(true);
+    }
+    for (const role of ["finance", "support"] as const) {
+      expect(canRead(role, "partnerCrm")).toBe(false);
+    }
+    expect(sectionHref.partnerCrm).toBe("/partners/crm");
+    expect(
+      visibleMenu("superadmin").find((entry) => entry.id === "partners")
+    ).toEqual({
+      id: "partners",
+      label: "companies",
+      sections: ["companies", "partnerCrm"],
+    });
+    // Marketing has no Team requests: Partners opens the CRM.
+    expect(
+      visibleMenu("marketing").find((entry) => entry.id === "partners")
+    ).toEqual({ id: "partners", label: "companies", sections: ["partnerCrm"] });
+    expect(
+      visibleMenu("support").find((entry) => entry.id === "partners")?.sections
+    ).toEqual(["companies"]);
+  });
+
   test("every section is in one menu entry", () => {
     const listed = menu.flatMap((entry) => entry.sections);
     expect([...listed].sort()).toEqual([...sections].sort());
@@ -89,6 +126,7 @@ describe("role → sections", () => {
     expect(visibleMenu("editor")).toEqual([
       { id: "inbox", label: "dashboard", sections: ["dashboard"] },
       { id: "club", label: "editorial", sections: ["editorial"] },
+      { id: "partners", label: "companies", sections: ["partnerCrm"] },
     ]);
     // Support has Telegram and Reviews, without Editorial or the Catalog.
     expect(visibleMenu("support").find((entry) => entry.id === "club")).toEqual(

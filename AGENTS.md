@@ -208,7 +208,9 @@ incidents) is in `docs/platform`.
     routes and their sourced, dated requirements, and `/club/telegram`) · Partners `/partners` (Team
     `/partners/team` with requests at `/partners/team/<id>` and Plus seats
     at `/partners/team/plus`, then orders, invoices, `/partners/shops`
-    where staff approve shops, perks and sign-in) · Finance `/finance` (with
+    where staff approve shops, perks and sign-in, and `/partners/crm`, the
+    partner CRM: organizations, their people, every touch and deals, with
+    due follow-ups in the Inbox and a CSV import at `/partners/crm/import`) · Finance `/finance` (with
     `/finance/payouts`, the weekly shop payouts, `/finance/programs`,
     program refunds to pay, `/finance/codes`, digital codes (held and failed
     codes, brands and denominations with cost, margin and price, the supplier
@@ -367,9 +369,12 @@ local stack (`SUPABASE_INTEGRATION=1`) and the end-to-end journeys.
   (`/legal/returns#section-7`); a test checks every linked section exists.
   Never show a promise without its policy.
 - **Brand names:** English names in English copy, the official Arabic
-  names in Arabic copy (`docs/brand/BRAND_GUIDELINES.md` section 2), and
-  the plans (Glow, Shine, Blaze, Duo) and product and model names in Latin
-  letters in both ("ايديا پلص Shine").
+  names in Arabic copy (`docs/brand/BRAND_GUIDELINES.md` section 2). No
+  Latin letters in Arabic copy and no Arabic in English copy (owner
+  decision, 2026-11-04): the plans are گلو، شاين، بليز، ديو in Arabic
+  ("ايديا پلص شاين"), other companies and formats are in Arabic letters
+  (تلگرام، واتساب، پي دي إف); Latin stays only for values typed exactly
+  (inside « ») and for links and emails.
   - English: always "The IDEA", never a bare "IDEA". Full names (The IDEA
     Store, The IDEA Plus, The IDEA Club, The IDEA Pass) go in titles and
     first mentions outside our own surfaces; inside the website, apps and
@@ -401,8 +406,8 @@ local stack (`SUPABASE_INTEGRATION=1`) and the end-to-end journeys.
 - **Language standard** (`docs/brand/BRAND_GUIDELINES.md` section 3,
   enforced by `packages/internationalization/language.test.ts`): American
   English; no exclamation marks; « » quotes, ، ؛ ؟ and tanween on the
-  letter (شكرًا) in Arabic; other companies' names in Latin letters
-  (Telegram, WhatsApp); amounts as "25,000 IQD" and "25,000 دينار عراقي"; buttons as Iraqi
+  letter (شكرًا) in Arabic; other companies' names in Arabic letters
+  (تلگرام، واتساب); amounts as "25,000 IQD" and "25,000 دينار عراقي"; buttons as Iraqi
   imperatives from the table (احفظ، عدّل، امسح، شيل); one word per thing
   (الإيميل, طقم, المجموع) and one translation per repeated sentence.
   Modern Standard Arabic only for legal pages, consent wording, printed

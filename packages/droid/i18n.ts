@@ -29,9 +29,9 @@ const ar = {
   joinNeedsPlus:
     "{chat} لأعضاء الپلص. اشترك بالپلص وبعدين اطلب تنضم مرة ثانية.",
   joinNotLinked:
-    "حتى تنضم لـ{chat}، اربط Telegram ببطاقة پاسك أول شي (بطاقتك ← الإعدادات ← Telegram)، وبعدين اطلب تنضم مرة ثانية.",
+    "حتى تنضم لـ{chat}، اربط تلگرام ببطاقة پاسك أول شي (بطاقتك ← الإعدادات ← تلگرام)، وبعدين اطلب تنضم مرة ثانية.",
   linkApp: "تطبيق ايديا",
-  linkClub: "النادي على Telegram",
+  linkClub: "النادي على تلگرام",
   links: "روابط",
   linksTitle: "روابط ايديا:",
   linkWebsite: "الموقع",
@@ -44,7 +44,7 @@ const ar = {
   newsletterOn: "النشرة: شغّالة ✓",
   notificationOpen: "افتح",
   notLinked:
-    "اربط Telegram ببطاقة پاسك حتى تشوف طلباتك ورصيدك هنا. افتح بطاقتك ← الإعدادات ← Telegram.",
+    "اربط تلگرام ببطاقة پاسك حتى تشوف طلباتك ورصيدك هنا. افتح بطاقتك ← الإعدادات ← تلگرام.",
   orderLine: "#{number} · {status} · {total}",
   orderStatus_cancelled: "ملغى",
   orderStatus_confirmed: "مؤكد",
@@ -75,7 +75,7 @@ const ar = {
   searchEmpty: "ما لگيت منتجات تطابق «{query}».",
   searchPrompt: "اكتب اسم المنتج اللي تدوّر عليه:",
   searchResults: "هذي نتائج «{query}»:",
-  searchUsage: "اكتب /search وبعدها اسم المنتج، مثلًا: /search بلايستيشن",
+  searchUsage: "اكتب «/search» وبعدها اسم المنتج، مثلًا: «/search بلايستيشن»",
   shop: "🛍️ تسوّق في السوگ",
   stock: "متوفر: {count}",
   support: "احچي ويانا",

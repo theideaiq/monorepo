@@ -69,7 +69,13 @@ const EXCLAMATION = /!/;
 const ARABIC_MARKS =
   /[\u0600-\u06FF][,;?]|"|[\u0660-\u0669\u06F0-\u06F9]|\.\.\./;
 const TANWEEN_ON_ALEF = /ا\u064B/;
-const ARABIZED_NAMES = /تيليغرام|تيليجرام|تلگرام|واتساب|واتس اب/;
+/** What may stay in Latin letters in Arabic copy: links, emails, {arguments}
+ * and ICU syntax, and values typed exactly, which sit inside « ». */
+const TYPED_OR_LINKS =
+  /«[^»]*»|https?:\/\/\S+|[\w.+-]+@[\w.-]+|\b[\w-]+(?:\.[\w-]+)*\.(?:com|iq|org|net|io|fm|cz|edu)\b(?:\/\S*)?|\{\w+\}|\{\w+,\s*(?:plural|select|selectordinal),|(?<=[\s{}])(?:zero|one|two|few|many|other|=\d+|[a-z_]+)\s*(?=\{)|<\/?\w+>/g;
+const LATIN = /[A-Za-z]/;
+/** Arabic in English copy. */
+const ARABIC = /[\u0600-\u06FF]/;
 const MSA_EMAIL = /البريد الإلكتروني|بريدك الإلكتروني/;
 const SHORT_DINAR = /د\.ع/;
 const DINAR_WITHOUT_IRAQI =
@@ -99,10 +105,12 @@ const isStandard = (path: string) =>
 const standard = arabic.filter(([path]) => isStandard(path));
 const iraqi = arabic.filter(([path]) => !isStandard(path));
 
-/** Words only Iraqi speech uses (our names with گ are taken out first). */
+/** Words only Iraqi speech uses (names spelled with گ are taken out first). */
 const IRAQI_WORDS =
   /(?<![؀-ۿ])(?:ماكو|اكو|هسه|شلون|شنو|شگد|راح|هاي|هذي|مو|اللي|بعدين|ويا|وياك|دز|تگدر|يگدر)(?![؀-ۿ])|[گچ]/;
-const OUR_NAMES_WITH_GAF = /السوگ|سوگ|الگلوبات|گلوبات|گلوب/g;
+/** Our names and the foreign names we spell with گ (Glow, Google, Telegram, PEGI, WCAG). */
+const OUR_NAMES_WITH_GAF =
+  /السوگ|سوگ|الگلوبات|گلوبات|گلوب|گلو|تلگرام|گوگل|پيگي|كاگ/g;
 /** Modern Standard forms that Iraqi copy says another way. */
 const STANDARD_WORDS =
   /(?<![؀-ۿ])(?:لا يوجد|لا توجد|سوف|الآن|هل|لماذا|ماذا|يمكنك|تستطيع|لم يتم|سيتم|يتم|التي|الذي|الذين|ليس|ليست|لدينا|لديك|لديه|هذه|هؤلاء|عندما|ينبغي)(?![؀-ۿ])/;
@@ -137,8 +145,14 @@ describe("language standard", () => {
     expect(offending(arabic, TANWEEN_ON_ALEF)).toEqual([]);
   });
 
-  test("other companies' names stay in Latin letters in Arabic", () => {
-    expect(offending(arabic, ARABIZED_NAMES)).toEqual([]);
+  test("no Arabic in English copy and no English in Arabic copy", () => {
+    expect(offending(english, ARABIC)).toEqual([]);
+    expect(
+      arabic
+        // Each allowed part becomes a space, so no two pieces join into a word.
+        .filter(([, text]) => LATIN.test(text.replace(TYPED_OR_LINKS, " ")))
+        .map(([path, text]) => `${path}: ${text}`)
+    ).toEqual([]);
   });
 
   test("one word for email and one way to write the currency in Arabic", () => {
