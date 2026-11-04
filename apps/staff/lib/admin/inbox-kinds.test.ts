@@ -5,7 +5,9 @@ import {
   type InboxRow,
   inboxHref,
   isLate,
+  kindHref,
   mineOnly,
+  ownedKinds,
   parseInboxFilter,
   stepSelection,
   visibleKinds,
@@ -30,6 +32,10 @@ describe("the Inbox's filter", () => {
   test("reads a known kind and Mine from the address", () => {
     expect(parseInboxFilter({ kind: "returns", mine: "1" })).toEqual({
       kind: "returns",
+      mine: true,
+    });
+    expect(parseInboxFilter({ kind: "followUps", mine: "1" })).toEqual({
+      kind: "followUps",
       mine: true,
     });
     expect(parseInboxFilter({ kind: "nope" })).toEqual({
@@ -72,10 +78,26 @@ describe("the Inbox's rows", () => {
     expect(mineOnly(rows, false, "me")).toHaveLength(3);
   });
 
+  test("partner follow-ups are owned (Mine holds them) and open the CRM", () => {
+    expect(ownedKinds).toEqual(["support", "submissions", "followUps"]);
+    expect(kindHref.followUps).toBe("/partners/crm?due=1&mine=1");
+    const followUp = row({
+      assignee: "me",
+      key: "followUps:9",
+      kind: "followUps",
+      since: "2026-10-27T21:00:00.000Z",
+    });
+    expect(
+      mineOnly([...rows, followUp], true, "me").map((item) => item.key)
+    ).toEqual(["b", "followUps:9"]);
+    expect(countByKind([followUp]).followUps).toBe(1);
+  });
+
   test("counts every kind", () => {
     expect(countByKind(rows)).toEqual({
       applications: 0,
       checks: 0,
+      followUps: 0,
       returns: 0,
       shops: 0,
       submissions: 1,
@@ -130,13 +152,21 @@ describe("J and K", () => {
 });
 
 test("each role sees the kinds of its sections", () => {
-  expect(visibleKinds("editor")).toEqual(["applications", "submissions"]);
+  expect(visibleKinds("editor")).toEqual([
+    "applications",
+    "submissions",
+    "followUps",
+  ]);
+  // Partner follow-ups: the roles that can read the CRM.
+  expect(visibleKinds("marketing")).toEqual(["verifications", "followUps"]);
+  expect(visibleKinds("finance")).not.toContain("followUps");
   expect(visibleKinds("support")).toEqual([
     "support",
     "verifications",
     "returns",
     "shops",
   ]);
-  expect(visibleKinds("superadmin")).toHaveLength(7);
+  expect(visibleKinds("superadmin")).toHaveLength(8);
+  expect(visibleKinds("admin")).toContain("followUps");
   expect(visibleKinds(null)).toEqual([]);
 });

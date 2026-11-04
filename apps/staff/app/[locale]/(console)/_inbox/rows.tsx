@@ -19,7 +19,11 @@ import { ProductCover } from "@/components/admin/product-cover";
 import { SignedFiles, signAll } from "@/components/admin/signed-files";
 import { StatusBadge } from "@/components/admin/status-badge";
 import { env } from "@/env";
-import { academicYearEnd } from "@/lib/admin/dates";
+import {
+  academicYearEnd,
+  fromBaghdadInput,
+  todayInBaghdad,
+} from "@/lib/admin/dates";
 import { type Formatters, formatters } from "@/lib/admin/format";
 import { seesMoney } from "@/lib/admin/inbox";
 import {
@@ -27,6 +31,7 @@ import {
   type InboxRow,
   visibleKinds,
 } from "@/lib/admin/inbox-kinds";
+import { dueState, type PartnerStage } from "@/lib/admin/partner-crm";
 import { profileNames } from "@/lib/admin/profiles";
 import { canRead, canWrite } from "@/lib/admin/roles";
 import type { ServerClient } from "@/lib/admin/session";
@@ -74,6 +79,8 @@ interface Context {
   supabase: ServerClient;
   t: Awaited<ReturnType<typeof getTranslations<"admin">>>;
   tStore: Awaited<ReturnType<typeof getTranslations<"store">>>;
+  /** The staff member viewing the Inbox. */
+  userId: string;
 }
 
 const exact = { count: "exact" } as const;
@@ -1102,9 +1109,98 @@ const loadSubmissions = async ({
   };
 };
 
+// ── Partner follow-ups ─────────────────────────────────────────────────────
+
+/**
+ * The viewer's own partner organizations whose next action is due today or
+ * earlier, the most overdue first. Only the name, the next action and the
+ * stage: no contacts.
+ */
+const loadFollowUps = async ({
+  format,
+  supabase,
+  t,
+  userId,
+}: Context): Promise<KindResult> => {
+  const today = todayInBaghdad();
+  const [{ count, data }, names] = await Promise.all([
+    supabase
+      .from("partner_orgs")
+      .select(
+        "id, name, name_ar, stage, priority, next_action, next_action_on",
+        exact
+      )
+      .eq("owner_id", userId)
+      .lte("next_action_on", today)
+      .order("next_action_on")
+      .order("priority")
+      .limit(PER_KIND),
+    profileNames(supabase, [userId]),
+  ]);
+  const ownerName = names.get(userId) ?? null;
+
+  return {
+    items: (data ?? []).map((org) => {
+      const due = org.next_action_on ?? today;
+      const state = dueState(due, today);
+      const stage = org.stage as PartnerStage;
+      return {
+        actions: null,
+        facts: (
+          <DetailList
+            items={[
+              {
+                label: t("partnerCrm.fields.nextAction"),
+                value: org.next_action,
+              },
+              {
+                label: t("partnerCrm.fields.nextActionOn"),
+                value: (
+                  <span className="inline-flex flex-wrap items-center gap-2">
+                    {format.date(due)}
+                    <StatusBadge
+                      tone={state === "overdue" ? "danger" : "warning"}
+                    >
+                      {t(
+                        state === "overdue"
+                          ? "partnerCrm.due.overdue"
+                          : "partnerCrm.due.today"
+                      )}
+                    </StatusBadge>
+                  </span>
+                ),
+              },
+              {
+                label: t("partnerCrm.fields.stage"),
+                value: t(`partnerCrm.stages.${stage}`),
+              },
+              {
+                label: t("partnerCrm.fields.priority"),
+                value: t(`partnerCrm.priorities.${org.priority as 1 | 2 | 3}`),
+              },
+            ]}
+          />
+        ),
+        row: rowOf("followUps", {
+          assignee: userId,
+          assigneeName: ownerName,
+          detail: org.next_action ?? "",
+          href: `/partners/crm/${org.id}#activity`,
+          id: org.id,
+          since: fromBaghdadInput(`${due}T00:00`) ?? new Date().toISOString(),
+          subtype: t("dashboard.inbox.types.followUp"),
+          title: org.name_ar ? `${org.name} · ${org.name_ar}` : org.name,
+        }),
+      };
+    }),
+    total: count ?? 0,
+  };
+};
+
 const loaders: Record<InboxKind, (context: Context) => Promise<KindResult>> = {
   applications: loadApplications,
   checks: loadChecks,
+  followUps: loadFollowUps,
   returns: loadReturns,
   shops: loadShops,
   submissions: loadSubmissions,
@@ -1123,7 +1219,9 @@ export const loadInboxItems = async (
   locale: Locale,
   only: readonly InboxKind[],
   /** "Mine": only items assigned to this user, where the query can say. */
-  mine: string | null = null
+  mine: string | null,
+  /** The viewer (partner follow-ups are always their own). */
+  userId: string
 ): Promise<Partial<Record<InboxKind, KindResult>>> => {
   const [t, tStore] = await Promise.all([
     getTranslations("admin"),
@@ -1137,6 +1235,7 @@ export const loadInboxItems = async (
     supabase,
     t,
     tStore,
+    userId,
   };
   const kinds = visibleKinds(role).filter((kind) => only.includes(kind));
   const results = await Promise.all(

@@ -14,6 +14,7 @@ export const inboxKinds = [
   "shops",
   "applications",
   "submissions",
+  "followUps",
 ] as const;
 
 export type InboxKind = (typeof inboxKinds)[number];
@@ -22,6 +23,7 @@ export type InboxKind = (typeof inboxKinds)[number];
 export const kindSection: Record<InboxKind, Section> = {
   applications: "editorial",
   checks: "catalog",
+  followUps: "partnerCrm",
   returns: "orders",
   shops: "companies",
   submissions: "editorial",
@@ -33,6 +35,7 @@ export const kindSection: Record<InboxKind, Section> = {
 export const kindHref: Record<InboxKind, string> = {
   applications: "/club/opportunities#applications",
   checks: "/catalog/checks",
+  followUps: "/partners/crm?due=1&mine=1",
   returns: "/orders/returns",
   shops: "/partners/shops",
   submissions: "/club/submissions",
@@ -40,13 +43,23 @@ export const kindHref: Record<InboxKind, string> = {
   verifications: "/customers/verifications",
 };
 
+/** Kinds with an owner: the only ones "Mine" can hold. */
+export const ownedKinds: readonly InboxKind[] = [
+  "support",
+  "submissions",
+  "followUps",
+];
+
 /** The kinds the role can open, in menu order. */
 export const visibleKinds = (role: StaffRole | null | undefined) =>
   inboxKinds.filter((kind) => canRead(role, kindSection[kind]));
 
 /** One decision in the Inbox (plain data, sent to the client list). */
 export interface InboxRow {
-  /** Who owns it, when the item has an owner (tickets, submissions). */
+  /**
+   * Who owns it, when the item has an owner (tickets, submissions, and
+   * partner follow-ups, which are always the viewer's own).
+   */
   assignee: string | null;
   assigneeName: string | null;
   /** A short line under the title (customer, shop, reason…). */

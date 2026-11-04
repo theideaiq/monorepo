@@ -5552,6 +5552,7 @@
       "support": "الدعم",
       "reviews": "التقييمات",
       "companies": "الشركاء",
+      "partnerCrm": "علاقات الشركاء",
       "affiliates": "التسويق بالعمولة",
       "waiting": "{count} ينتظرون"
     },
@@ -5695,7 +5696,8 @@
           "returns": "المُرجَعات والنزاعات",
           "shops": "متاجر للموافقة",
           "applications": "الطلبات",
-          "submissions": "المشاركات"
+          "submissions": "المشاركات",
+          "followUps": "متابعات الشركاء"
         },
         "types": {
           "ticket": "تذكرة دعم",
@@ -5710,7 +5712,8 @@
           "refund": "مبلغ مُرجَع لازم ينرسل",
           "shop": "طلب متجر",
           "application": "طلب برنامج",
-          "submission": "مشاركة"
+          "submission": "مشاركة",
+          "followUp": "متابعة شريك"
         },
         "waiting": {
           "minutes": "{count} د",
@@ -8244,7 +8247,9 @@
         "coupons": "القسائم",
         "codes": "الأكواد الرقمية",
         "programs": "استردادات البرامج",
-        "travel": "ملف السفر"
+        "travel": "ملف السفر",
+        "crmNew": "علاقات الشركاء · جهة جديدة",
+        "crmImport": "علاقات الشركاء · استيراد"
       }
     },
     "companies": {
@@ -8484,6 +8489,258 @@
           "activeHint": "المورّد الموگّف ما ياخذ شي لحد ما يرجع يتفعّل.",
           "save": "احفظ الرسوم",
           "start": "سوّيه مورّد"
+        }
+      }
+    },
+    "partnerCrm": {
+      "description": "الجهات اللي نشتغل وياها أو نتواصل وياها لبرامجنا، منو مسؤول عن كل وحدة وشنو الخطوة الجاية.",
+      "organization": "الجهة",
+      "pipeline": "المرحلة والمسؤول والخطوة الجاية",
+      "new": "جهة جديدة",
+      "listTitle": "الجهات",
+      "empty": "ماكو جهات بعد. ضيف وحدة أو استورد شيت التواصل.",
+      "searchLabel": "الاسم أو الموقع",
+      "anyStage": "كل المراحل",
+      "anyKind": "كل الأنواع",
+      "anyOwner": "أي واحد",
+      "countryPlaceholder": "البلد",
+      "mine": "مالتي",
+      "dueFilter": "مستحقة",
+      "noOwner": "بلا مسؤول",
+      "unnamedStaff": "موظف بلا اسم",
+      "noNextAction": "ماكو خطوة جاية",
+      "never": "ولا مرة",
+      "openDeals": "اتفاقات مفتوحة",
+      "deleteConfirm": "متأكد تريد تمسح هالجهة؟",
+      "deleteDescription": "ناسها وتواصلاتها واتفاقاتها تنمسح وياها. ما تگدر ترجعها.",
+      "fields": {
+        "name": "الاسم",
+        "nameAr": "الاسم بالعربي",
+        "kind": "النوع",
+        "country": "البلد",
+        "countryHint": "رمز ISO من حرفين، مثل DE أو IQ.",
+        "city": "المدينة",
+        "website": "الموقع",
+        "urlHint": "العنوان كامل، يبدي بـ https://.",
+        "email": "الإيميل العام",
+        "emailHint": "إيميل المكتب (info@…)، مو إيميل شخص.",
+        "sourceUrl": "وين لگيناها",
+        "sourceUrlHint": "الصفحة أو القائمة اللي جت منها، حتى نتأكد بعدين.",
+        "stage": "المرحلة",
+        "priority": "الأولوية",
+        "owner": "المسؤول",
+        "nextAction": "الخطوة الجاية",
+        "nextActionHint": "حط الخطوة وتاريخها سوا.",
+        "nextActionOn": "تاريخ الخطوة الجاية",
+        "tags": "الوسوم",
+        "tagsHint": "افصلها بفواصل.",
+        "tag": "وسم"
+      },
+      "columns": {
+        "lastTouch": "آخر تواصل"
+      },
+      "stages": {
+        "prospect": "محتملة",
+        "contacted": "تواصلنا",
+        "talking": "دا نحچي",
+        "partner": "شريكة",
+        "paused": "موقفة",
+        "declined": "رفضت"
+      },
+      "kinds": {
+        "university": "جامعة",
+        "school": "مدرسة",
+        "embassy": "سفارة",
+        "cultural_centre": "مركز ثقافي",
+        "foundation": "مؤسسة",
+        "program_organizer": "منظّم برامج",
+        "ngo": "منظمة غير حكومية",
+        "company": "شركة",
+        "government": "جهة حكومية",
+        "media": "إعلام",
+        "other": "غيرها"
+      },
+      "priorities": {
+        "1": "عالية",
+        "2": "عادية",
+        "3": "واطية"
+      },
+      "due": {
+        "overdue": "متأخرة",
+        "today": "اليوم"
+      },
+      "tabs": {
+        "organization": "الجهة",
+        "people": "الناس",
+        "activity": "التواصل",
+        "deals": "الاتفاقات"
+      },
+      "people": {
+        "description": "معلومات الشغل بس، وكل وحدة وياها من وين جت.",
+        "empty": "ماكو ناس بعد.",
+        "name": "الاسم",
+        "role": "الدور",
+        "email": "إيميل الشغل",
+        "emailHint": "عنوان شغله بس.",
+        "phone": "تلفون الشغل",
+        "source": "المصدر",
+        "sourceHint": "من وين جت هالمعلومات: صفحة جهته، تعريف من أحد، كارت.",
+        "add": "ضيف شخص",
+        "remove": "شيل",
+        "removeConfirm": "متأكد تريد تشيل هالشخص؟",
+        "removeDescription": "معلوماته تنمسح. التواصلات وياه تبقى، بس بدون اسمه.",
+        "sourceLine": "المصدر: {source}",
+        "noSource": "ما مذكور"
+      },
+      "activity": {
+        "description": "كل إيميل ومكالمة واجتماع، الأحدث أول.",
+        "empty": "ماكو تواصل بعد.",
+        "channel": "الطريقة",
+        "channels": {
+          "email": "إيميل",
+          "call": "مكالمة",
+          "meeting": "اجتماع",
+          "whatsapp": "WhatsApp",
+          "telegram": "Telegram",
+          "event": "فعالية",
+          "letter": "رسالة",
+          "other": "غيرها"
+        },
+        "direction": "منو بدى",
+        "outbound": "إحنا تواصلنا",
+        "inbound": "همّه تواصلوا",
+        "when": "شوكت",
+        "withWhom": "ويا منو",
+        "noOne": "مو ويا شخص معيّن",
+        "summary": "شنو صار",
+        "nextTitle": "الخطوة الجاية",
+        "nextHint": "اختياري: حط شنو الجاي وشوكت، أو امسحها من تخلص.",
+        "clearNext": "الخطوة الحالية خلصت: امسحها",
+        "log": "سجّل التواصل",
+        "withLine": "ويا {name}",
+        "byLine": "سجّله {name}",
+        "unnamedStaff": "موظف بلا اسم",
+        "formerStaff": "موظف سابق",
+        "deleteConfirm": "متأكد تريد تمسح هالتواصل؟"
+      },
+      "deals": {
+        "description": "الشي اللي دا نشتغل عليه سوا، بمرحلته وقيمته.",
+        "empty": "ماكو اتفاقات بعد.",
+        "title": "العنوان",
+        "kind": "النوع",
+        "kinds": {
+          "delegation": "وفد",
+          "listing": "إدراج",
+          "info_session": "جلسة تعريفية",
+          "sponsorship": "رعاية",
+          "perk": "ميزة",
+          "agreement": "اتفاقية",
+          "other": "غيرها"
+        },
+        "stage": "المرحلة",
+        "stages": {
+          "idea": "فكرة",
+          "proposed": "انعرضت",
+          "negotiating": "دا نتفاوض",
+          "agreed": "اتفقنا",
+          "done": "خلصت",
+          "lost": "راحت"
+        },
+        "value": "القيمة (دينار عراقي)",
+        "valueHint": "بخطوات 250 دينار عراقي. خليها فارغة إذا ماكو فلوس بيها.",
+        "expectedOn": "متوقعة بتاريخ",
+        "opportunity": "الفرصة",
+        "noOpportunity": "ماكو",
+        "add": "ضيف اتفاق",
+        "noValue": "بلا قيمة",
+        "expectedLine": "متوقعة {date}",
+        "deleteConfirm": "متأكد تريد تمسح هالاتفاق؟"
+      },
+      "import": {
+        "title": "استيراد من CSV",
+        "description": "صدّر شيت التواصل كـ CSV واختاره هنا. شوف المعاينة، وبعدين استورد: كل سطر يحدّث الجهة اللي عندها نفس الموقع (أو، إذا ماكو موقع، نفس الاسم) أو يضيف جهة جديدة. الخانات الفارغة ما تمسح أي شي.",
+        "orgsFile": "الجهات (CSV)",
+        "orgsHint": "كل جهة بسطر، ويا سطر عناوين.",
+        "peopleFile": "الناس (CSV، اختياري)",
+        "peopleHint": "كل شخص بسطر، يذكر جهته بالموقع أو بالاسم بالضبط، ويا المصدر.",
+        "problems": {
+          "empty": "الملف ما بيه صفوف.",
+          "noNameColumn": "ماكو عمود اسم. ضيف عنوان «name».",
+          "noOrgColumn": "ماكو عمود للجهة. ضيف «org_website» أو «org_name».",
+          "noPersonColumns": "ملف الناس يحتاج عمودين «name» و«source».",
+          "tooLarge": "الملف كبير هواية. قسّمه لملفات أصغر.",
+          "unreadable": "ما گدرنا نقرا الملف. احفظه بصيغة CSV (UTF-8) وجرّب مرة ثانية."
+        },
+        "unknownColumns": "أعمدة ما نعرفها، تركناها: {columns}",
+        "duplicateColumns": "أعمدة مكررة، ينحسب الأول بس: {columns}",
+        "valid": "جاهز",
+        "reasons": {
+          "cityTooLong": "المدينة أطول من 120 حرف",
+          "countryInvalid": "البلد مو رمز ISO ولا بلد نعرفه",
+          "dateInvalid": "تاريخ الخطوة مو تاريخ (اكتبه YYYY-MM-DD)",
+          "dateWithoutNextAction": "تاريخ خطوة بدون خطوة",
+          "duplicateInFile": "يكرر سطر قبله (نفس الموقع أو الاسم)",
+          "emailInvalid": "الإيميل مو عنوان إيميل",
+          "nameArTooLong": "الاسم العربي أطول من 200 حرف",
+          "nameMissing": "ماكو اسم",
+          "nameTooLong": "الاسم أطول من 200 حرف",
+          "nextActionTooLong": "الخطوة الجاية أطول من 300 حرف",
+          "nextActionWithoutDate": "خطوة جاية بدون تاريخها",
+          "notesTooLong": "الملاحظات طويلة هواية",
+          "orgMissing": "ماكو جهة",
+          "phoneInvalid": "التلفون مو رقم تلفون",
+          "priorityInvalid": "الأولوية مو 1 أو 2 أو 3 أو high أو normal أو low",
+          "roleTooLong": "الدور أطول من 200 حرف",
+          "sourceMissing": "ماكو مصدر",
+          "sourceTooLong": "المصدر أطول من 300 حرف",
+          "sourceUrlInvalid": "رابط المصدر مو عنوان موقع",
+          "stageUnknown": "المرحلة مو وحدة نعرفها",
+          "tagTooLong": "وسم أطول من 40 حرف",
+          "tooManyTags": "أكثر من 20 وسم",
+          "websiteInvalid": "الموقع مو عنوان موقع"
+        },
+        "warnings": {
+          "kindUnknown": "النوع ما معروف: انستورد كـ غيرها"
+        },
+        "line": "السطر",
+        "result": "الفحص",
+        "counts": "{valid} جهة جاهزة، {invalid} بيها مشاكل (راح نتركها). {people} شخص جاهز، {peopleInvalid} بيهم مشاكل.",
+        "run": "استورد",
+        "done": "خلص الاستيراد: انضافت {inserted}، تحدّثت {updated}، انتركت {skipped}.",
+        "peopleDone": "الناس: انضاف {added}، انترك {skipped} (ماكو جهة تطابق، أو موجودين).",
+        "failedLines": "قاعدة البيانات رفضت هالأسطر: {lines}",
+        "shown": "دا تشوف أول {shown} من {total} صف.",
+        "orgsPreview": "الجهات اللي بالملف",
+        "peoplePreview": "الناس اللي بالملف",
+        "columnsDescription": "أسماء العناوين تتطابق بغض النظر عن الحروف الكبيرة والمسافات والعلامات؛ والأسماء الثانية اللي جوه هم مقبولة.",
+        "orgColumnsTitle": "أعمدة الجهات",
+        "peopleColumnsDescription": "تحتاجها بس لملف الناس. كل سطر يذكر جهته بالموقع أو بالاسم بالضبط.",
+        "peopleColumnsTitle": "أعمدة الناس",
+        "orgColumns": {
+          "name": "اسم الجهة (لازم)",
+          "name_ar": "اسمها بالعربي",
+          "kind": "university أو school أو embassy أو cultural_centre أو foundation أو program_organizer أو ngo أو company أو government أو media؛ أي شي ثاني يصير غيرها",
+          "country": "رمز ISO (DE) أو اسم البلد بالإنگليزي أو العربي",
+          "city": "المدينة",
+          "website": "موقعها؛ الدومين بدون https:// نضيفله إياه. بيه نطابق الجهات الموجودة",
+          "email": "إيميل عام (info@…)، مو إيميل شخص",
+          "stage": "prospect أو contacted أو talking أو partner أو paused أو declined (والمرادفات المعروفة)",
+          "priority": "1 أو 2 أو 3، أو high أو normal أو low",
+          "next_action": "شنو الجاي؛ يحتاج next_action_on",
+          "next_action_on": "تاريخها بشكل YYYY-MM-DD؛ يحتاج next_action",
+          "source_url": "وين لگيناها",
+          "tags": "مفصولة بفواصل أو فاصلة منقوطة أو |؛ تنضاف لوسومها",
+          "notes": "ملاحظات"
+        },
+        "peopleColumns": {
+          "org_website": "موقع الجهة",
+          "org_name": "أو اسم الجهة بالضبط",
+          "name": "اسم الشخص (لازم)",
+          "role": "دوره",
+          "email": "إيميل شغله",
+          "phone": "تلفون شغله",
+          "source": "من وين جت معلوماته (لازم)",
+          "notes": "ملاحظات"
         }
       }
     },

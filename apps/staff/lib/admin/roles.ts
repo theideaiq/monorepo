@@ -15,6 +15,7 @@ export const sections = [
   "support",
   "reviews",
   "companies",
+  "partnerCrm",
   "finance",
   "affiliates",
   "editorial",
@@ -41,6 +42,7 @@ export const sectionHref: Record<Section, string> = {
   handover: "/settings/handover",
   health: "/settings/health",
   orders: "/orders",
+  partnerCrm: "/partners/crm",
   rentals: "/plus",
   reviews: "/catalog/reviews",
   staff: "/settings",
@@ -72,7 +74,8 @@ const roleAccess: Record<StaffRole, AccessMap> = {
   // Handing the business over (who has access, services, domains) is the
   // owner's: superadmins only.
   admin: everything(["staff", "handover"]),
-  editor: { dashboard: "read", editorial: "write" },
+  // Editors (Club and programs) and marketing run the partner CRM.
+  editor: { dashboard: "read", editorial: "write", partnerCrm: "write" },
   finance: {
     // Finance invoices purchase orders; support handles the rest.
     affiliates: "write",
@@ -82,7 +85,12 @@ const roleAccess: Record<StaffRole, AccessMap> = {
     orders: "read",
   },
   // Marketing approves affiliates; finance also pays them.
-  marketing: { affiliates: "write", customers: "read", dashboard: "read" },
+  marketing: {
+    affiliates: "write",
+    customers: "read",
+    dashboard: "read",
+    partnerCrm: "write",
+  },
   superadmin: everything(),
   support: {
     companies: "write",
@@ -124,7 +132,7 @@ export const menu = [
   { id: "catalog", sections: ["catalog", "reviews"] },
   { id: "customers", sections: ["customers"] },
   { id: "club", sections: ["editorial", "telegram"] },
-  { id: "partners", sections: ["companies"] },
+  { id: "partners", sections: ["companies", "partnerCrm"] },
   { id: "finance", sections: ["finance", "affiliates"] },
   {
     id: "settings",
