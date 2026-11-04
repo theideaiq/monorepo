@@ -1933,6 +1933,36 @@ export type Database = {
           },
         ];
       };
+      job_runs: {
+        Row: {
+          job: string;
+          last_duration_ms: number | null;
+          last_error: string | null;
+          last_failed_at: string | null;
+          last_ok_at: string | null;
+          last_started_at: string | null;
+          updated_at: string;
+        };
+        Insert: {
+          job: string;
+          last_duration_ms?: number | null;
+          last_error?: string | null;
+          last_failed_at?: string | null;
+          last_ok_at?: string | null;
+          last_started_at?: string | null;
+          updated_at?: string;
+        };
+        Update: {
+          job?: string;
+          last_duration_ms?: number | null;
+          last_error?: string | null;
+          last_failed_at?: string | null;
+          last_ok_at?: string | null;
+          last_started_at?: string | null;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       kit_booking_games: {
         Row: {
           booking_id: string;
@@ -2313,6 +2343,7 @@ export type Database = {
         Row: {
           created_at: string;
           data: NonNullable<Json>;
+          emailed_at: string | null;
           event: string;
           id: string;
           kind: Database["public"]["Enums"]["notification_kind"];
@@ -2326,6 +2357,7 @@ export type Database = {
         Insert: {
           created_at?: string;
           data?: NonNullable<Json>;
+          emailed_at?: string | null;
           event: string;
           id?: string;
           kind: Database["public"]["Enums"]["notification_kind"];
@@ -2339,6 +2371,7 @@ export type Database = {
         Update: {
           created_at?: string;
           data?: NonNullable<Json>;
+          emailed_at?: string | null;
           event?: string;
           id?: string;
           kind?: Database["public"]["Enums"]["notification_kind"];
@@ -7898,6 +7931,42 @@ export type Database = {
           },
         ];
       };
+      travel_reminders: {
+        Row: {
+          due_on: string;
+          kit_id: string;
+          requirement_id: string;
+          sent_at: string;
+        };
+        Insert: {
+          due_on: string;
+          kit_id: string;
+          requirement_id: string;
+          sent_at?: string;
+        };
+        Update: {
+          due_on?: string;
+          kit_id?: string;
+          requirement_id?: string;
+          sent_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "travel_reminders_kit_id_fkey";
+            columns: ["kit_id"];
+            isOneToOne: false;
+            referencedRelation: "travel_kits";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "travel_reminders_requirement_id_fkey";
+            columns: ["requirement_id"];
+            isOneToOne: false;
+            referencedRelation: "travel_requirements";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       travel_requirements: {
         Row: {
           anchor: string | null;
@@ -8951,6 +9020,18 @@ export type Database = {
           use_bulbs?: number;
         };
         Returns: Json;
+      };
+      claim_email_notifications: {
+        Args: { batch?: number; events: string[] };
+        Returns: {
+          data: Json;
+          email: string;
+          event: string;
+          id: string;
+          link: string;
+          locale: string;
+          user_id: string;
+        }[];
       };
       claim_gift: { Args: { shipping?: Json; token: string }; Returns: string };
       claim_invite: { Args: { code: string }; Returns: string };
@@ -10622,6 +10703,7 @@ export type Database = {
         Returns: number;
       };
       notify_rentals_due_soon: { Args: { within?: string }; Returns: number };
+      notify_travel_kits: { Args: Record<PropertyKey, never>; Returns: number };
       offer_photos: {
         Args: { offer_product: string };
         Returns: {
