@@ -917,6 +917,7 @@
             "opens": "Opens {date}",
             "closes": "Closes {date}",
             "open": "Open until filled",
+            "source": "Check the source for dates",
             "closed": "Closed for now"
           }
         },
@@ -1388,6 +1389,7 @@
       "opens": "Opens {date}",
       "closes": "Closes {date}",
       "rolling": "Open until filled",
+      "checkSource": "Check the source for dates",
       "back": "All opportunities",
       "where": "Where",
       "deadline": "Deadline",
@@ -4303,6 +4305,7 @@
         "featured": "Featured",
         "closes": "Closes {date}",
         "rolling": "Open until filled",
+        "checkSource": "Check the source for dates",
         "followers": "Following: {count}",
         "feeToApply": "{fee} to apply",
         "reviewNote": "The IDEA: {note}",
@@ -7044,6 +7047,7 @@
         "theIdea": "The IDEA",
         "deadline": "Deadline",
         "rolling": "Open until filled",
+        "checkSource": "Check the source for dates",
         "status": "Status",
         "statuses": {
           "draft": "Draft",

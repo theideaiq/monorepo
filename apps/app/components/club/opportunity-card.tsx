@@ -1,4 +1,5 @@
 import { localized } from "@repo/commerce";
+import { datesAtSource } from "@repo/commerce/opportunities";
 import { Badge } from "@repo/design-system/components/ui/badge";
 import type { Locale } from "@repo/internationalization";
 import {
@@ -46,6 +47,8 @@ export const OpportunityCard = async ({
     when = t("opens", { date: formatDate(opportunity.opens_at, locale) });
   } else if (opportunity.deadline) {
     when = t("closes", { date: formatDate(opportunity.deadline, locale) });
+  } else if (datesAtSource(opportunity)) {
+    when = t("checkSource");
   }
 
   return (

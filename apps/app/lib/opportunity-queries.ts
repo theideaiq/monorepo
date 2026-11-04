@@ -21,7 +21,7 @@ export const useMyFollows = () => {
         await supabase
           .from("opportunity_follows")
           .select(
-            "opportunity_id, created_at, opportunity:opportunities (slug, kind, title_ar, title_en, host_name, opens_at, deadline, status)"
+            "opportunity_id, created_at, opportunity:opportunities (slug, kind, title_ar, title_en, host_name, opens_at, deadline, status, source_url, last_checked_on)"
           )
           .order("created_at", { ascending: false })
       ) ?? [],
