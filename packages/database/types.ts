@@ -2505,13 +2505,22 @@ export type Database = {
           deadline_notified_at: string | null;
           description_ar: string | null;
           description_en: string | null;
+          destination_countries: string[];
           ends_on: string | null;
           featured_until: string | null;
           fee_note: string | null;
+          funding_type: Database["public"]["Enums"]["opportunity_funding"];
           host_name: string | null;
           id: string;
+          iraqi_eligibility:
+            | Database["public"]["Enums"]["opportunity_eligibility"]
+            | null;
           kind: Database["public"]["Enums"]["opportunity_kind"];
+          last_checked_on: string | null;
+          levels: Database["public"]["Enums"]["opportunity_level"][];
           location: string | null;
+          max_age: number | null;
+          min_age: number | null;
           open_notified_at: string | null;
           opens_at: string | null;
           organization_id: string | null;
@@ -2521,6 +2530,7 @@ export type Database = {
           reviewed_at: string | null;
           reviewed_by: string | null;
           slug: string;
+          source_url: string | null;
           starts_on: string | null;
           status: string;
           submitted_at: string | null;
@@ -2540,13 +2550,22 @@ export type Database = {
           deadline_notified_at?: string | null;
           description_ar?: string | null;
           description_en?: string | null;
+          destination_countries?: string[];
           ends_on?: string | null;
           featured_until?: string | null;
           fee_note?: string | null;
+          funding_type?: Database["public"]["Enums"]["opportunity_funding"];
           host_name?: string | null;
           id?: string;
+          iraqi_eligibility?:
+            | Database["public"]["Enums"]["opportunity_eligibility"]
+            | null;
           kind: Database["public"]["Enums"]["opportunity_kind"];
+          last_checked_on?: string | null;
+          levels?: Database["public"]["Enums"]["opportunity_level"][];
           location?: string | null;
+          max_age?: number | null;
+          min_age?: number | null;
           open_notified_at?: string | null;
           opens_at?: string | null;
           organization_id?: string | null;
@@ -2556,6 +2575,7 @@ export type Database = {
           reviewed_at?: string | null;
           reviewed_by?: string | null;
           slug: string;
+          source_url?: string | null;
           starts_on?: string | null;
           status?: string;
           submitted_at?: string | null;
@@ -2575,13 +2595,22 @@ export type Database = {
           deadline_notified_at?: string | null;
           description_ar?: string | null;
           description_en?: string | null;
+          destination_countries?: string[];
           ends_on?: string | null;
           featured_until?: string | null;
           fee_note?: string | null;
+          funding_type?: Database["public"]["Enums"]["opportunity_funding"];
           host_name?: string | null;
           id?: string;
+          iraqi_eligibility?:
+            | Database["public"]["Enums"]["opportunity_eligibility"]
+            | null;
           kind?: Database["public"]["Enums"]["opportunity_kind"];
+          last_checked_on?: string | null;
+          levels?: Database["public"]["Enums"]["opportunity_level"][];
           location?: string | null;
+          max_age?: number | null;
+          min_age?: number | null;
           open_notified_at?: string | null;
           opens_at?: string | null;
           organization_id?: string | null;
@@ -2591,6 +2620,7 @@ export type Database = {
           reviewed_at?: string | null;
           reviewed_by?: string | null;
           slug?: string;
+          source_url?: string | null;
           starts_on?: string | null;
           status?: string;
           submitted_at?: string | null;
@@ -8645,6 +8675,10 @@ export type Database = {
       };
       claim_gift: { Args: { shipping?: Json; token: string }; Returns: string };
       claim_invite: { Args: { code: string }; Returns: string };
+      claim_organization: {
+        Args: { organization: string; owner_email: string };
+        Returns: undefined;
+      };
       claim_partner_webhooks: {
         Args: { max_rows?: number };
         Returns: {
@@ -9324,6 +9358,10 @@ export type Database = {
           isOneToOne: true;
           isSetofReturn: false;
         };
+      };
+      create_unclaimed_organization: {
+        Args: { org_name: string };
+        Returns: string;
       };
       decide_affiliate: {
         Args: {
@@ -12464,6 +12502,13 @@ export type Database = {
           rule: string;
         }[];
       };
+      unclaimed_organizations: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          id: string;
+          name: string;
+        }[];
+      };
       unlink_telegram: { Args: Record<PropertyKey, never>; Returns: undefined };
       update_pass_app: {
         Args: {
@@ -12616,12 +12661,33 @@ export type Database = {
         | "expired"
         | "withdrawn"
         | "purchased";
+      opportunity_eligibility:
+        | "named_official"
+        | "named_relay"
+        | "named_secondary"
+        | "inferred"
+        | "unconfirmed";
+      opportunity_funding:
+        | "fully_funded"
+        | "partly_funded"
+        | "stipend_only"
+        | "free_to_enter"
+        | "fee_charging"
+        | "self_funded"
+        | "unknown";
       opportunity_kind:
         | "job"
         | "internship"
         | "scholarship"
         | "competition"
         | "program";
+      opportunity_level:
+        | "high_school"
+        | "undergraduate"
+        | "masters"
+        | "phd"
+        | "postdoc"
+        | "professional";
       order_fulfilment: "delivery" | "pickup";
       order_payment_method: "online" | "cash_on_delivery";
       order_status:
@@ -12925,12 +12991,36 @@ export const Constants = {
         "withdrawn",
         "purchased",
       ],
+      opportunity_eligibility: [
+        "named_official",
+        "named_relay",
+        "named_secondary",
+        "inferred",
+        "unconfirmed",
+      ],
+      opportunity_funding: [
+        "fully_funded",
+        "partly_funded",
+        "stipend_only",
+        "free_to_enter",
+        "fee_charging",
+        "self_funded",
+        "unknown",
+      ],
       opportunity_kind: [
         "job",
         "internship",
         "scholarship",
         "competition",
         "program",
+      ],
+      opportunity_level: [
+        "high_school",
+        "undergraduate",
+        "masters",
+        "phd",
+        "postdoc",
+        "professional",
       ],
       order_fulfilment: ["delivery", "pickup"],
       order_payment_method: ["online", "cash_on_delivery"],

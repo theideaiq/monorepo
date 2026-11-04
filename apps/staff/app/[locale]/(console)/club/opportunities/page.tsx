@@ -31,7 +31,7 @@ export const generateMetadata = async (): Promise<Metadata> => {
 };
 
 const COLUMNS =
-  "id, kind, title_ar, title_en, status, deadline, submitted_at, featured_until, organization:organizations (name)" as const;
+  "id, kind, title_ar, title_en, status, deadline, submitted_at, featured_until, host_name" as const;
 
 /**
  * Opportunities: organizations' listings waiting for review first (oldest
@@ -94,9 +94,6 @@ const OpportunitiesPage = async ({
 
   const rows = (list: typeof all) =>
     (list ?? []).map((row) => {
-      const organization = Array.isArray(row.organization)
-        ? row.organization[0]
-        : row.organization;
       const featured =
         row.featured_until && new Date(row.featured_until).getTime() > now;
       return (
@@ -115,9 +112,7 @@ const OpportunitiesPage = async ({
             ) : null}
           </TableCell>
           <TableCell>{t(`opportunities.kinds.${row.kind}`)}</TableCell>
-          <TableCell>
-            {organization?.name ?? t("opportunities.theIdea")}
-          </TableCell>
+          <TableCell>{row.host_name ?? t("opportunities.theIdea")}</TableCell>
           <TableCell className="whitespace-nowrap">
             {row.deadline
               ? format.dateTime(row.deadline)

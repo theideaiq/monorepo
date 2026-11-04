@@ -152,6 +152,22 @@ export const tags = z
   ])
   .pipe(z.array(z.string().max(40)).max(20));
 
+const COUNTRY_CODE = /^[A-Z]{2}$/;
+
+/** Comma-separated ISO country codes, upper-cased and de-duplicated. */
+export const countryCodes = z
+  .string()
+  .optional()
+  .transform((value) => [
+    ...new Set(
+      (value ?? "")
+        .split(TAG_SEPARATOR)
+        .map((code) => code.trim().toUpperCase())
+        .filter(Boolean)
+    ),
+  ])
+  .pipe(z.array(z.string().regex(COUNTRY_CODE)).max(50));
+
 /**
  * Key/value rows (`key[]` and `value[]` fields) as an object, e.g. product
  * details or variant attributes. Rows without a key are dropped.

@@ -583,8 +583,12 @@ export const getEvent = async (slug: string) => {
   );
 };
 
-const OPPORTUNITY_COLUMNS =
-  "id, slug, kind, host_name, title_ar, title_en, summary_ar, summary_en, description_ar, description_en, location, remote, apply_url, applicant_fee, fee_note, opens_at, deadline, starts_on, ends_on, cover_image, status, featured_until, updated_at" as const;
+/**
+ * Every column, not a list: code ships minutes before its migration, and
+ * naming a column that isn't there yet would fail the whole query. All of
+ * them are public already, and these rows stay on the server.
+ */
+const OPPORTUNITY_COLUMNS = "*" as const;
 
 export type OpportunityRow = Pick<
   Tables<"opportunities">,
@@ -594,16 +598,24 @@ export type OpportunityRow = Pick<
   | "deadline"
   | "description_ar"
   | "description_en"
+  | "destination_countries"
   | "ends_on"
   | "featured_until"
   | "fee_note"
+  | "funding_type"
   | "host_name"
   | "id"
+  | "iraqi_eligibility"
   | "kind"
+  | "last_checked_on"
+  | "levels"
   | "location"
+  | "max_age"
+  | "min_age"
   | "opens_at"
   | "remote"
   | "slug"
+  | "source_url"
   | "starts_on"
   | "status"
   | "summary_ar"

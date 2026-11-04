@@ -155,6 +155,41 @@ test.describe("Staff", () => {
     await expect(page.getByText("Listed", { exact: true })).toBeVisible();
     await expectAccessible(page);
 
+    // Club → Opportunities: an outside program under a new unclaimed
+    // organization, listed without review and showing its name as the host.
+    await db.from("opportunities").delete().eq("title_en", "E2E DAAD Grant");
+    await page.goto(`${urls.staff}/club/opportunities/new`);
+    await page.getByLabel("Or a new organization").fill("E2E DAAD");
+    await page.getByLabel("Title in Arabic").fill("منحة الاختبار");
+    await page.getByLabel("Title in English").fill("E2E DAAD Grant");
+    await page.getByLabel("Place").fill("Berlin");
+    await page.getByLabel("Funding").selectOption("fully_funded");
+    await page.getByLabel("Eligibility for Iraqis").selectOption("inferred");
+    await page.getByLabel("Destination countries").fill("de");
+    await page.getByLabel("Master's").check();
+    await page
+      .getByLabel("Source", { exact: true })
+      .fill("https://example.com/grant");
+    await page.getByLabel("Last checked").fill("2026-11-01");
+    await page.getByLabel("Listed in the Club").check();
+    await expectAccessible(page);
+    await page.getByRole("button", { exact: true, name: "Save" }).click();
+    await expect(
+      page.getByRole("heading", { name: "Hand over to the organization" })
+    ).toBeVisible();
+    await expect(page.getByLabel("Funding")).toHaveValue("fully_funded");
+    await expectAccessible(page);
+    const { data: grant } = await db
+      .from("opportunities")
+      .select("host_name, status, destination_countries")
+      .eq("title_en", "E2E DAAD Grant")
+      .single();
+    expect(grant).toEqual({
+      destination_countries: ["DE"],
+      host_name: "E2E DAAD",
+      status: "approved",
+    });
+
     // Club → Opportunities: one of The IDEA's programs sold as a package,
     // and an application accepted.
     const customerId = await resetCustomer();

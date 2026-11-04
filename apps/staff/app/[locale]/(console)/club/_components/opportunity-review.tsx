@@ -8,7 +8,11 @@ import {
   TextareaField,
   TextField,
 } from "@/components/admin/fields";
-import { featureOpportunity, reviewOpportunity } from "../actions";
+import {
+  claimOrganization,
+  featureOpportunity,
+  reviewOpportunity,
+} from "../actions";
 
 const DECISIONS = ["approved", "changes", "rejected"] as const;
 
@@ -37,6 +41,31 @@ export const ReviewOpportunityForm = ({ id }: { readonly id: string }) => {
       />
       <SubmitButton className="justify-self-start" size="sm">
         {t("sendDecision")}
+      </SubmitButton>
+    </ActionForm>
+  );
+};
+
+/** Makes a Pass the owner of the unclaimed organization running a listing. */
+export const ClaimOrganizationForm = ({
+  organization,
+}: {
+  readonly organization: string;
+}) => {
+  const t = useTranslations("admin.editorial.opportunities");
+  return (
+    <ActionForm action={claimOrganization} className="grid gap-3">
+      <input name="organization" type="hidden" value={organization} />
+      <TextField
+        dir="ltr"
+        label={t("claimEmail")}
+        maxLength={320}
+        name="email"
+        required
+        type="email"
+      />
+      <SubmitButton className="justify-self-start" size="sm" variant="outline">
+        {t("claimSend")}
       </SubmitButton>
     </ActionForm>
   );

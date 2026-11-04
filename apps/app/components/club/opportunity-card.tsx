@@ -1,7 +1,10 @@
 import { localized } from "@repo/commerce";
 import { Badge } from "@repo/design-system/components/ui/badge";
 import type { Locale } from "@repo/internationalization";
-import { formatDate } from "@repo/internationalization/format";
+import {
+  formatCalendarDate,
+  formatDate,
+} from "@repo/internationalization/format";
 import { Link } from "@repo/internationalization/navigation";
 import { Briefcase, MapPin } from "lucide-react";
 import { getTranslations } from "next-intl/server";
@@ -13,9 +16,12 @@ import { editorialUrl, type OpportunityRow } from "@/lib/data";
 export const isFeatured = (row: Pick<OpportunityRow, "featured_until">) =>
   Boolean(row.featured_until && new Date(row.featured_until) > new Date());
 
+/** A calendar day (YYYY-MM-DD) to format, at midday so it stays that day. */
+export const calendarDay = (value: string) => new Date(`${value}T12:00:00`);
+
 /**
- * An opportunity in Club → Join: its kind, who runs it, where, and when it
- * opens or closes.
+ * An opportunity in Club → Join: its kind, who runs it, where, when it opens
+ * or closes, its funding, its standing for Iraqis and when it was checked.
  */
 export const OpportunityCard = async ({
   locale,
@@ -28,6 +34,10 @@ export const OpportunityCard = async ({
   const title = localized(opportunity, "title", locale);
   const summary = localized(opportunity, "summary", locale);
   const cover = editorialUrl(opportunity.cover_image);
+  const funding =
+    opportunity.funding_type && opportunity.funding_type !== "unknown"
+      ? opportunity.funding_type
+      : null;
   const opensLater =
     opportunity.opens_at && new Date(opportunity.opens_at) > new Date();
 
@@ -72,6 +82,28 @@ export const OpportunityCard = async ({
           </span>
           <span>{when}</span>
         </p>
+        {funding || opportunity.iraqi_eligibility ? (
+          <p className="flex flex-wrap gap-2">
+            {funding ? (
+              <Badge variant="secondary">{t(`fundingTypes.${funding}`)}</Badge>
+            ) : null}
+            {opportunity.iraqi_eligibility ? (
+              <Badge variant="outline">
+                {t(`eligibilityGrades.${opportunity.iraqi_eligibility}`)}
+              </Badge>
+            ) : null}
+          </p>
+        ) : null}
+        {opportunity.last_checked_on ? (
+          <p className="text-muted-foreground text-xs">
+            {t("checkedOn", {
+              date: formatCalendarDate(
+                calendarDay(opportunity.last_checked_on),
+                locale
+              ),
+            })}
+          </p>
+        ) : null}
       </div>
     </Link>
   );

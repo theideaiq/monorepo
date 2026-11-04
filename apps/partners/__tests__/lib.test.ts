@@ -5,8 +5,71 @@ import { ApiError, callApi } from "@/lib/api";
 import { developerError } from "@/lib/developer-queries";
 import { toInvitationError, toOrganizationError } from "@/lib/errors";
 import { safeNextPath } from "@/lib/navigation";
+import {
+  type OpportunityInput,
+  parseCountries,
+  toRow,
+  validFilterFields,
+} from "@/lib/opportunity-queries";
 import { isValidSlug, suggestSlug } from "@/lib/slug";
 import { fakeSupabase } from "./render";
+
+describe("an opportunity's filter fields", () => {
+  const input: OpportunityInput = {
+    applicantFee: 0,
+    applyUrl: "",
+    countries: " de, tr,DE ",
+    deadline: null,
+    descriptionAr: "",
+    descriptionEn: "",
+    eligibility: "named_official",
+    endsOn: null,
+    feeNote: "",
+    funding: "partly_funded",
+    kind: "scholarship",
+    lastCheckedOn: "2026-11-01",
+    levels: ["masters"],
+    location: "",
+    maxAge: 30,
+    minAge: 18,
+    opensAt: null,
+    remote: true,
+    sourceUrl: " https://example.iq/about ",
+    startsOn: null,
+    summaryAr: "",
+    summaryEn: "",
+    titleAr: "منحة",
+    titleEn: "A scholarship",
+  };
+
+  test("are saved as the database keeps them", () => {
+    expect(toRow(input)).toMatchObject({
+      destination_countries: ["DE", "TR"],
+      funding_type: "partly_funded",
+      iraqi_eligibility: "named_official",
+      last_checked_on: "2026-11-01",
+      levels: ["masters"],
+      max_age: 30,
+      min_age: 18,
+      source_url: "https://example.iq/about",
+    });
+    expect(toRow({ ...input, countries: "", sourceUrl: " " })).toMatchObject({
+      destination_countries: [],
+      source_url: null,
+    });
+  });
+
+  test("are checked before saving", () => {
+    expect(parseCountries("iq, ")).toEqual(["IQ"]);
+    expect(validFilterFields(input)).toBe(true);
+    expect(validFilterFields({ ...input, countries: "Germany" })).toBe(false);
+    expect(validFilterFields({ ...input, maxAge: 17 })).toBe(false);
+    expect(validFilterFields({ ...input, maxAge: null })).toBe(true);
+    expect(
+      validFilterFields({ ...input, sourceUrl: "http://example.iq" })
+    ).toBe(false);
+  });
+});
 
 describe("redirect targets", () => {
   test("only accepts paths inside the app", () => {
