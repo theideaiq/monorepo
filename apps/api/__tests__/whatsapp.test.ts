@@ -184,7 +184,7 @@ describe("templateMessage", () => {
         }),
         "ar"
       )?.parameters
-    ).toEqual(["بك", "#10042", "سنرسله إليك قريباً"]);
+    ).toEqual(["بك", "#10042", "راح ندزه إلك قريب"]);
   });
 
   test("rental due soon: the item in the recipient's language and the date", () => {

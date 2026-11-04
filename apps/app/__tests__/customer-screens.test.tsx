@@ -359,9 +359,7 @@ describe("checkout", () => {
     fireEvent.click(screen.getByRole("button", { name: PLACE_ORDER_AR }));
 
     expect(
-      await screen.findByText(
-        "الكمية المتوفرة من بعض المنتجات غير كافية. راجع سلتك."
-      )
+      await screen.findByText("بعض المنتجات ماكو منها كمية كافية. راجع سلتك.")
     ).toBeTruthy();
     expect(openCheckout).not.toHaveBeenCalled();
   });

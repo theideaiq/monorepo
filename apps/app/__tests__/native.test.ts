@@ -146,7 +146,7 @@ describe("capacitor.config", () => {
     );
     expect(shell.url).toBe("https://theideaiq.com");
     expect(shell.messages.en.retry).toBe("Try again");
-    expect(shell.messages.ar.title).toBe("أنت غير متصل");
+    expect(shell.messages.ar.title).toBe("إنت مو متصل");
   });
 });
 

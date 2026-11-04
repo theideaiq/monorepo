@@ -57,8 +57,7 @@ const setup = ({
   return { signInWithOtp, supabase, verifyOtp };
 };
 
-const USE_CODE =
-  /^(Email me a code instead|أرسلوا لي رمزًا بالبريد بدلًا من ذلك)$/;
+const USE_CODE = /^(Email me a code instead|دزّولي رمز على الإيميل بدالها)$/;
 
 /** The password form shows first; these tests use the emailed code. */
 const useCode = () =>
@@ -157,19 +156,15 @@ describe("The IDEA Pass email sign-in", () => {
     fireEvent.change(screen.getByLabelText("البريد الإلكتروني"), {
       target: { value: "sara@example.com" },
     });
-    fireEvent.click(screen.getByRole("button", { name: "متابعة" }));
+    fireEvent.click(screen.getByRole("button", { name: "كمّل" }));
     fireEvent.change(await screen.findByLabelText("رمز التحقق"), {
       target: { value: "00000000" },
     });
 
-    expect(
-      await screen.findByText("الرمز غير صحيح أو منتهي الصلاحية.")
-    ).toBeTruthy();
+    expect(await screen.findByText("الرمز غلط أو انتهت صلاحيته.")).toBeTruthy();
     expect(assign).not.toHaveBeenCalled();
 
-    fireEvent.click(
-      screen.getByRole("button", { name: "استخدام بريد إلكتروني آخر" })
-    );
+    fireEvent.click(screen.getByRole("button", { name: "استخدم إيميل ثاني" }));
     expect(
       (screen.getByLabelText("البريد الإلكتروني") as HTMLInputElement).value
     ).toBe("sara@example.com");

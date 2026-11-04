@@ -35,8 +35,7 @@ const ar = {
   links: "روابط",
   linksTitle: "روابط ايديا:",
   linkWebsite: "الموقع",
-  menuGreeting:
-    "هلو {name}! آني الدرويد من ايديا. شلون أگدر أساعدك؟",
+  menuGreeting: "هلو {name}! آني الدرويد من ايديا. شلون أگدر أساعدك؟",
   newPost: "اكو منشور جديد بـ{channel}:",
   newPostOpen: "افتح المنشور",
   newsletterNowOff: "وگّفت النشرة. ما راح ندزلك منشوراتنا الجديدة.",

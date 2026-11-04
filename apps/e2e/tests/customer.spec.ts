@@ -146,7 +146,7 @@ test("the sign-in page is accessible in Arabic", async ({ page }) => {
   await expect(page).toHaveURL(`${urls.web}/ar/sign-in`);
   await expect(page.locator("html")).toHaveAttribute("dir", "rtl");
   await expect(
-    page.getByRole("heading", { name: "تسجيل الدخول إلى ايديا پاس" })
+    page.getByRole("heading", { name: "سجّل دخولك بايديا پاس" })
   ).toBeVisible();
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
   await expectAccessible(page);
@@ -816,7 +816,7 @@ test("an outside listing with no date or known cost claims neither", async ({
 
   await page.goto(`${urls.web}/ar/club/opportunities/${slug}`);
   await expect(
-    page.getByRole("article").getByText("راجع المصدر لمعرفة المواعيد")
+    page.getByRole("article").getByText("شوف المصدر حتى تعرف المواعيد")
   ).toBeVisible();
 
   await db.from("opportunities").delete().eq("slug", slug);

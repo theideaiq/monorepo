@@ -43,7 +43,7 @@ describe("buildPosts", () => {
     );
     expect(news).toEqual([
       {
-        buttonLabel: "اقرأ المزيد",
+        buttonLabel: "اقرأ أكثر",
         lines: ["ملخص"],
         photo:
           "https://db.example.com/storage/v1/object/public/editorial/covers/a.webp",
