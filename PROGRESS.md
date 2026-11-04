@@ -468,7 +468,7 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   photos of a copy that isn't new. The performance budget (A28) follows on
   its own.
 - 2026-11-04: **Store trust, schema first** (migration
-  `20270325000000_store_trust.sql`): `sellers.score_lines`, the order lines
+  `20270326000000_store_trust.sql`): `sellers.score_lines`, the order lines
   a shop's 90-day score rests on (0 = no record yet, shown as a new shop,
   never "100%"), and `seller_offers.photos`, a shop's own 3–10 photos of a
   listing that isn't new, set with `set_offer_photos` and read on product
