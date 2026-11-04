@@ -455,6 +455,13 @@ steps need Xcode, Android Studio and the store/Firebase accounts
 
 ## Decisions
 
+- 2026-11-04: **Store trust, schema first** (migration
+  `20270325000000_store_trust.sql`): `sellers.score_lines`, the order lines
+  a shop's 90-day score rests on (0 = no record yet, shown as a new shop,
+  never "100%"), and `seller_offers.photos`, a shop's own 3–10 photos of a
+  listing that isn't new, set with `set_offer_photos` and read on product
+  pages through `offer_photos`. The website and Partners use them in the
+  next change.
 - 2026-11-04: **Owner decisions after the design inspiration review and the
   audit of commit 532ce1b** (the work is split into seven pull requests:
   PR 1 now, PR 2 store trust, PR 3 Plus and Pass, PR 4 Partners, PR 5 the
