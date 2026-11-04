@@ -208,7 +208,9 @@ incidents) is in `docs/platform`.
     routes and their sourced, dated requirements, and `/club/telegram`) · Partners `/partners` (Team
     `/partners/team` with requests at `/partners/team/<id>` and Plus seats
     at `/partners/team/plus`, then orders, invoices, `/partners/shops`
-    where staff approve shops, perks and sign-in) · Finance `/finance` (with
+    where staff approve shops, perks and sign-in, and `/partners/crm`, the
+    partner CRM: organizations, their people, every touch and deals, with
+    due follow-ups in the Inbox and a CSV import at `/partners/crm/import`) · Finance `/finance` (with
     `/finance/payouts`, the weekly shop payouts, `/finance/programs`,
     program refunds to pay, `/finance/codes`, digital codes (held and failed
     codes, brands and denominations with cost, margin and price, the supplier

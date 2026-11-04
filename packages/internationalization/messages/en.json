@@ -8551,7 +8551,7 @@
         "university": "University",
         "school": "School",
         "embassy": "Embassy",
-        "cultural_centre": "Cultural centre",
+        "cultural_centre": "Cultural center",
         "foundation": "Foundation",
         "program_organizer": "Program organizer",
         "ngo": "NGO",
@@ -8719,7 +8719,7 @@
         "orgColumns": {
           "name": "The organization's name (required)",
           "name_ar": "Its Arabic name",
-          "kind": "University, school, embassy, cultural centre, foundation, program organizer, NGO, company, government or media; anything else becomes Other",
+          "kind": "University, school, embassy, cultural center, foundation, program organizer, NGO, company, government or media; anything else becomes Other",
           "country": "ISO code (DE) or the country's name in English or Arabic",
           "city": "City",
           "website": "Its website; a bare domain gets https:// in front. Used to match organizations already here",
