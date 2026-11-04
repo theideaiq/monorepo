@@ -1,7 +1,7 @@
 "use client";
 
 import { useAuth } from "@repo/auth/provider";
-import type { Database } from "@repo/database";
+import { Constants, type Database } from "@repo/database";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { unwrap } from "./queries";
 
@@ -22,6 +22,12 @@ export type OpportunityStatus =
   | "pending"
   | "rejected";
 
+export type OpportunityLevel = Database["public"]["Enums"]["opportunity_level"];
+export type OpportunityFunding =
+  Database["public"]["Enums"]["opportunity_funding"];
+export type OpportunityEligibility =
+  Database["public"]["Enums"]["opportunity_eligibility"];
+
 export const OPPORTUNITY_KINDS: readonly OpportunityKind[] = [
   "job",
   "internship",
@@ -30,18 +36,32 @@ export const OPPORTUNITY_KINDS: readonly OpportunityKind[] = [
   "program",
 ];
 
+export const OPPORTUNITY_LEVELS = Constants.public.Enums.opportunity_level;
+export const OPPORTUNITY_FUNDING = Constants.public.Enums.opportunity_funding;
+export const OPPORTUNITY_ELIGIBILITY =
+  Constants.public.Enums.opportunity_eligibility;
+
 export interface OpportunityInput {
   applicantFee: number;
   applyUrl: string;
+  /** As typed: comma-separated two-letter country codes. */
+  countries: string;
   deadline: string | null;
   descriptionAr: string;
   descriptionEn: string;
+  eligibility: OpportunityEligibility | null;
   endsOn: string | null;
   feeNote: string;
+  funding: OpportunityFunding;
   kind: OpportunityKind;
+  lastCheckedOn: string | null;
+  levels: readonly OpportunityLevel[];
   location: string;
+  maxAge: number | null;
+  minAge: number | null;
   opensAt: string | null;
   remote: boolean;
+  sourceUrl: string;
   startsOn: string | null;
   summaryAr: string;
   summaryEn: string;
@@ -87,18 +107,48 @@ export const useOpportunityFollowers = (organizationId: string) => {
 
 const blank = (value: string) => value.trim() || null;
 
-const toRow = (input: OpportunityInput) => ({
+const COUNTRY_CODE = /^[A-Z]{2}$/;
+
+/** Comma-separated country codes as the database keeps them. */
+export const parseCountries = (value: string) => [
+  ...new Set(
+    value
+      .split(",")
+      .map((code) => code.trim().toUpperCase())
+      .filter(Boolean)
+  ),
+];
+
+/** Whether the filter fields would pass the database's checks. */
+export const validFilterFields = (
+  input: Pick<OpportunityInput, "countries" | "maxAge" | "minAge" | "sourceUrl">
+) =>
+  parseCountries(input.countries).every((code) => COUNTRY_CODE.test(code)) &&
+  (input.minAge === null ||
+    input.maxAge === null ||
+    input.minAge <= input.maxAge) &&
+  (!input.sourceUrl.trim() || input.sourceUrl.trim().startsWith("https://"));
+
+export const toRow = (input: OpportunityInput) => ({
   applicant_fee: input.applicantFee,
   apply_url: blank(input.applyUrl),
   deadline: input.deadline,
   description_ar: blank(input.descriptionAr),
   description_en: blank(input.descriptionEn),
+  destination_countries: parseCountries(input.countries),
   ends_on: input.endsOn,
   fee_note: blank(input.feeNote),
+  funding_type: input.funding,
+  iraqi_eligibility: input.eligibility,
   kind: input.kind,
+  last_checked_on: input.lastCheckedOn,
+  levels: [...input.levels],
   location: blank(input.location),
+  max_age: input.maxAge,
+  min_age: input.minAge,
   opens_at: input.opensAt,
   remote: input.remote,
+  source_url: blank(input.sourceUrl),
   starts_on: input.startsOn,
   summary_ar: blank(input.summaryAr),
   summary_en: blank(input.summaryEn),

@@ -30,8 +30,9 @@ incidents) is in `docs/platform`.
     `/plus/plans` the plans and tiers with joining and the waitlist, and
     `/plus/plan` your plan (changes, pause, cancel; Family links to the
     Pass). The IDEA Club is `/club` with `/club/events[/<slug>]` (RSVP),
-    `/club/opportunities[/<slug>]` (who runs it, where to apply and Notify
-    me; for The IDEA's own programs, the package, the application with
+    `/club/opportunities[/<slug>]` (filters by kind, level, destination,
+    funding, standing for Iraqis and age; who runs it, the source and when
+    it was last checked, where to apply and Notify me; for The IDEA's own programs, the package, the application with
     passport scans, its installments, which go through the cart, and
     withdrawing), `/club/surveys` and `/club/read[/<slug>]` (posts by
     topic), then the Telegram rooms; your tickets, applications and
@@ -185,7 +186,9 @@ incidents) is in `docs/platform`.
     The IDEA's own auctions; and `/catalog/campaigns`, seasonal campaigns
     shops opt in to) · Customers `/customers` ·
     Club `/club` (with `/club/opportunities`, where editors review
-    organizations' opportunities and post The IDEA's own, selling The
+    organizations' opportunities, post The IDEA's own and outside
+    organizations' under an unclaimed organization (one with no members,
+    handed over by Pass email), selling The
     IDEA's programs as packages with their applications at
     `/club/opportunities/<id>/applications`, and `/club/telegram`) · Partners `/partners` (Team
     `/partners/team` with requests at `/partners/team/<id>` and Plus seats

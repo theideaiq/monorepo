@@ -12,6 +12,7 @@ import { Link } from "@/lib/admin/navigation";
 import { requireSection } from "@/lib/admin/session";
 import { OpportunityForm } from "../../_components/opportunity-form";
 import {
+  ClaimOrganizationForm,
   FeatureOpportunityForm,
   ReviewOpportunityForm,
 } from "../../_components/opportunity-review";
@@ -45,17 +46,22 @@ const OpportunityPage = async ({
   const tCommon = await getTranslations("admin.common");
   const format = formatters(locale);
 
-  const { data: opportunity } = await supabase
+  // Editors can't read organizations: the host's name is on the listing.
+  const { data: row } = await supabase
     .from("opportunities")
-    .select("*, organization:organizations (name)")
+    .select("*")
     .eq("id", id)
     .maybeSingle();
-  if (!opportunity) {
+  if (!row) {
     notFound();
   }
-  const { organization, ...row } = opportunity;
-  const runBy = (Array.isArray(organization) ? organization[0] : organization)
-    ?.name;
+  const organizationId = row.organization_id;
+  const { data: unclaimed } = organizationId
+    ? await supabase.rpc("unclaimed_organizations")
+    : { data: null };
+  const isUnclaimed = (unclaimed ?? []).some(
+    (host) => host.id === organizationId
+  );
   const status = row.status as Status;
   // The IDEA's own programs are sold here as packages.
   const sold = row.kind === "program" && !row.organization_id;
@@ -77,7 +83,7 @@ const OpportunityPage = async ({
     <>
       <PageHeader
         back={{ href: "/club/opportunities", label: t("tabs.opportunities") }}
-        description={runBy ?? t("opportunities.theIdea")}
+        description={row.host_name ?? t("opportunities.theIdea")}
         title={localized(row, "title", locale)}
       >
         <ActionButton
@@ -96,6 +102,7 @@ const OpportunityPage = async ({
         <div className="grid content-start gap-4">
           <OpportunityForm
             deadline={toBaghdadInput(row.deadline)}
+            listable={!organizationId || isUnclaimed}
             opensAt={toBaghdadInput(row.opens_at)}
             opportunity={row}
             supabaseUrl={env.NEXT_PUBLIC_SUPABASE_URL ?? ""}
@@ -136,7 +143,7 @@ const OpportunityPage = async ({
             {row.review_note ? (
               <p className="text-muted-foreground text-sm">{row.review_note}</p>
             ) : null}
-            {runBy && status === "pending" ? (
+            {organizationId && status === "pending" ? (
               <ReviewOpportunityForm id={row.id} />
             ) : null}
             {status === "approved" ? (
@@ -150,6 +157,14 @@ const OpportunityPage = async ({
               </ActionButton>
             ) : null}
           </Panel>
+          {organizationId && isUnclaimed ? (
+            <Panel
+              description={t("opportunities.claimDescription")}
+              title={t("opportunities.claimTitle")}
+            >
+              <ClaimOrganizationForm organization={organizationId} />
+            </Panel>
+          ) : null}
           <Panel
             description={t("opportunities.featuredDescription")}
             title={t("opportunities.featuring")}

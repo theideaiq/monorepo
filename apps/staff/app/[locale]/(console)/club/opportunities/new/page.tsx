@@ -10,10 +10,14 @@ export const generateMetadata = async (): Promise<Metadata> => {
   return { title: t("new") };
 };
 
-/** One of The IDEA's own opportunities (programs, competitions, …). */
+/**
+ * One of The IDEA's own opportunities (programs, competitions, …), or an
+ * outside organization's, under an unclaimed organization.
+ */
 const NewOpportunityPage = async () => {
-  await requireSection("editorial", "write");
+  const { supabase } = await requireSection("editorial", "write");
   const t = await getTranslations("admin.editorial");
+  const { data: hosts } = await supabase.rpc("unclaimed_organizations");
 
   return (
     <>
@@ -24,6 +28,8 @@ const NewOpportunityPage = async () => {
       <PageBody className="max-w-5xl">
         <OpportunityForm
           deadline=""
+          hosts={hosts ?? []}
+          listable
           opensAt=""
           supabaseUrl={env.NEXT_PUBLIC_SUPABASE_URL ?? ""}
         />

@@ -1,5 +1,6 @@
 "use server";
 
+import { Constants } from "@repo/database";
 import { z } from "zod";
 import {
   ActionFailure,
@@ -11,6 +12,7 @@ import { success } from "@/lib/admin/action-state";
 import { slugify } from "@/lib/admin/catalog-import";
 import {
   checkbox,
+  countryCodes,
   dateTime,
   int,
   optionalDate,
@@ -24,6 +26,7 @@ import {
   uuid,
 } from "@/lib/admin/forms";
 import { type PublishMode, publishedAtFor } from "@/lib/admin/publishing";
+import type { ServerClient } from "@/lib/admin/session";
 import { postTopics } from "./_components/topics";
 
 const publishMode = z.enum(["draft", "now", "schedule"]);
@@ -381,23 +384,44 @@ const optionalHttpsUrl = z
   .transform((value) => value || null)
   .pipe(z.union([z.null(), z.url().startsWith("https://")]));
 
+const { Enums } = Constants.public;
+
+/** A new one's unclaimed organization (an existing one, or a new name). */
+const hostFields = {
+  hostId: optionalUuid,
+  hostName: optionalText(120),
+};
+
 const opportunitySchema = z
   .object({
     applicantFee: optionalInt(0, 1_000_000_000),
     applyUrl: optionalHttpsUrl,
+    countries: countryCodes,
     coverImage: optionalStoragePath,
     deadline: optionalDateTime,
     descriptionAr: optionalText(10_000),
     descriptionEn: optionalText(10_000),
+    eligibility: z
+      .enum(Enums.opportunity_eligibility)
+      .or(z.literal(""))
+      .optional()
+      .transform((value) => value || null),
     endsOn: optionalDate,
     feeNote: optionalText(300),
+    funding: z.enum(Enums.opportunity_funding).default("unknown"),
+    ...hostFields,
     id: optionalUuid,
     kind: z.enum(opportunityKinds),
+    lastChecked: optionalDate,
+    levels: z.array(z.enum(Enums.opportunity_level)).max(6).default([]),
     /** The IDEA's own only: listed straight away, or kept as a draft. */
     listed: checkbox,
     location: optionalText(160),
+    maxAge: optionalInt(1, 99),
+    minAge: optionalInt(1, 99),
     opensAt: optionalDateTime,
     remote: checkbox,
+    sourceUrl: optionalHttpsUrl,
     startsOn: optionalDate,
     summaryAr: optionalText(300),
     summaryEn: optionalText(300),
@@ -414,11 +438,25 @@ const opportunitySchema = z
   .refine(
     (row) => !(row.startsOn && row.endsOn) || row.startsOn <= row.endsOn,
     { path: ["endsOn"] }
+  )
+  .refine(
+    (row) =>
+      row.minAge === null || row.maxAge === null || row.minAge <= row.maxAge,
+    { path: ["maxAge"] }
+  );
+
+/** The organizations nobody has claimed: editors list and review for them. */
+const unclaimedIds = async (supabase: ServerClient) =>
+  new Set(
+    (check(await supabase.rpc("unclaimed_organizations")).data ?? []).map(
+      (organization) => organization.id
+    )
   );
 
 /**
- * Saves an opportunity. New ones are The IDEA's own (listed or a draft);
- * an organization's keep their review status when editors correct them.
+ * Saves an opportunity. New ones are The IDEA's own or an unclaimed
+ * organization's (listed or a draft); a claimed organization's keep their
+ * review status when editors correct them.
  */
 export const saveOpportunity = staffAction(
   "editorial",
@@ -431,12 +469,20 @@ export const saveOpportunity = staffAction(
       deadline: input.deadline,
       description_ar: input.descriptionAr,
       description_en: input.descriptionEn,
+      destination_countries: input.countries,
       ends_on: input.endsOn,
       fee_note: input.feeNote,
+      funding_type: input.funding,
+      iraqi_eligibility: input.eligibility,
       kind: input.kind,
+      last_checked_on: input.lastChecked,
+      levels: input.levels,
       location: input.location,
+      max_age: input.maxAge,
+      min_age: input.minAge,
       opens_at: input.opensAt,
       remote: input.remote,
+      source_url: input.sourceUrl,
       starts_on: input.startsOn,
       summary_ar: input.summaryAr,
       summary_en: input.summaryEn,
@@ -452,26 +498,58 @@ export const saveOpportunity = staffAction(
           .eq("id", input.id)
           .single()
       );
+      const reviewed =
+        current?.organization_id &&
+        !(await unclaimedIds(supabase)).has(current.organization_id);
       affected(
         await supabase
           .from("opportunities")
-          .update(current?.organization_id ? row : { ...row, status })
+          .update(reviewed ? row : { ...row, status })
           .eq("id", input.id)
           .select("id")
       );
       return success();
     }
+    let organizationId = input.hostId;
+    if (input.hostName) {
+      organizationId = check(
+        await supabase.rpc("create_unclaimed_organization", {
+          org_name: input.hostName,
+        })
+      ).data;
+    } else if (
+      organizationId &&
+      !(await unclaimedIds(supabase)).has(organizationId)
+    ) {
+      throw new ActionFailure("invalid");
+    }
     const { data } = check(
       await supabase
         .from("opportunities")
-        // The database makes the slug from the title.
-        .insert({ ...row, slug: "", status })
+        // The database makes the slug from the title, and the host from
+        // the organization.
+        .insert({ ...row, organization_id: organizationId, slug: "", status })
         .select("id")
         .single()
     );
     return success("saved", {
       redirectTo: `/club/opportunities/${data?.id}`,
     });
+  }
+);
+
+/** Hands an unclaimed organization over to the Pass with this email. */
+export const claimOrganization = staffAction(
+  "editorial",
+  z.object({ email: z.email().max(320), organization: uuid }),
+  async ({ input, supabase }) => {
+    check(
+      await supabase.rpc("claim_organization", {
+        organization: input.organization,
+        owner_email: input.email,
+      })
+    );
+    return success("saved");
   }
 );
 
