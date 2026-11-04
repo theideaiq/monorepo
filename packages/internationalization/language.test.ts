@@ -149,7 +149,8 @@ describe("language standard", () => {
     expect(offending(english, ARABIC)).toEqual([]);
     expect(
       arabic
-        .filter(([, text]) => LATIN.test(text.replace(TYPED_OR_LINKS, "")))
+        // Each allowed part becomes a space, so no two pieces join into a word.
+        .filter(([, text]) => LATIN.test(text.replace(TYPED_OR_LINKS, " ")))
         .map(([path, text]) => `${path}: ${text}`)
     ).toEqual([]);
   });
