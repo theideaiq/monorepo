@@ -8,6 +8,7 @@ import {
   ListIcon,
   ListOrderedIcon,
   type LucideIcon,
+  LuggageIcon,
   PackageIcon,
   Settings2Icon,
   TicketIcon,
@@ -26,7 +27,8 @@ export type NavKey =
   | "queue"
   | "saved"
   | "settings"
-  | "tickets";
+  | "tickets"
+  | "travel";
 
 export interface NavItem {
   href: string;
@@ -55,6 +57,7 @@ export const navItems: NavItem[] = [
     key: "tickets",
     match: ["/pass/applications"],
   },
+  { href: "/pass/travel", icon: LuggageIcon, key: "travel" },
   { href: "/pass/codes", icon: KeyRoundIcon, key: "codes" },
   { href: "/pass/bulbs", icon: LightbulbIcon, key: "bulbs" },
   { href: "/pass/family", icon: UsersIcon, key: "family" },

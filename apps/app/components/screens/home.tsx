@@ -15,6 +15,7 @@ import {
   HouseIcon,
   InboxIcon,
   type LucideIcon,
+  LuggageIcon,
   MoveRight,
   TruckIcon,
   UsersIcon,
@@ -392,6 +393,14 @@ const Rows = () => {
               className="size-4 shrink-0 text-muted-foreground rtl:rotate-180"
             />
           </Link>
+        </li>
+        <li>
+          <RowLink
+            hint={t("travel.kits.hint")}
+            href="/pass/travel"
+            icon={LuggageIcon}
+            label={t("nav.travel")}
+          />
         </li>
         <li>
           <RowLink
