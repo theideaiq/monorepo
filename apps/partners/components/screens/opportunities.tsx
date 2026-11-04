@@ -1,6 +1,7 @@
 "use client";
 
 import { formatPrice } from "@repo/commerce";
+import { datesAtSource } from "@repo/commerce/opportunities";
 import { Badge } from "@repo/design-system/components/ui/badge";
 import { Button } from "@repo/design-system/components/ui/button";
 import {
@@ -634,11 +635,15 @@ const Row = ({
   const featured =
     opportunity.featured_until &&
     new Date(opportunity.featured_until).getTime() > Date.now();
+  let deadline = t("rolling");
+  if (opportunity.deadline) {
+    deadline = t("closes", { date: formatDate(opportunity.deadline, locale) });
+  } else if (datesAtSource(opportunity)) {
+    deadline = t("checkSource");
+  }
   const details = [
     t(`kinds.${opportunity.kind}`),
-    opportunity.deadline
-      ? t("closes", { date: formatDate(opportunity.deadline, locale) })
-      : t("rolling"),
+    deadline,
     t("followers", { count: formatNumber(followers, locale) }),
   ];
   if (opportunity.applicant_fee > 0) {

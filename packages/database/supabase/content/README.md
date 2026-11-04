@@ -1,9 +1,12 @@
 # The IDEA Club content
 
-Posts for The IDEA Club (`/club`), not schema. `posts/` holds one file per
-post, run in order by the **Import The IDEA Post content** workflow
-(`.github/workflows/import-content.yml`, run by hand from GitHub Actions;
-the workflow keeps its older name).
+Content for The IDEA Club (`/club`), not schema, run by hand from the **Import
+The IDEA Club content** workflow (`.github/workflows/import-content.yml`):
+choose `posts` or `opportunities`.
+
+## Posts
+
+`posts/` holds one file per post, run in order.
 
 Each file is a single `do` block that upserts the post by its slug and marks
 its Telegram news item as already sent, so importing a batch doesn't flood
@@ -21,3 +24,22 @@ as "The IDEA …", Markdown with `##` headings (the title is the page's h1),
 links to other posts as `/club/<slug>` (the site adds the language), and
 facts that change every year (fees, deadlines, exam formats) checked
 against the official source and linked.
+
+## Opportunities
+
+`opportunities/` holds batches of outside programs for Club → Opportunities,
+one file per batch, each a single `do` block. Every program goes in as a
+`draft` under an unclaimed organization, so nothing appears publicly until an
+editor approves it in Staff → Club → Opportunities.
+
+Running a file again adds what's missing and updates only the import's own
+untouched drafts, matched by slug. It leaves alone anything an editor or
+organization has approved, rejected or changed, and it reuses a host that
+already exists without members. A draft deleted in Staff comes back on a
+re-run, so reject one instead. `scripts/opportunity-content.test.ts` checks
+each file's fields and Arabic rules.
+
+Writing rules: at most 300 characters per summary, what it is and who it's
+for; Modern Standard Arabic with Latin digits; tanween al-fath on the letter
+before the alif (شكرًا); an official Arabic name only if the source gives one;
+never free or funded unless the source says so.

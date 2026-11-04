@@ -785,6 +785,43 @@ test.describe("a signed-in customer", () => {
   });
 });
 
+test("an outside listing with no date or known cost claims neither", async ({
+  page,
+}) => {
+  const db = admin();
+  const slug = `e2e-outside-${Date.now()}`;
+  await db.from("opportunities").delete().like("slug", "e2e-outside-%");
+  const { error } = await db.from("opportunities").insert({
+    fee_note: "$75 per project",
+    funding_type: "fee_charging",
+    kind: "competition",
+    last_checked_on: "2026-11-04",
+    location: "Baghdad",
+    slug,
+    source_url: "https://example.org/program",
+    status: "approved",
+    title_ar: "مسابقة خارجية للاختبار",
+    title_en: "E2E Outside Listing",
+  });
+  if (error) {
+    throw error;
+  }
+
+  await page.goto(`${urls.web}/club/opportunities/${slug}`);
+  const article = page.getByRole("article");
+  await expect(article.getByText("Check the source for dates")).toBeVisible();
+  await expect(article.getByText("$75 per project")).toBeVisible();
+  await expect(article.getByText("Free", { exact: true })).toHaveCount(0);
+  await expect(article.getByText("Open until filled")).toHaveCount(0);
+
+  await page.goto(`${urls.web}/ar/club/opportunities/${slug}`);
+  await expect(
+    page.getByRole("article").getByText("راجع المصدر لمعرفة المواعيد")
+  ).toBeVisible();
+
+  await db.from("opportunities").delete().eq("slug", slug);
+});
+
 test("a member follows an opportunity and finds it in Pass → Applications", async ({
   context,
   page,

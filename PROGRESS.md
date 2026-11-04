@@ -476,6 +476,11 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   order was placed, paid, booked for delivery and delivered, for the person
   who placed it (never the courier's words). The website and Partners use
   them in the next change.
+- 2026-11-04: Opportunities, first outside programs
+  (`supabase/content/opportunities/01-first-external-programs.sql`): 49 programs
+  as drafts under unclaimed organizations, run by hand from the Import The IDEA
+  Club content workflow. **To do (owner):** run it, have a native Arabic reader
+  review the titles, then approve in Staff → Club → Opportunities.
 - 2026-11-04: Opportunities, part 7 (owner's approved proposal and D8: a catalog
   of programs for Iraqis in Club → Opportunities;
   `20270325000000_opportunity_catalog.sql`). External programs are listed
