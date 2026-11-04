@@ -21,6 +21,7 @@ import {
   resetSignUpUser,
 } from "../seed";
 import {
+  emailField,
   expectAccessible,
   expectSignedInHome,
   signIn,
@@ -44,7 +45,7 @@ test("a new email gets The IDEA Pass with a password and one code", async ({
   await expectAccessible(page);
   await page.getByRole("button", { name: "Get your Pass" }).click();
   await page.getByLabel("Full name").fill(signUpUser.name);
-  await page.getByLabel("Email").fill(signUpUser.email);
+  await (await emailField(page)).fill(signUpUser.email);
   // A weak password can't be sent.
   await page.getByLabel("Password").fill("short");
   await expect(
@@ -79,14 +80,14 @@ test("a new email gets The IDEA Pass with a password and one code", async ({
   // Signed out, a forgotten password is reset with an emailed code.
   await page.context().clearCookies();
   await page.goto(`${urls.web}/sign-in`);
-  await page.getByLabel("Email").fill(signUpUser.email);
+  await (await emailField(page)).fill(signUpUser.email);
   await page.getByLabel("Password").fill("wrong-password-1");
   await page.getByRole("button", { exact: true, name: "Sign in" }).click();
   await expect(
     page.getByText("That email and password don't match.", { exact: false })
   ).toBeVisible();
   await page.getByRole("button", { name: "Forgot your password?" }).click();
-  await page.getByLabel("Email").fill(signUpUser.email);
+  await (await emailField(page)).fill(signUpUser.email);
   await clearInbox(signUpUser.email);
   await page.getByRole("button", { name: "Send the code" }).click();
   await page
@@ -111,7 +112,7 @@ test("a new email gets The IDEA Pass with a password and one code", async ({
   // And the new password signs in.
   await page.context().clearCookies();
   await page.goto(`${urls.web}/sign-in`);
-  await page.getByLabel("Email").fill(signUpUser.email);
+  await (await emailField(page)).fill(signUpUser.email);
   await page.getByLabel("Password").fill(`${SIGN_UP_PASSWORD}y`);
   await page.getByRole("button", { exact: true, name: "Sign in" }).click();
   await expectSignedInHome(page);
@@ -123,7 +124,7 @@ test("sign in on The IDEA Pass with an emailed code and go back", async ({
   await resetCustomer();
   await page.goto(`${urls.web}/sign-in${cartReturnTo}`);
   await page.getByRole("button", { name: "Email me a code instead" }).click();
-  await page.getByLabel("Email").fill(customer.email);
+  await (await emailField(page)).fill(customer.email);
   await clearInbox(customer.email);
   await page.getByRole("button", { name: "Continue" }).click();
   await expect(
