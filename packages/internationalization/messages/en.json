@@ -236,7 +236,7 @@
       "title": "One Pass for",
       "highlight": "everything at The IDEA",
       "description": "Shop the store, rent with Plus, RSVP to events and submit your work, all with your Pass.",
-      "button": "Open Your Pass",
+      "button": "Open your Pass",
       "signIn": "Sign in"
     },
     "home": {
@@ -339,7 +339,7 @@
         "price-desc": "Price: high to low"
       },
       "apply": "Apply",
-      "results": "Results for “{query}”",
+      "results": "Results for \"{query}\"",
       "empty": "No products match your search.",
       "clear": "Clear filters",
       "filters": {
@@ -485,7 +485,7 @@
         "title": "What each plan can rent",
         "description": "Most of the catalog is open to every plan. Some items, such as new releases and collector's editions, need a higher plan; they are marked with the plan they need. Every plan includes everything the plans below it can rent.",
         "entry": "Every item without a plan mark.",
-        "higher": "Also the items marked “{plan}”."
+        "higher": "Also the items marked \"{plan}\"."
       },
       "kits": {
         "title": "Game night kits",
@@ -568,7 +568,7 @@
       "apply": {
         "title": "How to apply",
         "steps": [
-          "Write to us at {email} with the subject “Application: your field”.",
+          "Write to us at {email} with the subject \"Application: your field\".",
           "Attach your CV (PDF) and links to your work: a portfolio, GitHub, writing or anything you're proud of.",
           "Tell us in a few lines which part of The IDEA you'd like to work on and why.",
           "We'll get back to you if there's a fit."
@@ -672,7 +672,7 @@
         "message": "How can we help?",
         "cta": "Send the message",
         "sending": "Sending…",
-        "success": "Thanks! We'll be in touch shortly.",
+        "success": "Thanks. We'll be in touch shortly.",
         "errors": {
           "forbidden": "We couldn't accept this message. Please email us instead.",
           "invalid": "Please enter your name, a valid email and a message.",
@@ -709,7 +709,7 @@
         },
         "plus": {
           "title": "The IDEA Plus",
-          "description": "Plans, billing, swaps, pausing and cancelling, Keep it, single-item rent, game night kits and deposits."
+          "description": "Plans, billing, swaps, pausing and canceling, Keep it, single-item rent, game night kits and deposits."
         },
         "rewards": {
           "title": "Rewards",
@@ -721,7 +721,7 @@
         },
         "club": {
           "title": "Club rules",
-          "description": "How to take part in the Club: rooms, events, photos, behaviour, reporting and moderation."
+          "description": "How to take part in the Club: rooms, events, photos, behavior, reporting and moderation."
         },
         "programs": {
           "title": "Programs",
@@ -1394,7 +1394,7 @@
       "label": "Search The IDEA",
       "placeholder": "Search products, events and posts…",
       "submit": "Search",
-      "results": "Results for “{query}”",
+      "results": "Results for \"{query}\"",
       "empty": "Nothing matches your search. Try another word, in Arabic or English.",
       "products": "Products",
       "rentals": "To rent with Plus",
@@ -1591,7 +1591,7 @@
           "completed": "Completed",
           "refused": "Not accepted this time",
           "withdrawn": "Withdrawn",
-          "cancelled": "Cancelled"
+          "cancelled": "Canceled"
         },
         "guardianPending": "Waiting for your guardian's approval.",
         "paid": "Paid {paid} of {price}",
@@ -1649,7 +1649,7 @@
         },
         "leave": {
           "title": "Leave any time",
-          "policy": "Plus: changing, pausing and cancelling",
+          "policy": "Plus: changing, pausing and canceling",
           "means": "Cancel your Plus plan any time. It ends at the end of the month you paid for, once your items are back.",
           "claim": "cancel it yourself in your plan, any time.",
           "claimAction": "Go to your plan"
@@ -1984,8 +1984,8 @@
         "priceDesc": "Price: high to low"
       },
       "empty": "No products here yet.",
-      "emptySearch": "No products match “{query}”.",
-      "resultsFor": "Results for “{query}”",
+      "emptySearch": "No products match \"{query}\".",
+      "resultsFor": "Results for \"{query}\"",
       "clearSearch": "Clear search",
       "loadMore": "Show more",
       "product": {
@@ -2171,7 +2171,7 @@
       "viewOrder": "View order",
       "done": {
         "title": "Done",
-        "thanks": "Thank you! Your order is in.",
+        "thanks": "Thank you. Your order is in.",
         "waiting": "We're confirming your payment…",
         "notFound": "We couldn't find this order.",
         "total": "Total",
@@ -2306,15 +2306,15 @@
         "paying": "Opening the payment page…",
         "pendingNotice": "This order is waiting for payment.",
         "confirming": "We're confirming your payment…",
-        "thanks": "Thank you! We received your payment and are preparing your order.",
+        "thanks": "Thank you. We received your payment and are preparing your order.",
         "cancel": "Cancel order",
         "cancelTitle": "Cancel this order?",
-        "cancelDescription": "The order is cancelled and nothing is charged. This can't be undone.",
+        "cancelDescription": "The order is canceled and nothing is charged. This can't be undone.",
         "cancelConfirm": "Cancel order",
         "keep": "Keep order",
-        "cancelling": "Cancelling…",
-        "cancelFailed": "This order can no longer be cancelled.",
-        "cancelledNotice": "This order was cancelled.",
+        "cancelling": "Canceling…",
+        "cancelFailed": "This order can no longer be canceled.",
+        "cancelledNotice": "This order was canceled.",
         "refundedNotice": "This order was refunded.",
         "help": "Get help with this order",
         "helpShort": "Help",
@@ -2327,9 +2327,9 @@
         "method": "Delivery and payment",
         "contact": "Contact",
         "confirmedNotice": "Your order is confirmed. Have {amount} ready in cash for the courier.",
-        "cancelCashDescription": "The order is cancelled. This can't be undone.",
+        "cancelCashDescription": "The order is canceled. This can't be undone.",
         "guardianPending": "This order is waiting for your guardian's approval. You'll pay once they approve it.",
-        "guardianDeclined": "Your guardian declined this order, so it was cancelled.",
+        "guardianDeclined": "Your guardian declined this order, so it was canceled.",
         "gift": {
           "title": "Sent as a gift",
           "waiting": "Waiting for them to accept it and give their address. Nothing ships until then.",
@@ -2509,7 +2509,7 @@
         "due": "Due on {date}",
         "returnedOn": "Returned on {date}",
         "cancel": "Cancel request",
-        "cancelling": "Cancelling…",
+        "cancelling": "Canceling…",
         "keep": "Keep it for {price}",
         "keeping": "Opening the payment page…",
         "keepPending": "You've already asked to keep this. Pay from the order.",
@@ -2782,7 +2782,7 @@
         "imageHint": "Visual art is sent as a JPEG or PNG image.",
         "submit": "Submit",
         "submitting": "Submitting…",
-        "submitted": "Thank you! Your work was submitted.",
+        "submitted": "Thank you. Your work was submitted.",
         "failed": "We couldn't submit your work. Please try again."
       },
       "problems": {
@@ -3089,7 +3089,7 @@
         "open": "Delete your Pass",
         "dialogTitle": "Delete your Pass?",
         "consequences": "Your profile, cart, RSVPs, submissions and sign-in are deleted, and you leave every organization you belong to. Order and payment records are kept for accounting, without your name.",
-        "confirmLabel": "To confirm, type “{phrase}”",
+        "confirmLabel": "To confirm, type \"{phrase}\"",
         "confirmPhrase": "delete my pass",
         "confirm": "Delete my Pass permanently",
         "deleting": "Deleting…",
@@ -3103,7 +3103,7 @@
           "onlyMember": "You're the only member, so this organization can only be deleted.",
           "unnamed": "Member without a name",
           "deleteOrganization": "Delete organization",
-          "deleteConfirmLabel": "This deletes {name} with its projects, members and files. Type “{slug}” to confirm.",
+          "deleteConfirmLabel": "This deletes {name} with its projects, members and files. Type \"{slug}\" to confirm.",
           "deleteConfirm": "Delete {name}",
           "failed": "That didn't work. Please try again."
         }
@@ -3615,14 +3615,14 @@
       "cashback": "{rate}% back in Bulbs",
       "rules": {
         "value": "1 Bulb is worth 1 IQD.",
-        "pending": "Bulbs from an order are usable {days} days after delivery (the return window); a cancelled or refunded order takes them back.",
+        "pending": "Bulbs from an order are usable {days} days after delivery (the return window); a canceled or refunded order takes them back.",
         "expiry": "Bulbs don't expire while you're active; after 12 months without any activity they do, and we remind you a month before.",
-        "spend": "Spend Bulbs at checkout, from 1,000 and in steps of 250: they pay up to the whole order, delivery included. A cancelled order gives them back."
+        "spend": "Spend Bulbs at checkout, from 1,000 and in steps of 250: they pay up to the whole order, delivery included. A canceled order gives them back."
       },
       "historyTitle": "History",
       "empty": "No Bulbs yet. Your first order earns cashback and a 2,000-Bulb welcome bonus.",
       "usableFrom": "usable from {date}",
-      "voided": "cancelled",
+      "voided": "canceled",
       "kinds": {
         "purchase": "Cashback on an order",
         "bonus": "Bonus",
@@ -3657,7 +3657,7 @@
           "quoted": "Quoted",
           "ordered": "Ordered",
           "delivered": "Delivered",
-          "cancelled": "Cancelled"
+          "cancelled": "Canceled"
         },
         "quote": {
           "draft": "Draft",
@@ -3669,7 +3669,7 @@
         "order": {
           "open": "Open",
           "delivered": "Delivered",
-          "cancelled": "Cancelled"
+          "cancelled": "Canceled"
         },
         "invoice": {
           "issued": "Issued",
@@ -3717,7 +3717,7 @@
         "neededBy": "Needed by {date}",
         "cancel": "Cancel request",
         "cancelTitle": "Cancel this request?",
-        "cancelError": "The request couldn't be cancelled.",
+        "cancelError": "The request couldn't be canceled.",
         "keep": "Keep",
         "print": "Print",
         "printOrder": "Print the purchase order"
@@ -3964,7 +3964,7 @@
         },
         "documents": {
           "title": "Documents",
-          "description": "Your business licence and an ID of the person responsible (PDF or photos). Only your owners, admins and The IDEA's staff see them.",
+          "description": "Your business license and an ID of the person responsible (PDF or photos). Only your owners, admins and The IDEA's staff see them.",
           "none": "No documents yet.",
           "add": "Add a document",
           "uploading": "Uploading…",
@@ -4068,7 +4068,7 @@
         },
         "hidden": {
           "title": "Hidden until they have a photo ({count})",
-          "description": "These products wait as drafts, and the Store doesn't show them until they have a photo. Use “Details are wrong” on the listing to tell The IDEA.",
+          "description": "These products wait as drafts, and the Store doesn't show them until they have a photo. Use \"Details are wrong\" on the listing to tell The IDEA.",
           "descriptionAdd": "These products wait as drafts, and the Store doesn't show them until they have a photo. Add one below and they go live once checked.",
           "add": "Add photos",
           "live": "Added. It's live in the Store.",
@@ -4157,7 +4157,7 @@
         "waitingTitle": "To pack",
         "waitingDescription": "Lines to get ready within 2 days. Choose the ones packed, the branch they leave from and the parcel size, then mark them ready: we book one parcel per order and send a courier.",
         "sentTitle": "Sent and closed",
-        "sentDescription": "Ready, picked up, out of stock or cancelled.",
+        "sentDescription": "Ready, picked up, out of stock or canceled.",
         "noneWaiting": "Nothing to pack right now.",
         "noneSent": "Nothing yet.",
         "orderLine": "Order #{number} · {customer}",
@@ -4169,7 +4169,7 @@
           "ready": "Ready",
           "picked_up": "Picked up",
           "out_of_stock": "Out of stock",
-          "cancelled": "Cancelled"
+          "cancelled": "Canceled"
         },
         "outOfStock": "Out of stock",
         "printLabel": "Print label",
@@ -4244,7 +4244,7 @@
         "itemProblem": "Report a problem",
         "failed": "That didn't work. Try again.",
         "parcelsTitle": "Parcels refused at the door",
-        "parcelsDescription": "The courier brought these back. Confirm each one is back with you; its lines are cancelled and the copies go back on sale.",
+        "parcelsDescription": "The courier brought these back. Confirm each one is back with you; its lines are canceled and the copies go back on sale.",
         "parcelLine": "Order #{order} · {customer}",
         "returnedOn": "Returned {time}",
         "parcelBack": "It's back",
@@ -4306,7 +4306,7 @@
         "status": {
           "pending": "Being sent",
           "paid": "Paid",
-          "cancelled": "Cancelled"
+          "cancelled": "Canceled"
         },
         "paidOn": "Sent by {method} on {time} · reference {reference}",
         "methods": {
@@ -4545,7 +4545,7 @@
           "paid": "Paid",
           "unsold": "Unsold",
           "unpaid": "Not paid",
-          "cancelled": "Cancelled"
+          "cancelled": "Canceled"
         },
         "current": "Current bid {amount} · bids: {bids}",
         "noBids": "No bids · starts at {amount}",
@@ -4567,7 +4567,7 @@
           "photos": "Add 3 to 12 photos of this copy.",
           "note": "Describe the copy's condition.",
           "copy": "That copy isn't available.",
-          "hasBids": "An auction with bids can't be cancelled.",
+          "hasBids": "An auction with bids can't be canceled.",
           "secondChance": "A second chance is offered once, after an unpaid win.",
           "noBidder": "There's no other bidder to offer it to.",
           "failed": "That didn't work. Try again."
@@ -4657,7 +4657,7 @@
         "signIn": "Sign in to make an offer",
         "result": {
           "sent": "Offer sent: {amount}. The seller has 48 hours to answer.",
-          "accepted": "Accepted! It's in your cart at {amount} for 24 hours.",
+          "accepted": "Accepted. It's in your cart at {amount} for 24 hours.",
           "declined": "The seller declined {amount}. You can try a higher offer."
         },
         "follow": "Follow it in Saved",
@@ -4796,7 +4796,7 @@
           "preparing": "Getting your code ready…",
           "ready": "Ready",
           "replaced": "Replaced with a new code",
-          "cancelled": "Cancelled"
+          "cancelled": "Canceled"
         }
       },
       "storeLink": "Gift cards, game currency and subscriptions for your store's region.",
@@ -4847,7 +4847,7 @@
         "status": {
           "pending": "Pending",
           "paid": "Paid",
-          "void": "Cancelled"
+          "void": "Canceled"
         }
       },
       "families": {
@@ -4995,7 +4995,7 @@
       "processing": "Preparing",
       "shipped": "On the way",
       "delivered": "Delivered",
-      "cancelled": "Cancelled",
+      "cancelled": "Canceled",
       "refunded": "Refunded",
       "confirmed": "Confirmed"
     },
@@ -5004,7 +5004,7 @@
       "active": "With you",
       "returned": "Returned",
       "overdue": "Overdue",
-      "cancelled": "Cancelled",
+      "cancelled": "Canceled",
       "kept": "Kept"
     },
     "submissionStatus": {
@@ -5066,11 +5066,11 @@
         },
         "order_delivered": {
           "title": "Order delivered",
-          "body": "Order #{number} was delivered. Enjoy!"
+          "body": "Order #{number} was delivered. Enjoy."
         },
         "order_cancelled": {
-          "title": "Order cancelled",
-          "body": "Order #{number} was cancelled."
+          "title": "Order canceled",
+          "body": "Order #{number} was canceled."
         },
         "order_refunded": {
           "title": "Order refunded",
@@ -5078,7 +5078,7 @@
         },
         "rental_active": {
           "title": "Your rental has arrived",
-          "body": "{name} is with you{hasDue, select, yes { until {due}} other {}}. Enjoy!"
+          "body": "{name} is with you{hasDue, select, yes { until {due}} other {}}. Enjoy."
         },
         "rental_overdue": {
           "title": "Rental overdue",
@@ -5086,11 +5086,11 @@
         },
         "rental_returned": {
           "title": "Rental returned",
-          "body": "We received {name} back. Thank you!"
+          "body": "We received {name} back. Thank you."
         },
         "rental_cancelled": {
-          "title": "Rental cancelled",
-          "body": "Your request for {name} was cancelled."
+          "title": "Rental canceled",
+          "body": "Your request for {name} was canceled."
         },
         "support_reply": {
           "title": "New reply from support",
@@ -5114,7 +5114,7 @@
         },
         "bulbs_birthday": {
           "title": "Happy birthday from The IDEA",
-          "body": "We've added {bulbs} Bulbs to your Pass. Enjoy your day!"
+          "body": "We've added {bulbs} Bulbs to your Pass. Enjoy your day."
         },
         "quote_sent": {
           "title": "You have a quote",
@@ -5138,7 +5138,7 @@
         },
         "guardian_declined": {
           "title": "Your guardian declined your order",
-          "body": "Order #{number} was cancelled."
+          "body": "Order #{number} was canceled."
         },
         "guardian_linked": {
           "title": "Your guardian is linked",
@@ -5154,7 +5154,7 @@
         },
         "plus_swap_done": {
           "title": "Swap done",
-          "body": "Your new items are with you. Enjoy!"
+          "body": "Your new items are with you. Enjoy."
         },
         "student_verified": {
           "title": "You're verified as a student",
@@ -5282,7 +5282,7 @@
         },
         "gift_delivered": {
           "title": "Your gift has arrived",
-          "body": "The gift in order #{number} was delivered. Enjoy it!"
+          "body": "The gift in order #{number} was delivered. Enjoy it."
         },
         "opportunity_approved": {
           "title": "Your opportunity is in the Club",
@@ -5318,7 +5318,7 @@
         },
         "program_guardian_declined": {
           "title": "Your guardian declined",
-          "body": "Your application to \"{title}\" was cancelled."
+          "body": "Your application to \"{title}\" was canceled."
         },
         "program_accepted": {
           "title": "You're accepted",
@@ -5333,8 +5333,8 @@
           "body": "Your application to \"{title}\" wasn't accepted."
         },
         "program_cancelled": {
-          "title": "Place cancelled",
-          "body": "{hasRefund, select, yes {Your place on \"{title}\" was cancelled; {amount} will be refunded.} other {Your place on \"{title}\" was cancelled.}}"
+          "title": "Place canceled",
+          "body": "{hasRefund, select, yes {Your place on \"{title}\" was canceled; {amount} will be refunded.} other {Your place on \"{title}\" was canceled.}}"
         },
         "program_refunded": {
           "title": "Refund sent",
@@ -5862,7 +5862,7 @@
       },
       "variants": {
         "title": "Variants",
-        "description": "The versions customers choose (format, platform, colour, edition), each with its own price, stock and barcode. Condition (new, open box, used) is set per copy, not here.",
+        "description": "The versions customers choose (format, platform, color, edition), each with its own price, stock and barcode. Condition (new, open box, used) is set per copy, not here.",
         "labelEn": "Name (English)",
         "labelAr": "Name (Arabic)",
         "labelHint": "Shown to customers, e.g. Vinyl. Leave empty on a product's only variant.",
@@ -6294,7 +6294,7 @@
           "paid": "Paid",
           "unsold": "Unsold",
           "unpaid": "Not paid",
-          "cancelled": "Cancelled"
+          "cancelled": "Canceled"
         },
         "panelTitle": "Auction a copy",
         "panelDescription": "For collectible products, copies marked signed, limited or rare, and used copies in categories open for auctions.",
@@ -6428,7 +6428,7 @@
       },
       "shopLines": {
         "title": "Shop lines",
-        "description": "Shops' lines still waiting after their 2 days, and paid lines a shop cancelled as out of stock.",
+        "description": "Shops' lines still waiting after their 2 days, and paid lines a shop canceled as out of stock.",
         "lateTitle": "Late lines",
         "lateEmpty": "No late lines.",
         "refundsTitle": "Refunds due",
@@ -6500,7 +6500,7 @@
       "empty": {
         "ship": "Nothing waiting to go out.",
         "back": "Nothing is out with members.",
-        "history": "No returned or cancelled rentals yet."
+        "history": "No returned or canceled rentals yet."
       },
       "item": "Item",
       "member": "Member",
@@ -7046,7 +7046,7 @@
         "status": {
           "pending": "To send",
           "paid": "Paid",
-          "cancelled": "Cancelled"
+          "cancelled": "Canceled"
         },
         "paidOn": "{method} · {reference} · {time}",
         "summarySupply": "{lines} items and {supply} in supply fees up to {period} · {deducted} deducted"
@@ -7460,7 +7460,7 @@
           "completed": "Completed",
           "refused": "Refused",
           "withdrawn": "Withdrawn",
-          "cancelled": "Cancelled"
+          "cancelled": "Canceled"
         },
         "guardian": {
           "pending": "Waiting for the guardian",
@@ -8465,7 +8465,7 @@
         },
         "saveKind": "Change kind",
         "limitTitle": "Individual traders",
-        "limitDescription": "Shops with only the owner's ID can sell up to this much each Baghdad calendar month. Cancelled orders and refunded lines don't count.",
+        "limitDescription": "Shops with only the owner's ID can sell up to this much each Baghdad calendar month. Canceled orders and refunded lines don't count.",
         "limit": "Monthly sales limit (IQD)",
         "limitHint": "Checkouts that would pass it are refused.",
         "supply": {
@@ -8676,7 +8676,7 @@
         "allow": "Show my card",
         "cancel": "Cancel",
         "done": "Done. You can close this window.",
-        "again": "You're signed in. Go back to {site} and press “Show my Pass card” again.",
+        "again": "You're signed in. Go back to {site} and press \"Show my Pass card\" again.",
         "notAllowed": "This site can't show your Pass card yet.",
         "failed": "That didn't work. Please try again."
       },

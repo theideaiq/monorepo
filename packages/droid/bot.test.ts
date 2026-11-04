@@ -143,7 +143,7 @@ describe("private chats", () => {
     expect(textOf(sent()[0])).toContain("Tom &amp; Jerry &lt;Deluxe&gt;");
 
     await send(privateText(user(1, { language_code: "en" }), "/search zelda"));
-    expect(textOf(sent()[1])).toBe("No products match “zelda”.");
+    expect(textOf(sent()[1])).toBe('No products match "zelda".');
   });
 
   test("the search button waits for the next message", async () => {

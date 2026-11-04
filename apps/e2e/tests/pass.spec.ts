@@ -77,8 +77,8 @@ test.describe("The IDEA Pass", () => {
 
     await page.goto(`${urls.web}/ar/sign-in`);
     await expect(page.locator("html")).toHaveAttribute("dir", "rtl");
-    await expect(page.getByLabel("البريد الإلكتروني")).toHaveCount(1);
-    await expect(page.getByLabel("البريد الإلكتروني")).toBeVisible();
+    await expect(page.getByLabel("الإيميل")).toHaveCount(1);
+    await expect(page.getByLabel("الإيميل")).toBeVisible();
     await expectAccessible(page);
   });
 

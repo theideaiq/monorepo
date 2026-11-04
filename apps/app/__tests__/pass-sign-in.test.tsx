@@ -153,7 +153,7 @@ describe("The IDEA Pass email sign-in", () => {
     });
     useCode();
 
-    fireEvent.change(screen.getByLabelText("البريد الإلكتروني"), {
+    fireEvent.change(screen.getByLabelText("الإيميل"), {
       target: { value: "sara@example.com" },
     });
     fireEvent.click(screen.getByRole("button", { name: "كمّل" }));
@@ -165,8 +165,8 @@ describe("The IDEA Pass email sign-in", () => {
     expect(assign).not.toHaveBeenCalled();
 
     fireEvent.click(screen.getByRole("button", { name: "استخدم إيميل ثاني" }));
-    expect(
-      (screen.getByLabelText("البريد الإلكتروني") as HTMLInputElement).value
-    ).toBe("sara@example.com");
+    expect((screen.getByLabelText("الإيميل") as HTMLInputElement).value).toBe(
+      "sara@example.com"
+    );
   });
 });

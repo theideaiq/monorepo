@@ -612,7 +612,7 @@ describe("orders", () => {
 
     expect(
       await screen.findByText(
-        "Thank you! We received your payment and are preparing your order."
+        "Thank you. We received your payment and are preparing your order."
       )
     ).toBeTruthy();
     expect(track).toHaveBeenCalledWith(

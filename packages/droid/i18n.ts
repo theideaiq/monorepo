@@ -31,7 +31,7 @@ const ar = {
   joinNotLinked:
     "حتى تنضم لـ{chat}، اربط Telegram ببطاقة پاسك أول شي (بطاقتك ← الإعدادات ← Telegram)، وبعدين اطلب تنضم مرة ثانية.",
   linkApp: "تطبيق ايديا",
-  linkClub: "النادي على تيليجرام",
+  linkClub: "النادي على Telegram",
   links: "روابط",
   linksTitle: "روابط ايديا:",
   linkWebsite: "الموقع",
@@ -125,7 +125,7 @@ const en: Record<MessageKey, string> = {
   notLinked:
     "Connect Telegram to your Pass to see your orders and Bulbs here: Your Pass → Settings → Telegram.",
   orderLine: "#{number} · {status} · {total}",
-  orderStatus_cancelled: "Cancelled",
+  orderStatus_cancelled: "Canceled",
   orderStatus_confirmed: "Confirmed",
   orderStatus_delivered: "Delivered",
   orderStatus_paid: "Paid",
@@ -151,9 +151,9 @@ const en: Record<MessageKey, string> = {
   priceFrom: "From {price}",
   rental: "Rent with Plus",
   search: "Search the store",
-  searchEmpty: "No products match “{query}”.",
+  searchEmpty: 'No products match "{query}".',
   searchPrompt: "Type the name of the product you're looking for:",
-  searchResults: "Results for “{query}”:",
+  searchResults: 'Results for "{query}":',
   searchUsage:
     "Send /search followed by a product name, e.g. /search PlayStation",
   shop: "🛍️ Shop the store",

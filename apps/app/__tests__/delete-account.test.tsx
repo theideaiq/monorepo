@@ -4,7 +4,7 @@ import { DeleteAccountDialog } from "@/components/account/delete-account";
 import { takeAccountDeletedNotice } from "@/lib/account-deletion";
 import { fakeSupabase, renderWithApp } from "./render";
 
-const SLUG_LABEL = /Type “solo-org” to confirm/;
+const SLUG_LABEL = /Type "solo-org" to confirm/;
 const PHRASE_LABEL = /To confirm, type/;
 
 const ORG_ID = "10000000-0000-0000-0000-000000000001";
