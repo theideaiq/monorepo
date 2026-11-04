@@ -33,21 +33,21 @@ export interface StudentVerificationProps {
 
 const copy = {
   ar: {
-    delete: "حذف هذا التحقق",
+    delete: "امسح هذا التحقق",
     deleteNote:
-      "إن لم تطلب هذا التحقق أو لم تعد تريده، احذفه وسنُعلم الجهة بذلك. لا تحصل الجهة إلا على صفتك كطالب والجامعة وتاريخ الانتهاء.",
+      "إذا ما طلبت هذا التحقق أو ما تريده بعد، امسحه وراح نخبر الجهة. الجهة ما تاخذ غير إنك طالب، والجامعة، وتاريخ الانتهاء.",
     heading: {
-      received: "استلمنا مستندك",
-      rejected: "لم نتمكن من التحقق من صفتك كطالب",
-      verified: "تم التحقق من صفتك كطالب",
+      received: "وصلنا مستندك",
+      rejected: "ما گدرنا نتأكد إنك طالب",
+      verified: "تأكدنا إنك طالب",
     },
     reason: (reason: string) => `السبب: ${reason}`,
     received: (partner: string) =>
-      `نراجع مستندك للتحقق من صفتك كطالب لدى ${partner}، عادةً خلال يوم عمل واحد. سنراسلك بالنتيجة.`,
+      `دا نراجع مستندك حتى نتأكد إنك طالب لـ${partner}، عادةً خلال يوم عمل واحد. راح نراسلك بالنتيجة.`,
     rejected: (partner: string, university: string) =>
-      `لم نتمكن من قبول مستندك للتحقق من أنك طالب في ${university} لدى ${partner}. يمكنك المحاولة مرة أخرى من موقع ${partner}.`,
+      `ما گدرنا نقبل مستندك حتى نأكد لـ${partner} إنك طالب بـ${university}. تگدر تجرّب مرة ثانية من موقع ${partner}.`,
     verified: (partner: string, university: string, until: string) =>
-      `أكدنا لـ ${partner} أنك طالب في ${university}، حتى ${until}.`,
+      `أكدنا لـ${partner} إنك طالب بـ${university}، لحد ${until}.`,
   },
   en: {
     delete: "Delete this verification",

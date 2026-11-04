@@ -99,7 +99,7 @@ describe("sendOrderEmails", () => {
     const [receipt] = send.mock.calls.map(
       (call) => (call as unknown as [Record<string, unknown>])[0]
     );
-    expect(receipt?.subject).toBe("تم تأكيد طلبك #10042");
+    expect(receipt?.subject).toBe("طلبك #10042 تأكّد");
     expect(receipt?.text).toContain("بغداد");
   });
 

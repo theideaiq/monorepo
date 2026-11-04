@@ -455,6 +455,16 @@ steps need Xcode, Android Studio and the store/Firebase accounts
 
 ## Decisions
 
+- 2026-11-04: **D10, Arabic is Iraqi Arabic** (owner: "All across the
+  platform, convert as much as possible or appropriate into Iraqi
+  Arabic"). Every Arabic string on the website, Partners, Staff, Droid,
+  the emails (orders, reminders, student codes, the Pass sign-in emails)
+  and the offline screen is now Iraqi Arabic. Legal pages, consent and
+  contract wording, and tax and accounting labels stay in Modern Standard
+  Arabic. This replaces the brand guideline that kept product screens and
+  receipts in Modern Standard Arabic. Not converted: Arabic text stored
+  in the database by past migrations (category and plan names, seeded
+  posts and opportunities), which are names or editorial content.
 - 2026-11-04: **Partners** (PR 4): `/partners` leads with selling: how it
   works (apply, list, deliver, get paid weekly, with the selling policy),
   Free (100 active listings) and Pro with Pro's price from

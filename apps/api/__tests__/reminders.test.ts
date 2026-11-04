@@ -73,7 +73,7 @@ describe("sending reminders", () => {
     );
     expect(send).toHaveBeenCalledWith(
       expect.objectContaining({
-        subject: "ما زالت في سلتك",
+        subject: "بعدها بسلتك",
         to: "c@example.iq",
       })
     );

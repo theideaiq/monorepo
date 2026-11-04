@@ -98,7 +98,7 @@ We write like we talk to a friend we respect: short sentences, real words, a lit
 2. **Bright, not loud.** One idea per line. No exclamation marks in the product UI; at most one in a campaign.
 3. **On your side.** Talk about what the customer gets, not what we are.
 4. **Promise and prove.** Every claim names a number, a date or a place: "delivered to all 19 governorates".
-5. **Arabic first.** Social, the Club, Droid and campaigns speak Iraqi Arabic ("اعلگها", "يمنا بـ"). Product screens, receipts and legal pages use clear Modern Standard Arabic with Iraqi warmth. English is written as English, not translated.
+5. **Arabic first, in Iraqi Arabic.** Everything we write in Arabic speaks Iraqi Arabic, the way a friendly, respectful young Baghdadi talks ("اعلگها", "يمنا بـ", "ماكو طلبات بعد", "تگدر تغيّر خطتك بأي وقت"): the website and apps, Partners, Staff, Droid, emails, notifications, social and campaigns (owner decision, 2026-11-04). Legal pages, contract and consent wording, and tax and accounting labels stay in clear Modern Standard Arabic, where precision matters more than voice. Words shared by every Iraqi beat very local ones. English is written as English, not translated.
 
 **Mechanics**
 
@@ -125,6 +125,9 @@ We write like we talk to a friend we respect: short sentences, real words, a lit
 | Your The IDEA Pass | Your Pass |
 | السعر الحصري المميز لدينا فقط | يمنا بـ 99,750 دينار عراقي |
 | ممنون لاختيارك خدماتنا المتميزة | شكراً! طلبك بالطريق. |
+| لا توجد طلبات بعد. | ماكو طلبات بعد. |
+| حدث خطأ. حاول مرة أخرى. | صارت مشكلة. جرّب مرة ثانية. |
+| هل أنت متأكد أنك تريد الحذف؟ | متأكد تريد تمسحه؟ |
 
 ## 4. Logo
 
