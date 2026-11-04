@@ -30,7 +30,7 @@ export const isNativeShellUserAgent = (userAgent: string | null | undefined) =>
   Boolean(userAgent && SHELL.test(userAgent));
 
 /**
- * Runs first in the body, before anything is painted: marks `<html
+ * Runs in the page's head, before anything is painted: marks `<html
  * data-native>` inside the iOS/Android shell, so what the apps must not
  * show (`.web-only`, e.g. the gift cards and codes link) is hidden by CSS
  * from the first frame, while the website renders it on the server rather

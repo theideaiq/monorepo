@@ -475,7 +475,7 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   carried the join, swap and plan screens with their phone input (479 KB).
   Now the pitch is what the server renders (members see their slots once
   known), the codes link is server-rendered and hidden in the apps by
-  `html[data-native] .web-only` (an inline script in the body marks the
+  `html[data-native] .web-only` (an inline script in the head marks the
   shell before paint), the first row of store covers loads eagerly, and
   the /plus top lives in `components/plus/plus-home.tsx`. Measured after:
   415–448 KB of JavaScript, CLS 0–0.007, LCP 1.3–2.0 s.

@@ -59,12 +59,14 @@ const RootLayout = async ({ children, params }: RootLayoutProperties) => {
       lang={locale}
       suppressHydrationWarning
     >
-      <body>
-        {/* First in the body: runs before any content is painted. */}
+      <head>
+        {/* Runs before the first paint (Next.js' "Preventing flash before hydration"). */}
         <script
           // biome-ignore lint/security/noDangerouslySetInnerHtml: a fixed one-line script, no user input
           dangerouslySetInnerHTML={{ __html: NATIVE_MARK_SCRIPT }}
         />
+      </head>
+      <body>
         <NextIntlClientProvider
           messages={{ app, auth, billing, common, pass, store, web }}
         >
