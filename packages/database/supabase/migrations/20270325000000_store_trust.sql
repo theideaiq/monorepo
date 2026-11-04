@@ -84,7 +84,7 @@ begin
     raise exception 'Add 3 to 10 photos of the copy' using errcode = 'check_violation';
   end if;
   foreach photo in array photos loop
-    if photo !~ '^https://' then
+    if photo !~ '^https?://' then
       raise exception 'Photos are uploaded images' using errcode = 'check_violation';
     end if;
   end loop;
