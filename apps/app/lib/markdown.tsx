@@ -99,6 +99,19 @@ const ALIGNMENT: Record<string, string> = {
 
 const headingTags = ["h2", "h3", "h4", "h5", "h6", "h6"] as const;
 
+const NUMBERED = /^(\d+)\.\s/;
+
+/**
+ * A numbered heading ("## 7. Items not as described") gets the anchor
+ * `section-7`, the same in every language, so other pages can link to the
+ * section that backs a promise (`/legal/returns#section-7`).
+ */
+export const sectionId = (heading: Heading): string | undefined => {
+  const [first] = heading.children;
+  const match = first?.type === "text" ? NUMBERED.exec(first.value) : null;
+  return match ? `section-${match[1]}` : undefined;
+};
+
 const renderRow = (
   row: TableRow,
   key: string,
@@ -133,7 +146,11 @@ const renderNode = (
     case "heading": {
       // The page title is the h1; document headings start at h2.
       const Tag = headingTags[node.depth - 1] ?? "h6";
-      return <Tag key={key}>{renderChildren(node, depth)}</Tag>;
+      return (
+        <Tag id={sectionId(node)} key={key}>
+          {renderChildren(node, depth)}
+        </Tag>
+      );
     }
     case "text":
       return node.value;

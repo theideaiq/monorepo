@@ -337,6 +337,11 @@ local stack (`SUPABASE_INTEGRATION=1`) and the end-to-end journeys.
 - **Payments:** in-app (native) checkout is controlled by
   `project.commerce.allowNativeCheckout`. Digital goods must not be sold
   through third-party checkout inside the iOS/Android apps.
+- **Promises:** the brand's promises appear through `Promises`
+  (`apps/app/components/promises.tsx`), each linked to the policy section
+  that backs it. Numbered policy headings get language-independent anchors
+  (`/legal/returns#section-7`); a test checks every linked section exists.
+  Never show a promise without its policy.
 - **Brand names:** English names in English copy, the official Arabic
   names in Arabic copy (`docs/brand/BRAND_GUIDELINES.md` section 2), and
   the plans (Glow, Shine, Blaze, Duo) and product and model names in Latin

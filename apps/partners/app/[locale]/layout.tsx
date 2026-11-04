@@ -23,7 +23,7 @@ interface LocaleLayoutProperties {
 }
 
 export const generateMetadata = async (): Promise<Metadata> => {
-  const t = await getTranslations("app.meta");
+  const t = await getTranslations("app.company.meta");
   return {
     applicationName: t("title"),
     description: t("description"),

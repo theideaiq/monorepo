@@ -42,9 +42,6 @@ decisions with a date.
   birth, address, refresh tokens) wait for staff review in Companies →
   Sign in with the Pass (and the inbox); staff can suspend any app. Secrets
   rotate with 24 hours' grace; `private_key_jwt` with uploaded keys.
-  **To do:** auibsal.org registers through Developers (invite SAL's
-  developer to a SAL company in The IDEA Partners), then review its
-  `student_email` request.
 
 - Sign in with The IDEA Pass (migration `20261227000000_pass_sign_in.sql`):
   partner sites sign people in through our own OpenID Connect provider
@@ -180,6 +177,30 @@ decisions with a date.
       and nightly backup workflows; platform runbooks.
 
 ## Launch checklist (needs an owner with access)
+
+- [ ] **Owner steps of 2026-11-04** (decisions D1 and D2):
+      - **Close Plus for joining (D2):** production has 60 places today, so
+        people can join now. Set the places to 0 in Staff → Plus → Members
+        → Settings; the site then shows only the waitlist.
+      - **A legal party for the policies (D1):** these still name "The IDEA
+        IQ Inc." because they need a legal party: `terms` (the opening
+        "agreement between you and …" and Contact us), `privacy` (the
+        opening and the contact line), `copyright` (who owns the content,
+        and the contact line) and `business` (the contact line), in both
+        languages under `apps/app/content/legal`, and `LICENSE.md`. Name
+        the legal entity (or confirm the trading name) and they change in
+        one edit. Partners' order documents (quotes and invoices) now say
+        "The IDEA"; check whether an invoice needs the legal entity.
+      - **"A human answers":** write the support promise into a policy
+        (who answers, in which hours, how fast) so it can join the other
+        four promises on the site.
+      - **Native review of new Arabic:** the home headline and positioning
+        (`web.home.hero`, `web.home.meta`), the promises (`web.promises`),
+        About and Careers (`web.about`, `web.careers`), "Plus isn't open
+        yet" (`app.plus.join.notOpen*`), the Club's empty states
+        (`web.club.join.empty.*Action`, `web.club.emptyAction`), Partners'
+        description (`app.company.meta`) and the other reworded keys of
+        this change.
 
 - [ ] **Owner decisions of 2026-10-28** (`docs/program/decisions-2026-10-28.md`;
       steps in ARCHITECTURE_AND_INTEGRATIONS.md section 6): DMARC from
@@ -433,6 +454,31 @@ steps need Xcode, Android Studio and the store/Firebase accounts
       souq price was removed 2026-10-28.)
 
 ## Decisions
+
+- 2026-11-04: **Owner decisions after the design inspiration review and the
+  audit of commit 532ce1b** (the work is split into seven pull requests:
+  PR 1 now, PR 2 store trust, PR 3 Plus and Pass, PR 4 Partners, PR 5 the
+  Switch on moment and shelves, PR 6 programs, PR 7 only when the owner
+  says):
+  - **D1** "The IDEA IQ Inc." leaves visible text now; copyright lines use
+    the trading name "The IDEA" (`orgName` in `project.json`, the footer,
+    About, Partners documents). Where a policy needs a legal party it stays
+    until the owner names one (see the launch checklist).
+  - **D2** Plus is not open for sign-up until the owner says so; everyone
+    joins the existing waitlist. With 0 places (Staff → Plus → Members) the
+    site says "Plus isn't open for joining yet", and the home page's Pink
+    Band leads to the waitlist instead of "Join Plus".
+  - **D3** Pass perks are for everyone with a Pass.
+  - **D4** Condition bulbs and the souq price stay retired.
+  - **D5** Plus may launch area by area, with the existing area checks.
+  - **D8** The program catalog separates The IDEA's paid packages from
+    third-party listings, each with its source and the date it was last
+    checked.
+  - **D9** Retired code names are renamed only in the final pull request;
+    database tables keep their names.
+  - **Promises:** the five promises show only with the policy behind them.
+    Four link to their policy section (`/legal/<policy>#section-<n>`); "a
+    human answers" waits for a support policy.
 
 - 2026-10-30: **UX overhaul across the website, Partners and Staff, in one
   PR** (`docs/program/ux-overhaul.md`). Four tabs stay (Store · Plus · Club ·

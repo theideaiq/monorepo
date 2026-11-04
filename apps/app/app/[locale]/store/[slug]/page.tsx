@@ -23,6 +23,7 @@ import {
   RatingLink,
   SellerLine,
 } from "@/components/product-reviews";
+import { Promises } from "@/components/promises";
 import { BundleContents } from "@/components/store/bundle-contents";
 import { CategoryShelf } from "@/components/store/category-shelf";
 import { WriteReview } from "@/components/store/product-reviews";
@@ -299,6 +300,7 @@ const ProductView = async ({
           <Suspense>
             <PurchasePanel offers={offers} product={product} />
           </Suspense>
+          <Promises className="mt-4" compact />
         </aside>
 
         <div className="flex flex-col gap-6 lg:col-start-2">

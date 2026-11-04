@@ -8,7 +8,7 @@ import { LearnPrograms } from "@/components/learn-programs";
 import { PageHero } from "@/components/page-hero";
 import { PostSubmit } from "@/components/post-submit";
 import { EmptyState, Section } from "@/components/section";
-import { isPostTopic, postTopics, topicPath } from "@/lib/club";
+import { isPostTopic, joinPath, postTopics, topicPath } from "@/lib/club";
 import { getPosts } from "@/lib/data";
 import { localizedMetadata } from "@/lib/metadata";
 
@@ -65,7 +65,11 @@ const ReadPage = async ({ params, searchParams }: ReadProps) => {
             ))}
           </div>
         ) : (
-          <EmptyState>{t("empty")}</EmptyState>
+          <EmptyState
+            action={{ href: joinPath("events"), label: t("emptyAction") }}
+          >
+            {t("empty")}
+          </EmptyState>
         )}
       </Section>
       {tag === "guides" ? <LearnPrograms locale={locale} /> : null}

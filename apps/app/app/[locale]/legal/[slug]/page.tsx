@@ -80,7 +80,7 @@ const Legal = async ({ params }: LegalProps) => {
           ) : null}
         </header>
         <Markdown
-          className="prose prose-neutral dark:prose-invert max-w-none"
+          className="prose prose-neutral dark:prose-invert max-w-none [&_h2]:scroll-mt-24"
           locale={locale}
           source={source}
         />

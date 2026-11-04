@@ -234,20 +234,24 @@ const WaitlistPlace = ({ status }: { readonly status: PlusStatus }) => {
   );
 };
 
-/** How many places are left, or that Plus is full. */
+/**
+ * How many places are left, or that Plus is full. With no places at all
+ * (Staff → Plus → Members), Plus isn't open yet and everyone joins the
+ * waitlist.
+ */
 const Places = ({ status }: { readonly status: PlusStatus }) => {
   const t = useTranslations("app.plus.join");
   const locale = useLocale();
-  return (
-    <p className="font-medium text-sm">
-      {status.placesFree > 0
-        ? t("placesLeft", {
-            count: status.placesFree,
-            n: formatNumber(status.placesFree, locale),
-          })
-        : t("full", { waiting: formatNumber(status.waiting, locale) })}
-    </p>
-  );
+  let text = t("full", { waiting: formatNumber(status.waiting, locale) });
+  if (status.capacity === 0) {
+    text = t("notOpen");
+  } else if (status.placesFree > 0) {
+    text = t("placesLeft", {
+      count: status.placesFree,
+      n: formatNumber(status.placesFree, locale),
+    });
+  }
+  return <p className="font-medium text-sm">{text}</p>;
 };
 
 /** What a person who isn't a member yet does next. */
@@ -274,7 +278,9 @@ const NextStep = ({ status }: { readonly status: PlusStatus }) => {
   }
   return (
     <div className="grid gap-3">
-      <p className="text-sm">{t("fullHelp")}</p>
+      <p className="text-sm">
+        {t(status.capacity === 0 ? "notOpenHelp" : "fullHelp")}
+      </p>
       <WaitlistForm governorate={governorate} onGovernorate={setGovernorate} />
     </div>
   );

@@ -214,11 +214,11 @@
       "club": "Club"
     },
     "footer": {
-      "tagline": "Baghdad's digital ecosystem: shopping, rentals, learning, community and services for companies, with one Pass.",
+      "tagline": "Games, music, books, films and gear from The IDEA and shops across Iraq, with one Pass for all of it.",
       "legal": "Legal",
       "email": "Email",
       "telegram": "Telegram",
-      "copyright": "© {year} The IDEA IQ Inc. All rights reserved.",
+      "copyright": "© {year} The IDEA. All rights reserved.",
       "trademarks": "Game titles, trade names, trademarks and artwork shown on this site belong to their respective owners.",
       "company": "Company"
     },
@@ -241,8 +241,8 @@
     },
     "home": {
       "meta": {
-        "title": "Iraq's digital ecosystem",
-        "description": "Shop, rent and connect with The IDEA: the store, The IDEA Plus rentals, The IDEA Club, The IDEA Pass and Partners. Based in Baghdad, serving all of Iraq."
+        "title": "Games, music, books, films and gear, at your door",
+        "description": "The world's best games, music, books, films and gear from The IDEA and shops across Iraq: buy, bid or rent with Plus, delivered to your door at a fair price, with one Pass."
       },
       "news": {
         "title": "From the Club",
@@ -252,7 +252,6 @@
         "title": "Next events",
         "empty": "No upcoming events right now. Follow the Club on Telegram to hear about the next one."
       },
-      "title": "What are you looking for?",
       "newest": {
         "title": "New arrivals"
       },
@@ -260,7 +259,8 @@
         "title": "Rent instead of buying",
         "highlight": "with Plus.",
         "description": "Games, books and movies for a monthly fee: we deliver them and pick them up when you're done.",
-        "cta": "See what's for rent"
+        "cta": "See what's for rent",
+        "waitlist": "Join the Plus waitlist"
       },
       "member": {
         "guest": "Earn Bulbs on every order with your Pass",
@@ -270,6 +270,12 @@
       "featured": {
         "title": "Featured",
         "empty": "New products are on their way. Check back soon."
+      },
+      "hero": {
+        "line": "Switch on.",
+        "title": "One Pass.",
+        "highlight": "Everything worth having.",
+        "description": "The world's best games, music, books, films and gear, from The IDEA and shops across Iraq. Buy, bid or rent with Plus, delivered to your door at a fair price."
       }
     },
     "rent": {
@@ -476,12 +482,12 @@
     "about": {
       "meta": {
         "title": "Our story",
-        "description": "The IDEA IQ is an ecosystem built in Baghdad to bridge commerce, education and entertainment for the modern Iraqi."
+        "description": "The IDEA is Iraq's entertainment brand for the curious: games, music, books, films and gear from us and from shops across Iraq, with one Pass."
       },
       "badge": "Our story",
-      "title": "Building the digital future of",
+      "title": "Switching on the curious in",
       "highlight": "Baghdad.",
-      "subtitle": "The IDEA is not just a company. It is an ecosystem designed to bridge the gap between commerce, education and entertainment for the modern Iraqi.",
+      "subtitle": "The IDEA is one Pass to buy, rent with Plus, bid and share the world's best games, music, books, films and gear, from us and from shops across Iraq, delivered to your door at a fair price. Every seller keeps the same promises on price, date and condition.",
       "mission": {
         "title": "Our mission",
         "description": "To give every Iraqi one digital Pass with seamless access to quality products, learning and entertainment."
@@ -493,7 +499,7 @@
       "linesTitle": "What we're building",
       "company": {
         "title": "The company",
-        "description": "The IDEA is operated by The IDEA IQ Inc., based in Baghdad, Iraq."
+        "description": "The IDEA is based in Baghdad, Iraq."
       },
       "values": {
         "title": "Built for the",
@@ -536,10 +542,10 @@
     "careers": {
       "meta": {
         "title": "Careers",
-        "description": "Want to help build Iraq's digital ecosystem? Here's how to apply to work at The IDEA."
+        "description": "Want to help switch on the curious in Iraq? Here's how to apply to work at The IDEA."
       },
       "title": "Join the team",
-      "subtitle": "We're building the future of Iraq's digital economy, and we're always glad to meet dreamers, doers and creators.",
+      "subtitle": "We bring the world's best games, music, books, films and gear to Iraq, and we're always glad to meet people who want to build it with us.",
       "openings": {
         "title": "Open positions",
         "description": "We don't have advertised openings right now. We still read every application and keep promising profiles on file for future roles."
@@ -1128,7 +1134,7 @@
             "other": "Other (small groups)",
             "unknown": "Not given",
             "smallGroups": "Groups of fewer than 5 people are never shown.",
-            "note": "Respondents are The IDEA Pass users who chose to answer, some for a reward. They are not a random sample of Iraq.",
+            "note": "Respondents are people with a Pass who chose to answer, some for a reward. They are not a random sample of Iraq.",
             "export": {
               "wanted": "Wanted",
               "started": "Started",
@@ -1226,9 +1232,11 @@
         "signIn": "Sign in",
         "empty": {
           "all": "Nothing to join right now. Check back soon.",
-          "events": "No upcoming events right now. Check back soon.",
+          "events": "No upcoming events right now.",
           "surveys": "No surveys for you right now.",
-          "opportunities": "No opportunities open right now. Check back soon."
+          "opportunities": "No opportunities open right now.",
+          "eventsAction": "Hear about the next one on Telegram",
+          "opportunitiesAction": "Hear about new ones on Telegram"
         },
         "access": {
           "phone": "Boosted surveys need a verified phone of your own: one Pass per person.",
@@ -1245,7 +1253,8 @@
         "stories": "Stories",
         "guides": "Guides"
       },
-      "backToRead": "Back to Read"
+      "backToRead": "Back to Read",
+      "emptyAction": "See upcoming events"
     },
     "partners": {
       "meta": {
@@ -1467,13 +1476,30 @@
     },
     "feed": {
       "title": "The IDEA store"
+    },
+    "promises": {
+      "title": "What every seller on The IDEA keeps",
+      "items": {
+        "price": {
+          "title": "The price you see is the price you pay",
+          "policy": "Terms: orders and prices"
+        },
+        "when": {
+          "title": "We tell you when",
+          "policy": "Delivery: delivery times"
+        },
+        "condition": {
+          "title": "The condition we describe, or your money back",
+          "policy": "Returns: items not as described"
+        },
+        "leave": {
+          "title": "Leave any time",
+          "policy": "Plus: changing, pausing and cancelling"
+        }
+      }
     }
   },
   "app": {
-    "meta": {
-      "title": "Partners",
-      "description": "The IDEA's app: your orders, The IDEA Plus, events and support in one place."
-    },
     "nav": {
       "label": "Navigation",
       "store": "Store",
@@ -2301,7 +2327,9 @@
         "waiting": "You're number {position} on the waitlist. We'll let you know when a place opens.",
         "waitingOutside": "You're number {position} on the waitlist for {governorate}. We'll let you know when Plus comes there.",
         "leave": "Leave the waitlist",
-        "choosePlan": "There's a place for you. Choose a plan below."
+        "choosePlan": "There's a place for you. Choose a plan below.",
+        "notOpen": "Plus isn't open for joining yet.",
+        "notOpenHelp": "Join the waitlist and we'll invite you when it opens."
       },
       "weekdays": {
         "sunday": "Sunday",
@@ -3467,7 +3495,7 @@
         "unitPrice": "Unit price",
         "amount": "Amount",
         "total": "Total",
-        "footer": "The IDEA IQ · Baghdad, Iraq. Prices in Iraqi dinars.",
+        "footer": "The IDEA · Baghdad, Iraq. Prices in Iraqi dinars.",
         "validUntil": "Valid until {date}",
         "reference": "Your reference: {reference}",
         "due": "Due {date}",
@@ -4220,6 +4248,10 @@
           "noBidder": "There's no other bidder to offer it to.",
           "failed": "That didn't work. Try again."
         }
+      },
+      "meta": {
+        "title": "Partners",
+        "description": "Sell on The IDEA, offer perks to members, order for your team and connect your apps, all from Partners."
       }
     },
     "ages": {
@@ -5015,7 +5047,7 @@
         "plus": "Plus update",
         "promo": "News from The IDEA",
         "system": "Notice",
-        "trade_in": "Sell to us update"
+        "trade_in": "Update on an item you offered"
       },
       "fallbackBody": "Open to see the details."
     },
@@ -7051,7 +7083,7 @@
         "empty": "No members match.",
         "name": "Member",
         "groupStatus": "In the groups",
-        "account": "The IDEA account",
+        "account": "Pass",
         "linked": "Linked",
         "lastSeen": "Last seen"
       },

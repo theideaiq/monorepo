@@ -32,7 +32,7 @@ import { SideMenu } from "./side-menu";
 
 export const AppSidebar = () => {
   const t = useTranslations("app.nav");
-  const tMeta = useTranslations("app.meta");
+  const tMeta = useTranslations("app.company.meta");
   const locale = useLocale();
   const router = useRouter();
   const { active, organizations, select } = useOrganization();

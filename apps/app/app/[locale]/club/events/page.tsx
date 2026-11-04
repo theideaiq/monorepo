@@ -7,6 +7,7 @@ import { PageHero } from "@/components/page-hero";
 import { EmptyState, Section } from "@/components/section";
 import { joinPath } from "@/lib/club";
 import { getEvents } from "@/lib/data";
+import { telegram } from "@/lib/links";
 import { localizedMetadata } from "@/lib/metadata";
 
 interface EventsProps {
@@ -47,7 +48,15 @@ const EventsPage = async ({ params }: EventsProps) => {
             ))}
           </div>
         ) : (
-          <EmptyState>{t("club.join.empty.events")}</EmptyState>
+          <EmptyState
+            action={{
+              external: true,
+              href: telegram.club,
+              label: t("club.join.empty.eventsAction"),
+            }}
+          >
+            {t("club.join.empty.events")}
+          </EmptyState>
         )}
         {past.length > 0 ? (
           <section className="flex flex-col gap-4">
