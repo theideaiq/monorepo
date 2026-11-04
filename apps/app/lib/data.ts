@@ -746,7 +746,12 @@ export type ProgramRow = Pick<
   | "seats"
   | "travel"
   | "visa_refund_rate"
->;
+> &
+  // Missing until migration 20270327000000 runs (read as []).
+  Partial<Pick<Tables<"programs">, "costs" | "itinerary">>;
+
+const PROGRAM_COLUMNS =
+  "opportunity_id, price, plus_price, seats, min_age, max_age, travel, insurance, chaperone, passport_required, includes_ar, includes_en, installments, refund_schedule, visa_refund_rate, pay_within_days";
 
 /** The package behind one of The IDEA's programs, when it's sold here. */
 export const getProgram = async (opportunityId: string) => {
@@ -754,12 +759,22 @@ export const getProgram = async (opportunityId: string) => {
   if (!supabase) {
     return null;
   }
+  const withPlan = await supabase
+    .from("programs")
+    .select(`${PROGRAM_COLUMNS}, itinerary, costs`)
+    .eq("opportunity_id", opportunityId)
+    .maybeSingle();
+  if (!withPlan.error) {
+    return withPlan.data as ProgramRow | null;
+  }
+  // Before the itinerary and costs columns exist, the package without them.
+  log.error(
+    `web: program itinerary and costs failed: ${withPlan.error.message}`
+  );
   return check(
     await supabase
       .from("programs")
-      .select(
-        "opportunity_id, price, plus_price, seats, min_age, max_age, travel, insurance, chaperone, passport_required, includes_ar, includes_en, installments, refund_schedule, visa_refund_rate, pay_within_days"
-      )
+      .select(PROGRAM_COLUMNS)
       .eq("opportunity_id", opportunityId)
       .maybeSingle()
   ) as ProgramRow | null;
