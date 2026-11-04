@@ -16,6 +16,7 @@ export const EditorialTabs = async () => {
         { href: "/club/events", label: t("events") },
         { href: "/club/opportunities", label: t("opportunities") },
         { href: "/club/submissions", label: t("submissions") },
+        { href: "/club/travel", label: t("travel") },
       ]}
     />
   );
