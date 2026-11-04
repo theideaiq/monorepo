@@ -25,6 +25,11 @@ import { useLocale, useTranslations } from "next-intl";
 import { type ReactNode, useEffect, useId, useState } from "react";
 import { AgeAwareError } from "@/components/age-aware-error";
 import { JoinPlus } from "@/components/plus/join-plus";
+import {
+  BeforeYouJoin,
+  PlanChooser,
+  PlanCompare,
+} from "@/components/plus/plan-compare";
 import { ManagePlus } from "@/components/plus/plus-tools";
 import { Rail } from "@/components/shop/rail";
 import { SignedInSection } from "@/components/signed-in-section";
@@ -379,8 +384,10 @@ const JoinStep = ({
  * `/plus/plans`: Monthly or Yearly; Glow · Shine · Blaze; the Family switch
  * (the Duo plans: a second Pass and kids' profiles, sharing the slots);
  * the student price applied for verified students (a link to verify for
- * others); the area check; then one button, "Join Shine · 22,750 a
- * month". When the area isn't served or Plus is full, the waitlist.
+ * others); "Help me choose", the plans side by side, what the chosen plan
+ * means at home (price, swaps, areas); the area check; then one button,
+ * "Join Shine · 22,750 a month". When the area isn't served or Plus is
+ * full, the waitlist.
  */
 export const PlanSheet = () => {
   const t = useTranslations("app.plus.sheet");
@@ -446,6 +453,7 @@ export const PlanSheet = () => {
       {plans.data?.length === 0 ? (
         <p className="text-muted-foreground">{tPlans("empty")}</p>
       ) : null}
+      <PlanChooser onPick={setChosen} plans={shown} selected={picked?.id} />
       <div
         aria-label={t("choose")}
         className="grid gap-4 md:grid-cols-3"
@@ -509,6 +517,7 @@ export const PlanSheet = () => {
           );
         })}
       </div>
+      <PlanCompare per={per} plans={shown} />
       {!isStudent && studentPlans.data?.length ? (
         <Link
           className="inline-flex min-h-11 items-center self-start text-pink-text text-sm hover:underline"
@@ -519,6 +528,7 @@ export const PlanSheet = () => {
       ) : null}
       {choice ? (
         <div className="grid max-w-xl gap-3">
+          <BeforeYouJoin per={per} plan={choice.plan} />
           <JoinStep
             busy={checkout.isPending}
             onJoin={() => checkout.mutate(choice.plan)}

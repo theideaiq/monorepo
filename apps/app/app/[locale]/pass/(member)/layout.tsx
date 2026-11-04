@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
-import { RequireAuth, RequireOnboarding } from "@/components/gates";
+import { RequireOnboarding } from "@/components/gates";
 import { OrganizationProvider } from "@/components/organization-provider";
+import { PassGate } from "@/components/pass/pass-gate";
 import { PassNav } from "@/components/pass-nav";
 
 interface MyPassLayoutProps {
@@ -21,10 +22,11 @@ export const generateMetadata = async (): Promise<Metadata> => {
 /**
  * Your Pass: the signed-in customer's own pages (orders, The IDEA Plus,
  * wishlist, events, submissions, support, settings). Requires a
- * session and a finished onboarding; the data is protected by RLS.
+ * session and a finished onboarding, except `/pass` itself, which explains
+ * the Pass to visitors who aren't signed in; the data is protected by RLS.
  */
 const MyPassLayout = ({ children }: MyPassLayoutProps) => (
-  <RequireAuth>
+  <PassGate>
     <OrganizationProvider>
       <RequireOnboarding>
         <div className="container mx-auto grid gap-6 px-4 py-6 md:grid-cols-[13rem_1fr] md:py-10">
@@ -35,7 +37,7 @@ const MyPassLayout = ({ children }: MyPassLayoutProps) => (
         </div>
       </RequireOnboarding>
     </OrganizationProvider>
-  </RequireAuth>
+  </PassGate>
 );
 
 export default MyPassLayout;

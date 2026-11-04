@@ -88,8 +88,9 @@ incidents) is in `docs/platform`.
     apps link here with `passUrl()` from `@repo/auth/pass` (based on
     `NEXT_PUBLIC_WEB_URL`), which only returns to allowlisted hosts
     (`isAllowedReturnTo`);
-  - **The IDEA Pass pages** (`app/[locale]/pass/(member)`): `/pass` the
-    Pass card, Today (what needs you now) and the Library shelves on top:
+  - **The IDEA Pass pages** (`app/[locale]/pass/(member)`): `/pass` (signed
+    out, what the Pass is and one button to sign in; `PassGate`) the Pass
+    card, Today (what needs you now) and the Library shelves on top:
     `/pass/at-home` (Plus items you have, swaps and Keep it),
     `/pass/queue`, `/pass/history` (orders and rentals), `/pass/saved`,
     `/pass/lists`, `/pass/tickets`, `/pass/applications`, `/pass/codes`;

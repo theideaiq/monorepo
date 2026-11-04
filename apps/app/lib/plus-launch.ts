@@ -76,6 +76,23 @@ export const usePlusAreas = () => {
   });
 };
 
+/** What one more home swap costs on top of the plan's (Staff → Plus → Settings). */
+export const useExtraSwapFee = () => {
+  const { supabase } = useAuth();
+  return useQuery({
+    queryFn: async () =>
+      unwrap(
+        await supabase
+          .from("store_settings")
+          .select("extra_swap_fee")
+          .limit(1)
+          .maybeSingle()
+      )?.extra_swap_fee ?? null,
+    queryKey: [...PLUS, "extra-swap-fee"],
+    staleTime: 60 * 60_000,
+  });
+};
+
 /** The member's area and address for swaps. */
 export const usePlusHome = () => {
   const { supabase, user } = useAuth();

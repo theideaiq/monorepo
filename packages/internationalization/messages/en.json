@@ -2606,6 +2606,30 @@
           "rentalsOut": "Their rentals must be returned first.",
           "tooYoung": "Plus Duo is for 13 and over."
         }
+      },
+      "compare": {
+        "title": "The plans side by side",
+        "price": "Price {per}",
+        "items": "Items at a time",
+        "swaps": "Home swaps a month",
+        "bulbs": "Bulbs back on what you buy",
+        "delivery": "Free Store delivery in Baghdad",
+        "yes": "Included",
+        "no": "Not included",
+        "more": "Survey credits, early campaigns, new releases and kit discounts by plan are in the policy.",
+        "policy": "Read the Plus plans"
+      },
+      "chooser": {
+        "question": "How many things do you want at home at once?",
+        "answer": "{count, plural, one {One at a time} other {{n} at a time}}"
+      },
+      "before": {
+        "title": "Before you join",
+        "price": "{plan} is {price} {per}, paid in advance until you cancel.",
+        "swaps": "{count, plural, one {One home swap a month is included:} other {{n} home swaps a month are included:}} our rider brings the next item and takes the last one back on your area's delivery day.",
+        "extraSwap": "One more swap is {fee}.",
+        "leave": "Cancel any time from your plan. It ends at the end of the period you paid for, once your items are back.",
+        "areas": "{count, plural, one {Plus delivers to one area of Baghdad} other {Plus delivers to {n} areas of Baghdad}}"
       }
     },
     "events": {
@@ -8101,6 +8125,39 @@
         "invalid_file": "Send a photo (PNG, JPEG or WebP) or a PDF of up to 10 MB.",
         "no_badge": "Your student badge has expired. Use your university email instead.",
         "not_found": "This verification is already finished or has expired."
+      }
+    },
+    "explainer": {
+      "title": "One Pass.",
+      "highlight": "For all of it.",
+      "description": "Your Pass is who you are at The IDEA: your card, your orders, your Bulbs and what you save, on the website and in the app.",
+      "signIn": "Sign in or get your Pass",
+      "free": "A Pass is free. Your email and one code are all it takes.",
+      "parts": {
+        "card": {
+          "title": "Your card",
+          "description": "Show it at events and at partners; it carries your perks."
+        },
+        "orders": {
+          "title": "Orders",
+          "description": "Every order with its dates, returns and receipts in one place."
+        },
+        "bulbs": {
+          "title": "Bulbs",
+          "description": "Earn Bulbs on what you buy. 1 Bulb is 1 IQD off a later order."
+        },
+        "saved": {
+          "title": "Saved and lists",
+          "description": "Keep what you like, make lists and share them by link."
+        },
+        "family": {
+          "title": "Family",
+          "description": "Kids' profiles and teens who ask before they get something."
+        },
+        "perks": {
+          "title": "Perks",
+          "description": "Offers from our partners for everyone with a Pass."
+        }
       }
     }
   }
