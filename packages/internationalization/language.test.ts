@@ -105,10 +105,12 @@ const isStandard = (path: string) =>
 const standard = arabic.filter(([path]) => isStandard(path));
 const iraqi = arabic.filter(([path]) => !isStandard(path));
 
-/** Words only Iraqi speech uses (our names with گ are taken out first). */
+/** Words only Iraqi speech uses (names spelled with گ are taken out first). */
 const IRAQI_WORDS =
   /(?<![؀-ۿ])(?:ماكو|اكو|هسه|شلون|شنو|شگد|راح|هاي|هذي|مو|اللي|بعدين|ويا|وياك|دز|تگدر|يگدر)(?![؀-ۿ])|[گچ]/;
-const OUR_NAMES_WITH_GAF = /السوگ|سوگ|الگلوبات|گلوبات|گلوب/g;
+/** Our names and the foreign names we spell with گ (Glow, Google, Telegram, PEGI, WCAG). */
+const OUR_NAMES_WITH_GAF =
+  /السوگ|سوگ|الگلوبات|گلوبات|گلوب|گلو|تلگرام|گوگل|پيگي|كاگ/g;
 /** Modern Standard forms that Iraqi copy says another way. */
 const STANDARD_WORDS =
   /(?<![؀-ۿ])(?:لا يوجد|لا توجد|سوف|الآن|هل|لماذا|ماذا|يمكنك|تستطيع|لم يتم|سيتم|يتم|التي|الذي|الذين|ليس|ليست|لدينا|لديك|لديه|هذه|هؤلاء|عندما|ينبغي)(?![؀-ۿ])/;
