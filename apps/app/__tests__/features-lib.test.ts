@@ -108,6 +108,32 @@ describe("notifications", () => {
     expect(render(available, "ar").body).toContain("كثيب");
   });
 
+  test("names a Travel Kit's first line due, its country and how many more", () => {
+    const travel = (count: number) => ({
+      data: {
+        count,
+        country: "DE",
+        due_on: "2027-01-10",
+        title_ar: "حجز موعد الفيزا",
+        title_en: "Book the visa appointment",
+      },
+      event: "travel_due",
+      kind: "system" as const,
+    });
+    expect(render(travel(1))).toEqual({
+      body: '"Book the visa appointment" for your Germany trip is due 10 Jan 2027.',
+      title: "Coming up in your Travel Kit",
+    });
+    expect(render(travel(3)).body).toBe(
+      '"Book the visa appointment" and 2 more for your Germany trip are coming up; the first is due 10 Jan 2027.'
+    );
+    const arabic = render(travel(3), "ar").body;
+    expect(arabic).toContain("حجز موعد الفيزا");
+    expect(arabic).toContain("و2 شغلات");
+    expect(arabic).toContain("2027");
+    expect(notificationHref("/pass/travel/k1")).toBe("/pass/travel/k1");
+  });
+
   test("falls back for unknown events and odd data", () => {
     expect(
       render({ data: {}, event: "promo_spring_sale", kind: "promo" })

@@ -455,6 +455,28 @@ steps need Xcode, Android Studio and the store/Firebase accounts
 
 ## Decisions
 
+- 2026-11-04: **Programs, part 3: reminders, event sharing, Staff health
+  and handover** (PR 6c, after the schema in #1216, migration
+  `20270328000000_reminders_and_health.sql`). Reminders (A19): the daily
+  `/cron/opportunities` job also runs `notify_travel_kits()` (one
+  notification per Travel Kit with the lines due in the next three days
+  that aren't done, once per due date) and emails opportunity deadlines and
+  Travel Kit reminders once each (`claim_email_notifications`, template
+  `deadline-reminder`); Droid, push and the bell get them like every
+  notification. Every cron job records its runs in `job_runs`
+  (`recordJobRun`). Events (C21): a generated share image per event (title,
+  date and time in Baghdad, place, cover; Arabic shaped by Pango through
+  sharp, with a Satori fallback), Add to calendar (Google, Outlook, and an
+  `.ics` file from `GET /calendar/events/<slug>.ics` in the API) and Share
+  (the apps' share sheet, Web Share or copy). Staff (C27, A30):
+  `/settings/health` for admins (each job's last success and failure,
+  overdue jobs, which integrations are configured, Better Stack status and
+  stuck notification queues) and `/settings/handover` for superadmins (who
+  has access and whether each has an authenticator app, the services the
+  business depends on with their dashboards and variable names, domains,
+  and links to the runbooks). Owner: check the service dashboard links on
+  the Handover page, and set the GitHub `CRON_SECRET` so the boxy and
+  reminders workflows record their runs.
 - 2026-11-04: **Programs, part 2: the Travel Kit, its Staff editor and
   the package page** (PR 6b, after the schema in #1213). The Travel Kit
   ("ملف السفر"): "Start my Travel Kit" on a listed opportunity with routes,

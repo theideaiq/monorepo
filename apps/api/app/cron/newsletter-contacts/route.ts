@@ -5,6 +5,7 @@ import { log } from "@repo/observability/log";
 import { NextResponse } from "next/server";
 import { env } from "@/env";
 import { isAuthorizedCronRequest, unauthorized } from "@/lib/cron";
+import { recordJobRun } from "@/lib/job-runs";
 import { syncNewsletterContacts } from "@/lib/newsletter";
 
 // Resend allows a few requests a second, so a big first sync takes several
@@ -19,32 +20,33 @@ const BUDGET_MS = 240_000;
  * Resend back into `profiles.marketing_opt_in` (see lib/newsletter.ts).
  * Off until `RESEND_TOKEN` and `RESEND_SEGMENT_ID` are set.
  */
-export const GET = async (request: Request): Promise<Response> => {
+export const GET = (request: Request) => {
   if (!isAuthorizedCronRequest(request)) {
     return unauthorized();
   }
-
-  const segmentId = env.RESEND_SEGMENT_ID;
-  if (!(resend && segmentId)) {
-    return NextResponse.json({ ok: true, skipped: "not_configured" });
-  }
-
-  try {
-    const result = await syncNewsletterContacts({
-      admin: createAdminClient(),
-      contacts: resend.contacts,
-      deadline: Date.now() + BUDGET_MS,
-      segmentId,
-    });
-    if (result.failed > 0) {
-      log.warn(
-        `Newsletter sync: ${result.failed} Resend requests failed`,
-        result
-      );
+  return recordJobRun(createAdminClient, "newsletter-contacts", async () => {
+    const segmentId = env.RESEND_SEGMENT_ID;
+    if (!(resend && segmentId)) {
+      return NextResponse.json({ ok: true, skipped: "not_configured" });
     }
-    return NextResponse.json({ ok: true, ...result });
-  } catch (error) {
-    log.error(`Newsletter sync failed: ${parseError(error)}`);
-    return NextResponse.json({ ok: false }, { status: 500 });
-  }
+
+    try {
+      const result = await syncNewsletterContacts({
+        admin: createAdminClient(),
+        contacts: resend.contacts,
+        deadline: Date.now() + BUDGET_MS,
+        segmentId,
+      });
+      if (result.failed > 0) {
+        log.warn(
+          `Newsletter sync: ${result.failed} Resend requests failed`,
+          result
+        );
+      }
+      return NextResponse.json({ ok: true, ...result });
+    } catch (error) {
+      log.error(`Newsletter sync failed: ${parseError(error)}`);
+      return NextResponse.json({ ok: false }, { status: 500 });
+    }
+  });
 };
