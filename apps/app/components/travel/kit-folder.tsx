@@ -180,7 +180,7 @@ const Cover = ({
             {localized(kit.opportunity, "title", locale)}
           </Link>
         ) : null}
-        <p className="font-mono text-sm">{progress}</p>
+        <p className="text-sm tabular-nums">{progress}</p>
       </div>
       <BulbMeter className="w-16 md:w-20" label={progress} share={share} />
     </div>
@@ -411,7 +411,7 @@ const PrintoutsTab = ({
             <span className="text-sm">
               {localized(document, "title", locale)}
             </span>
-            <span className="shrink-0 font-mono text-sm">
+            <span className="shrink-0 text-sm tabular-nums">
               {t("copies", {
                 copies: formatNumber(document.copies ?? 0, locale),
               })}
@@ -501,7 +501,7 @@ const ScheduleTab = ({
                 <div className="flex flex-wrap items-center gap-2">
                   <p
                     className={cn(
-                      "font-mono text-sm",
+                      "text-sm tabular-nums",
                       due ? "text-foreground" : "text-muted-foreground"
                     )}
                   >
@@ -698,7 +698,7 @@ const Folder = ({ kit }: { readonly kit: Kit }) => {
             >
               <span
                 aria-hidden="true"
-                className="flex size-6 items-center justify-center rounded-full bg-idea-pink font-mono text-on-pink text-xs"
+                className="flex size-6 items-center justify-center rounded-full bg-idea-pink font-semibold text-on-pink text-xs"
               >
                 {t(`letters.${key}`)}
               </span>
