@@ -11,6 +11,7 @@ import {
 import { success } from "@/lib/admin/action-state";
 import { callApi } from "@/lib/admin/api";
 import {
+  commissionRows,
   financialSettingsSchema,
   journalEntrySchema,
   parseDimensions,
@@ -405,5 +406,39 @@ export const syncDigitalCatalog = staffAction(
       );
     }
     return success("saved");
+  }
+);
+
+// ── Commission ──────────────────────────────────────────────────────────────
+
+/**
+ * The commission on shops' sales per category, in percent: the standard
+ * rate (Free) and the lower Pro rate. New orders take the new rates; each
+ * order line keeps the rate it was sold at.
+ */
+export const saveCommissionRates = staffAction(
+  "finance",
+  z.record(z.string(), z.string()),
+  async ({ input, supabase }) => {
+    const rows = commissionRows(input);
+    if (!rows) {
+      throw new ActionFailure("invalid");
+    }
+    const results = await Promise.all(
+      rows.map((row) =>
+        supabase
+          .from("commission_rates")
+          .update({
+            pro_rate: Math.round(row.pro * 100) / 10_000,
+            standard_rate: Math.round(row.standard * 100) / 10_000,
+          })
+          .eq("category_id", row.category)
+          .select("category_id")
+      )
+    );
+    for (const result of results) {
+      affected(result);
+    }
+    return success();
   }
 );

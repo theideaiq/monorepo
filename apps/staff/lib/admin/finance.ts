@@ -1,6 +1,14 @@
 import { Constants, type Enums } from "@repo/database";
 import { z } from "zod";
-import { date, int, optionalDecimal, optionalText, text } from "./forms";
+import {
+  date,
+  decimalIn,
+  int,
+  optionalDecimal,
+  optionalText,
+  text,
+  uuid,
+} from "./forms";
 import { oneOf, type SearchParams } from "./list";
 
 export type Scenario = Enums<"ledger_scenario">;
@@ -114,3 +122,28 @@ export const financialSettingsSchema = z.object({
   fiscalYearStartMonth: int(1, 12),
   vatRate: optionalDecimal(0).pipe(z.number().max(100)),
 });
+
+// ── Commission ──
+
+const percent = decimalIn(0, 50);
+
+/**
+ * The form's fields, `standard.<category id>` and `pro.<category id>` in
+ * percent, as rows; Pro is never above the standard rate.
+ */
+export const commissionRows = (fields: Record<string, string>) => {
+  const rows: { category: string; pro: number; standard: number }[] = [];
+  for (const [key, value] of Object.entries(fields)) {
+    const [kind, category] = key.split(".");
+    if (kind !== "standard" || !uuid.safeParse(category).success) {
+      continue;
+    }
+    const standard = percent.safeParse(value);
+    const pro = percent.safeParse(fields[`pro.${category}`] ?? "");
+    if (!(standard.success && pro.success) || pro.data > standard.data) {
+      return null;
+    }
+    rows.push({ category, pro: pro.data, standard: standard.data });
+  }
+  return rows.length > 0 ? rows : null;
+};

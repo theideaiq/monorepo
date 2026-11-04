@@ -8,10 +8,11 @@ import { BadgePercent, Code, Crown, PackageSearch } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { FeatureGrid } from "@/components/feature-grid";
 import { PageHero } from "@/components/page-hero";
+import { Selling } from "@/components/partners/selling";
 import { PlanCard } from "@/components/plan-card";
 import { EmptyState, Section } from "@/components/section";
 import { env } from "@/env";
-import { getPlans } from "@/lib/data";
+import { getCommissionRates, getPlans, getProPrices } from "@/lib/data";
 import { appLink } from "@/lib/links";
 import { staticPageMetadata } from "@/lib/metadata";
 
@@ -32,7 +33,11 @@ const Partners = async ({ params }: PartnersProps) => {
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "web.partners" });
-  const plans = await getPlans("business");
+  const [plans, rates, pro] = await Promise.all([
+    getPlans("business"),
+    getCommissionRates(),
+    getProPrices(),
+  ]);
   const services = t.raw("services.items") as Services;
   const steps = t.raw("how.steps") as Steps;
   // Organizations are set up and billed on Partners.
@@ -40,8 +45,16 @@ const Partners = async ({ params }: PartnersProps) => {
 
   return (
     <>
-      <PageHero badge={t("badge")} subtitle={t("subtitle")} title={t("title")}>
+      <PageHero
+        badge={t("badge")}
+        highlight={t("highlight")}
+        subtitle={t("subtitle")}
+        title={t("title")}
+      >
         <Button asChild size="lg">
+          <a href={organizationUrl}>{t("cta.sell")}</a>
+        </Button>
+        <Button asChild size="lg" variant="outline">
           <Link
             href={{
               hash: "contact",
@@ -52,10 +65,14 @@ const Partners = async ({ params }: PartnersProps) => {
             {t("cta.contact")}
           </Link>
         </Button>
-        <Button asChild size="lg" variant="outline">
-          <a href={organizationUrl}>{t("cta.app")}</a>
-        </Button>
       </PageHero>
+
+      <Selling
+        locale={locale}
+        pro={pro}
+        rates={rates}
+        startHref={organizationUrl}
+      />
 
       <Section title={t("services.title")}>
         <FeatureGrid

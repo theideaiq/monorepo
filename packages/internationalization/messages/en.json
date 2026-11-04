@@ -1271,11 +1271,11 @@
     "partners": {
       "meta": {
         "title": "Partners — for shops and organizations",
-        "description": "Partners gives shops, suppliers and organizations in Iraq one place to work with The IDEA: bulk buying, member perks, Sign in with The IDEA Pass and The IDEA Plus for teams."
+        "description": "Sell on The IDEA: list in your shop's own name, we deliver and collect payment, and pay you weekly after commission. Plus bulk buying, member perks and Sign in with The IDEA Pass for organizations."
       },
       "badge": "For partners",
-      "title": "Partners",
-      "subtitle": "For shops, suppliers and organizations that work with The IDEA. One place for your team, your orders and your members.",
+      "title": "Sell across Iraq",
+      "subtitle": "List your games, music, books, films and gear. Customers pay through The IDEA, our courier delivers, and you are paid every week. Organizations also buy in bulk, offer perks to Pass members and sign people in with the Pass.",
       "services": {
         "title": "What partners do with The IDEA",
         "items": [
@@ -1314,7 +1314,61 @@
         "highlight": "our team",
         "description": "Tell us about your organization and what you need.",
         "contact": "Contact us",
-        "app": "Set up your organization"
+        "app": "Set up your organization",
+        "sell": "Start selling"
+      },
+      "highlight": "with The IDEA.",
+      "selling": {
+        "how": {
+          "title": "How selling works",
+          "apply": {
+            "title": "Apply",
+            "description": "Apply from Partners with your business documents, your payout details and a security deposit. Our team approves the shop."
+          },
+          "list": {
+            "title": "List",
+            "description": "Find each item by barcode, ISBN or title, then add its condition, price and copies. A listing goes live only with a photo."
+          },
+          "deliver": {
+            "title": "We deliver",
+            "description": "You sell in your own name; customers pay through The IDEA, which collects for you, and our courier picks up from your branch."
+          },
+          "paid": {
+            "title": "Paid weekly",
+            "description": "Each week we pay you for sales whose 14-day return window has closed, after commission, with a statement for every payout."
+          },
+          "policy": "Returns, deposits and everything else shops agree to are in the selling policy.",
+          "policyLink": "Read the selling policy"
+        },
+        "plans": {
+          "title": "Free or Pro",
+          "free": {
+            "name": "Free",
+            "price": "0 IQD",
+            "listings": "Up to {n} active listings",
+            "commission": "The standard commission, only when you sell"
+          },
+          "pro": {
+            "name": "Pro",
+            "perMonth": "a month, or {year} a year",
+            "listings": "Unlimited active listings",
+            "commission": "A lower commission in every category",
+            "billing": "Taken from your payouts. Cancel any time; the paid period runs out."
+          }
+        },
+        "commission": {
+          "title": "Commission by category",
+          "category": "Category"
+        },
+        "estimator": {
+          "title": "What one sale pays you",
+          "category": "Category",
+          "price": "Selling price (IQD)",
+          "free": "On Free ({rate} commission)",
+          "pro": "On Pro ({rate} commission)",
+          "note": "Before any refunds, returns that were your shop's fault and, on Pro, the Pro fee. Partners shows the rate for each category."
+        },
+        "start": "Start selling"
       }
     },
     "search": {
@@ -2853,6 +2907,33 @@
             "needsPhoto": "See listing",
             "quotes": "Answer",
             "invoices": "See invoices"
+          }
+        },
+        "firstSale": {
+          "title": "Your first sale",
+          "description": "Four steps and your shop is ready to sell.",
+          "done": "(done)",
+          "todo": "(to do)",
+          "steps": {
+            "payout": {
+              "title": "Add payout details",
+              "description": "The bank account each weekly payout goes to.",
+              "action": "Add details"
+            },
+            "branch": {
+              "title": "Add a pickup branch",
+              "description": "Where couriers collect your orders.",
+              "action": "Add a branch"
+            },
+            "listing": {
+              "title": "List your first item",
+              "description": "With its photos, so it shows in the Store.",
+              "action": "List an item"
+            },
+            "sale": {
+              "title": "Make your first sale",
+              "description": "Orders show here with what to pack and by when."
+            }
           }
         }
       },
@@ -6892,6 +6973,12 @@
         "sync": "Sync from Reloadly",
         "nameAr": "Arabic name",
         "regionAr": "Arabic region"
+      },
+      "commission": {
+        "title": "Commission on shops' sales",
+        "description": "Per category, in percent: the standard rate shops pay on Free and the lower Pro rate (never above the standard one). /partners and Partners show these; each order keeps the rate it was sold at.",
+        "standard": "Standard (Free) %",
+        "pro": "Pro %"
       }
     },
     "editorial": {

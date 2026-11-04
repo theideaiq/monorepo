@@ -18,6 +18,7 @@ import {
   AlertTriangleIcon,
   BriefcaseIcon,
   CheckCircle2Icon,
+  CircleIcon,
   ClockIcon,
   CodeXmlIcon,
   EyeOffIcon,
@@ -49,8 +50,10 @@ import {
   useSubscription,
 } from "@/lib/queries";
 import { useSeller } from "@/lib/seller-queries";
-import { useShopLines } from "@/lib/shop-order-queries";
+import { useShopLines, useShopLocations } from "@/lib/shop-order-queries";
 import {
+  type FirstSaleStep,
+  firstSaleSteps,
   keyNumbers,
   type ShopRows,
   type Task,
@@ -166,6 +169,92 @@ const KeyNumbers = ({
           }
         />
       </div>
+    </section>
+  );
+};
+
+const firstSaleHrefs: Record<FirstSaleStep, string> = {
+  branch: "/sell/settings",
+  listing: "/sell/listings",
+  payout: "/sell/settings",
+  sale: "/sell/orders",
+};
+
+/** Until the first sale: payout details, a branch, a live listing, the sale. */
+const FirstSale = ({
+  hasPayout,
+  rows,
+  sellerId,
+}: {
+  readonly hasPayout: boolean;
+  readonly rows: ShopRows;
+  readonly sellerId: string;
+}) => {
+  const t = useTranslations("app.business.today.firstSale");
+  const lines = useShopLines(sellerId);
+  const locations = useShopLocations(sellerId);
+  if (lines.isPending || locations.isPending) {
+    return null;
+  }
+  const steps = firstSaleSteps({
+    hasBranch: (locations.data ?? []).some((location) => location.active),
+    hasPayout,
+    listings: rows.listings,
+    sold: (lines.data ?? []).some((line) => line.status !== "cancelled"),
+  });
+  if (!steps) {
+    return null;
+  }
+  const next = steps.find((row) => !row.done)?.step;
+  return (
+    <section
+      aria-labelledby="first-sale"
+      className="grid gap-3 rounded-lg border bg-card p-4"
+    >
+      <div className="grid gap-1">
+        <h2 className="font-semibold text-lg" id="first-sale">
+          {t("title")}
+        </h2>
+        <p className="text-muted-foreground text-sm">{t("description")}</p>
+      </div>
+      <ol className="grid gap-2">
+        {steps.map(({ done, step }) => (
+          <li className="flex flex-wrap items-center gap-3" key={step}>
+            {done ? (
+              <CheckCircle2Icon
+                aria-hidden="true"
+                className="size-5 shrink-0 text-success"
+              />
+            ) : (
+              <CircleIcon
+                aria-hidden="true"
+                className="size-5 shrink-0 text-muted-foreground"
+              />
+            )}
+            <span className="grid min-w-0 flex-1 gap-0.5">
+              <span className="font-medium text-sm">
+                {t(`steps.${step}.title`)}
+                <span className="sr-only"> {done ? t("done") : t("todo")}</span>
+              </span>
+              <span className="text-muted-foreground text-xs">
+                {t(`steps.${step}.description`)}
+              </span>
+            </span>
+            {done || step === "sale" ? null : (
+              <Button
+                asChild
+                className="ms-auto"
+                size="sm"
+                variant={step === next ? "default" : "outline"}
+              >
+                <Link href={firstSaleHrefs[step]}>
+                  {t(`steps.${step}.action`)}
+                </Link>
+              </Button>
+            )}
+          </li>
+        ))}
+      </ol>
     </section>
   );
 };
@@ -314,6 +403,15 @@ const TodayBody = () => {
     <div className="flex max-w-5xl flex-col gap-8">
       {shopTasks.rows ? (
         <KeyNumbers rows={shopTasks.rows} sellerId={sellerId} />
+      ) : null}
+      {shopTasks.rows ? (
+        <FirstSale
+          hasPayout={Boolean(
+            shop.data?.details?.payout_iban && shop.data.details.payout_bank
+          )}
+          rows={shopTasks.rows}
+          sellerId={sellerId}
+        />
       ) : null}
       <Tasks tasks={tasks} />
       <PlanLine />

@@ -279,3 +279,38 @@ export const keyNumbers = ({
     salesWeek,
   };
 };
+
+export type FirstSaleStep = "branch" | "listing" | "payout" | "sale";
+
+/**
+ * The checklist an approved shop sees on Today until its first sale: where
+ * payouts go, a pickup branch, a live listing (it has a photo) and the sale.
+ * Null once the shop has sold, so the card goes away.
+ */
+export const firstSaleSteps = ({
+  hasBranch,
+  hasPayout,
+  listings,
+  sold,
+}: {
+  hasBranch: boolean;
+  hasPayout: boolean;
+  listings: readonly Pick<Listing, "active" | "available" | "product_status">[];
+  sold: boolean;
+}): { done: boolean; step: FirstSaleStep }[] | null => {
+  if (sold) {
+    return null;
+  }
+  const live = listings.some(
+    (listing) =>
+      listing.active &&
+      listing.available > 0 &&
+      listing.product_status === "active"
+  );
+  return [
+    { done: hasPayout, step: "payout" },
+    { done: hasBranch, step: "branch" },
+    { done: live, step: "listing" },
+    { done: false, step: "sale" },
+  ];
+};

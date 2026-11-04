@@ -37,8 +37,9 @@ incidents) is in `docs/platform`.
     withdrawing), `/club/surveys` and `/club/read[/<slug>]` (posts by
     topic), then the Telegram rooms; your tickets, applications and
     surveys are in the Pass. `/checkout/done/<order>` follows a paid
-    order. `/partners` ("For partners") presents The IDEA Partners to
-    organizations; `/search` (the one search: products, events,
+    order. `/partners` ("For partners") presents Partners to
+    organizations, leading with selling (how it works, Free and Pro, the
+    commission by category from `commission_rates` and what a sale pays); `/search` (the one search: products, events,
     opportunities and posts); `/help` (FAQ, the contact form at
     `#contact`, Ask Droid and the member's support tickets at `/help/<id>`
     and `/help/new`); `/promises` (the promises, the policy behind each
@@ -116,7 +117,8 @@ incidents) is in `docs/platform`.
   with a `proxy.ts` (locale, session refresh, security headers): its pages
   are at the root (`app/[locale]/(business)`), in the menu's groups
   (`docs/program/ux-overhaul.md`): Today `/` (key numbers: sales this
-  week, next payout, live listings, rating; then every task with its
+  week, next payout, live listings, rating; "Your first sale" until the
+  shop's first order; then every task with its
   deadline in deadline order with its action in the row; "List an item"
   and "Upload a sheet"; and below, the cards that add sections); Sell:
   `/sell/listings` (the shop's offers: find a product by ISBN, barcode or
@@ -201,7 +203,8 @@ incidents) is in `docs/platform`.
     program refunds to pay, `/finance/codes`, digital codes (held and failed
     codes, brands and denominations with cost, margin and price, the supplier
     sync), and `/finance/coupons`,
-    coupon codes members enter at checkout) · Settings
+    coupon codes members enter at checkout; `/finance/settings` also sets
+    the commission by category) · Settings
     `/settings` (with `/settings/store`, the store's delivery, checkout,
     auction and survey settings, and `/settings/audit`), and `/search`.
     Record pages (customer, order, product, ticket, event, team request)
