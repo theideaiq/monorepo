@@ -767,7 +767,19 @@
       "noRsvps": "كون أول واحد يسجّل حضوره.",
       "rsvp": "سجّل حضورك",
       "ended": "هاي الفعالية خلصت.",
-      "mine": "حجوزاتك"
+      "mine": "حجوزاتك",
+      "share": "شارك",
+      "addToCalendar": "ضيفها لتقويمك",
+      "calendar": {
+        "google": "تقويم Google",
+        "outlook": "Outlook",
+        "ics": "تقويم Apple وغيره (.ics)"
+      },
+      "image": {
+        "range": "{start} – {end}",
+        "dateTime": "{date}، {time}",
+        "time": "{time} بتوقيت بغداد"
+      }
     },
     "invite": {
       "title": "صديق دعاك على ايديا",
@@ -3562,7 +3574,8 @@
         "stillOffline": "بعدك مو متصل. راح نرجع نتصل أول ما يرجع الإنترنت."
       },
       "share": {
-        "copied": "تم نسخ الرابط"
+        "copied": "تم نسخ الرابط",
+        "failed": "ما گدرنا نشارك الرابط. انسخه من شريط العنوان."
       }
     },
     "bulbs": {

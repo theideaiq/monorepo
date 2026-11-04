@@ -24,6 +24,8 @@ interface Commerce {
 
 export interface EventProperties {
   add_payment_info: Commerce;
+  /** Saved an event to a calendar: `google`, `outlook` or `ics`. */
+  add_to_calendar: { itemId: string; method: string };
   add_to_cart: Commerce;
   begin_checkout: Commerce;
   contact: { method?: string };
@@ -31,6 +33,8 @@ export interface EventProperties {
   login: { method: string };
   purchase: Commerce & { transactionId: string; value: number };
   search: { query: string };
+  /** Shared a page: `contentType` ("event"), its id and how (`share`, `copy`). */
+  share: { contentType: string; itemId: string; method: string };
   sign_up: { method: string };
   start_trial: Commerce;
   subscribe: Commerce & { transactionId?: string };
@@ -54,6 +58,7 @@ export const eventNames: Record<AnalyticsEvent, Destinations> = {
     meta: "AddPaymentInfo",
     tiktok: "AddPaymentInfo",
   },
+  add_to_calendar: { ga4: "add_to_calendar" },
   add_to_cart: { ga4: "add_to_cart", meta: "AddToCart", tiktok: "AddToCart" },
   begin_checkout: {
     ga4: "begin_checkout",
@@ -65,6 +70,7 @@ export const eventNames: Record<AnalyticsEvent, Destinations> = {
   login: { ga4: "login" },
   purchase: { ga4: "purchase", meta: "Purchase", tiktok: "Purchase" },
   search: { ga4: "search", meta: "Search", tiktok: "Search" },
+  share: { ga4: "share" },
   sign_up: {
     ga4: "sign_up",
     meta: "CompleteRegistration",
@@ -117,7 +123,9 @@ export const toGa4 = <E extends AnalyticsEvent>(
   return {
     name: eventNames[event].ga4,
     params: compact({
+      content_type: stringOf(properties, "contentType"),
       currency: value === undefined ? currency : (currency ?? defaultCurrency),
+      item_id: stringOf(properties, "itemId"),
       items: items?.map((item) =>
         compact({
           item_category: item.category,

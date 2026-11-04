@@ -59,3 +59,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
+
+## Alexandria (font)
+
+Source: https://github.com/Gue3bara/Alexandria
+
+Copyright 2022 The Alexandria Project Authors. The TTF files in
+`apps/app/assets/og` (used to draw share images) are licensed under the SIL
+Open Font License, Version 1.1; the full license is in
+`apps/app/assets/og/OFL.txt`.

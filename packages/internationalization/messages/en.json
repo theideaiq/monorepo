@@ -767,7 +767,19 @@
       "noRsvps": "Be the first to RSVP.",
       "rsvp": "RSVP",
       "ended": "This event has ended.",
-      "mine": "Your RSVPs"
+      "mine": "Your RSVPs",
+      "share": "Share",
+      "addToCalendar": "Add to calendar",
+      "calendar": {
+        "google": "Google Calendar",
+        "outlook": "Outlook",
+        "ics": "Apple Calendar and others (.ics)"
+      },
+      "image": {
+        "range": "{start} – {end}",
+        "dateTime": "{date}, {time}",
+        "time": "{time}, Baghdad time"
+      }
     },
     "invite": {
       "title": "A friend invited you to The IDEA",
@@ -3562,7 +3574,8 @@
         "stillOffline": "Still offline. We'll reconnect as soon as the connection is back."
       },
       "share": {
-        "copied": "Link copied"
+        "copied": "Link copied",
+        "failed": "Couldn't share the link. Copy it from the address bar."
       }
     },
     "bulbs": {
