@@ -2666,6 +2666,36 @@ export type Database = {
           },
         ];
       };
+      opportunity_travel_routes: {
+        Row: {
+          opportunity_id: string;
+          route_id: string;
+        };
+        Insert: {
+          opportunity_id: string;
+          route_id: string;
+        };
+        Update: {
+          opportunity_id?: string;
+          route_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "opportunity_travel_routes_opportunity_id_fkey";
+            columns: ["opportunity_id"];
+            isOneToOne: false;
+            referencedRelation: "opportunities";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "opportunity_travel_routes_route_id_fkey";
+            columns: ["route_id"];
+            isOneToOne: false;
+            referencedRelation: "travel_routes";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       order_items: {
         Row: {
           attributes: NonNullable<Json>;
@@ -5026,11 +5056,13 @@ export type Database = {
       programs: {
         Row: {
           chaperone: boolean;
+          costs: NonNullable<Json>;
           created_at: string;
           includes_ar: string | null;
           includes_en: string | null;
           installments: NonNullable<Json>;
           insurance: boolean;
+          itinerary: NonNullable<Json>;
           max_age: number | null;
           min_age: number;
           opportunity_id: string;
@@ -5046,11 +5078,13 @@ export type Database = {
         };
         Insert: {
           chaperone?: boolean;
+          costs?: NonNullable<Json>;
           created_at?: string;
           includes_ar?: string | null;
           includes_en?: string | null;
           installments?: NonNullable<Json>;
           insurance?: boolean;
+          itinerary?: NonNullable<Json>;
           max_age?: number | null;
           min_age?: number;
           opportunity_id: string;
@@ -5066,11 +5100,13 @@ export type Database = {
         };
         Update: {
           chaperone?: boolean;
+          costs?: NonNullable<Json>;
           created_at?: string;
           includes_ar?: string | null;
           includes_en?: string | null;
           installments?: NonNullable<Json>;
           insurance?: boolean;
+          itinerary?: NonNullable<Json>;
           max_age?: number | null;
           min_age?: number;
           opportunity_id?: string;
@@ -7753,6 +7789,249 @@ export type Database = {
             referencedColumns: ["id"];
           },
         ];
+      };
+      travel_documents: {
+        Row: {
+          doc_key: string;
+          status: Database["public"]["Enums"]["travel_document_status"];
+          updated_at: string;
+          user_id: string;
+        };
+        Insert: {
+          doc_key: string;
+          status?: Database["public"]["Enums"]["travel_document_status"];
+          updated_at?: string;
+          user_id?: string;
+        };
+        Update: {
+          doc_key?: string;
+          status?: Database["public"]["Enums"]["travel_document_status"];
+          updated_at?: string;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
+      travel_kit_ticks: {
+        Row: {
+          done_at: string;
+          kit_id: string;
+          requirement_id: string;
+        };
+        Insert: {
+          done_at?: string;
+          kit_id: string;
+          requirement_id: string;
+        };
+        Update: {
+          done_at?: string;
+          kit_id?: string;
+          requirement_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "travel_kit_ticks_kit_id_fkey";
+            columns: ["kit_id"];
+            isOneToOne: false;
+            referencedRelation: "travel_kits";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "travel_kit_ticks_requirement_id_fkey";
+            columns: ["requirement_id"];
+            isOneToOne: false;
+            referencedRelation: "travel_requirements";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      travel_kits: {
+        Row: {
+          appointment_on: string | null;
+          created_at: string;
+          departure_on: string | null;
+          id: string;
+          minor: boolean;
+          notes: string | null;
+          opportunity_id: string | null;
+          route_id: string;
+          updated_at: string;
+          user_id: string;
+        };
+        Insert: {
+          appointment_on?: string | null;
+          created_at?: string;
+          departure_on?: string | null;
+          id?: string;
+          minor?: boolean;
+          notes?: string | null;
+          opportunity_id?: string | null;
+          route_id: string;
+          updated_at?: string;
+          user_id?: string;
+        };
+        Update: {
+          appointment_on?: string | null;
+          created_at?: string;
+          departure_on?: string | null;
+          id?: string;
+          minor?: boolean;
+          notes?: string | null;
+          opportunity_id?: string | null;
+          route_id?: string;
+          updated_at?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "travel_kits_opportunity_id_fkey";
+            columns: ["opportunity_id"];
+            isOneToOne: false;
+            referencedRelation: "opportunities";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "travel_kits_route_id_fkey";
+            columns: ["route_id"];
+            isOneToOne: false;
+            referencedRelation: "travel_routes";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      travel_requirements: {
+        Row: {
+          anchor: string | null;
+          checked_on: string;
+          confidence: Database["public"]["Enums"]["travel_confidence"];
+          copies: number | null;
+          created_at: string;
+          detail_ar: string | null;
+          detail_en: string | null;
+          doc_key: string | null;
+          id: string;
+          kind: Database["public"]["Enums"]["travel_item_kind"];
+          lead_days: number | null;
+          minors_only: boolean;
+          opportunity_id: string | null;
+          position: number;
+          route_id: string | null;
+          source_url: string;
+          title_ar: string;
+          title_en: string;
+          updated_at: string;
+        };
+        Insert: {
+          anchor?: string | null;
+          checked_on: string;
+          confidence: Database["public"]["Enums"]["travel_confidence"];
+          copies?: number | null;
+          created_at?: string;
+          detail_ar?: string | null;
+          detail_en?: string | null;
+          doc_key?: string | null;
+          id?: string;
+          kind: Database["public"]["Enums"]["travel_item_kind"];
+          lead_days?: number | null;
+          minors_only?: boolean;
+          opportunity_id?: string | null;
+          position?: number;
+          route_id?: string | null;
+          source_url: string;
+          title_ar: string;
+          title_en: string;
+          updated_at?: string;
+        };
+        Update: {
+          anchor?: string | null;
+          checked_on?: string;
+          confidence?: Database["public"]["Enums"]["travel_confidence"];
+          copies?: number | null;
+          created_at?: string;
+          detail_ar?: string | null;
+          detail_en?: string | null;
+          doc_key?: string | null;
+          id?: string;
+          kind?: Database["public"]["Enums"]["travel_item_kind"];
+          lead_days?: number | null;
+          minors_only?: boolean;
+          opportunity_id?: string | null;
+          position?: number;
+          route_id?: string | null;
+          source_url?: string;
+          title_ar?: string;
+          title_en?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "travel_requirements_opportunity_id_fkey";
+            columns: ["opportunity_id"];
+            isOneToOne: false;
+            referencedRelation: "opportunities";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "travel_requirements_route_id_fkey";
+            columns: ["route_id"];
+            isOneToOne: false;
+            referencedRelation: "travel_routes";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      travel_routes: {
+        Row: {
+          apply_at_ar: string | null;
+          apply_at_en: string | null;
+          ask_ar: string | null;
+          ask_en: string | null;
+          checked_on: string | null;
+          country: string;
+          created_at: string;
+          id: string;
+          note_ar: string | null;
+          note_en: string | null;
+          slug: string;
+          status: string;
+          updated_at: string;
+          visa_ar: string;
+          visa_en: string;
+        };
+        Insert: {
+          apply_at_ar?: string | null;
+          apply_at_en?: string | null;
+          ask_ar?: string | null;
+          ask_en?: string | null;
+          checked_on?: string | null;
+          country: string;
+          created_at?: string;
+          id?: string;
+          note_ar?: string | null;
+          note_en?: string | null;
+          slug: string;
+          status?: string;
+          updated_at?: string;
+          visa_ar: string;
+          visa_en: string;
+        };
+        Update: {
+          apply_at_ar?: string | null;
+          apply_at_en?: string | null;
+          ask_ar?: string | null;
+          ask_en?: string | null;
+          checked_on?: string | null;
+          country?: string;
+          created_at?: string;
+          id?: string;
+          note_ar?: string | null;
+          note_en?: string | null;
+          slug?: string;
+          status?: string;
+          updated_at?: string;
+          visa_ar?: string;
+          visa_en?: string;
+        };
+        Relationships: [];
       };
       universities: {
         Row: {
@@ -12823,6 +13102,9 @@ export type Database = {
       ticket_priority: "low" | "normal" | "high" | "urgent";
       ticket_status: "open" | "pending" | "resolved" | "closed";
       ticket_topic: "order" | "rental" | "plus" | "account" | "other";
+      travel_confidence: "official" | "secondary" | "unconfirmed";
+      travel_document_status: "not_started" | "in_progress" | "ready";
+      travel_item_kind: "document" | "task" | "question";
     };
     CompositeTypes: {
       [_ in never]: never;
@@ -13173,6 +13455,9 @@ export const Constants = {
       ticket_priority: ["low", "normal", "high", "urgent"],
       ticket_status: ["open", "pending", "resolved", "closed"],
       ticket_topic: ["order", "rental", "plus", "account", "other"],
+      travel_confidence: ["official", "secondary", "unconfirmed"],
+      travel_document_status: ["not_started", "in_progress", "ready"],
+      travel_item_kind: ["document", "task", "question"],
     },
   },
 } as const;
