@@ -773,7 +773,7 @@
       "calendar": {
         "google": "تقويم Google",
         "outlook": "Outlook",
-        "ics": "تقويم Apple وغيره (.ics)"
+        "ics": "تقويم Apple وغيره (⁦.ics⁩)"
       },
       "image": {
         "range": "{start} – {end}",
