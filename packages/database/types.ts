@@ -10418,6 +10418,13 @@ export type Database = {
           opportunity_id: string;
         }[];
       };
+      order_timeline: {
+        Args: { target: string };
+        Returns: {
+          at: string;
+          step: string;
+        }[];
+      };
       partner_check: { Args: { org: string; scanned: string }; Returns: Json };
       pass_app_webhooks: {
         Args: { org: string };

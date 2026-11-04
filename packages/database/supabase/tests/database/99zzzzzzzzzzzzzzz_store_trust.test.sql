@@ -52,7 +52,7 @@ $$;
 grant execute on all functions in schema pg_temp to public;
 -- </preamble>
 
-select plan(12);
+select plan(16);
 
 insert into auth.users (id, email) values
   ('00000000-0000-0000-0000-0000000f1001', 'owner-trust@example.iq'),
@@ -134,6 +134,39 @@ select pg_temp.login_as('00000000-0000-0000-0000-0000000f1001');
 select is(
   cardinality((public.set_offer_photos('9f200000-0000-0000-0000-0000000000e1', '{}')).photos), 0,
   'the shop can take them down again'
+);
+
+-- ── An order's dates ──
+select pg_temp.reset_role();
+insert into public.orders (id, user_id, status, subtotal, shipping_fee, total, shipping_address, paid_at, created_at)
+values ('9f200000-0000-0000-0000-0000000000f1', '00000000-0000-0000-0000-0000000f1003', 'shipped', 19750, 5000, 24750,
+  '{"city": "Baghdad"}', timestamptz '2026-11-01 10:05+03', timestamptz '2026-11-01 10:00+03');
+insert into public.shipments (order_id, carrier_id, size, created_at)
+values ('9f200000-0000-0000-0000-0000000000f1', 'trust-1', 'S', timestamptz '2026-11-02 09:00+03');
+select pg_temp.login_as('00000000-0000-0000-0000-0000000f1003');
+select results_eq(
+  $$ select step, at from public.order_timeline('9f200000-0000-0000-0000-0000000000f1') $$,
+  $$ values ('placed', timestamptz '2026-11-01 10:00+03'), ('paid', timestamptz '2026-11-01 10:05+03'),
+       ('booked', timestamptz '2026-11-02 09:00+03') $$,
+  'the customer sees when the order was placed, paid and booked for delivery'
+);
+select pg_temp.reset_role();
+update public.shipments set delivered_at = timestamptz '2026-11-03 14:00+03' where carrier_id = 'trust-1';
+select pg_temp.login_as('00000000-0000-0000-0000-0000000f1003');
+select is(
+  (select at from public.order_timeline('9f200000-0000-0000-0000-0000000000f1') where step = 'delivered'),
+  timestamptz '2026-11-03 14:00+03',
+  'and when it was delivered'
+);
+select pg_temp.login_as('00000000-0000-0000-0000-0000000f1001');
+select throws_ok(
+  $$ select * from public.order_timeline('9f200000-0000-0000-0000-0000000000f1') $$,
+  '42501', 'Not your order', 'nobody else sees the order''s dates'
+);
+select pg_temp.login_anon();
+select throws_ok(
+  $$ select * from public.order_timeline('9f200000-0000-0000-0000-0000000000f1') $$,
+  '42501', null, 'visitors can''t ask'
 );
 
 select * from finish();

@@ -156,3 +156,56 @@ revoke all on function private.offer_photos(uuid) from public;
 revoke all on function public.offer_photos(uuid) from public;
 grant execute on function private.offer_photos(uuid) to anon, authenticated, service_role;
 grant execute on function public.offer_photos(uuid) to anon, authenticated, service_role;
+
+-- ── The dates of an order's steps ─────────────────────────────────────────
+
+-- When the order was placed and paid, and when its parcels were booked for
+-- delivery and delivered (the first parcel booked, the last one delivered;
+-- returns aside), for the person who placed it. Never the courier's own
+-- words or name: the website words each step itself.
+create function private.order_timeline(target uuid)
+returns table (step text, at timestamptz)
+language plpgsql
+stable
+security definer
+set search_path = ''
+as $$
+begin
+  if not exists (
+    select 1 from public.orders o where o.id = target and o.user_id = (select auth.uid())
+  ) then
+    raise exception 'Not your order' using errcode = '42501';
+  end if;
+  return query
+  with parcels as (
+    select s.created_at, s.delivered_at
+    from public.shipments s
+    where s.order_id = target and s.return_id is null and s.cancelled_at is null
+  )
+  select 'placed'::text, o.created_at from public.orders o where o.id = target
+  union all
+  select 'paid', o.paid_at from public.orders o where o.id = target and o.paid_at is not null
+  union all
+  select 'booked', min(p.created_at) from parcels p having count(*) > 0
+  union all
+  select 'delivered', max(p.delivered_at) from parcels p
+  having count(*) > 0 and count(*) = count(p.delivered_at)
+  order by 2;
+end;
+$$;
+
+create function public.order_timeline(target uuid)
+returns table (step text, at timestamptz)
+language sql
+stable
+security invoker
+set search_path = ''
+as $$ select * from private.order_timeline(target) $$;
+
+comment on function public.order_timeline(uuid) is
+  'The dates an order was placed, paid, booked for delivery and delivered, for the person who placed it.';
+
+revoke all on function private.order_timeline(uuid) from public, anon;
+revoke all on function public.order_timeline(uuid) from public, anon;
+grant execute on function private.order_timeline(uuid) to authenticated;
+grant execute on function public.order_timeline(uuid) to authenticated;
