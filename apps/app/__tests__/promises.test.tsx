@@ -21,7 +21,16 @@ describe("The promises", () => {
       name: CONDITION,
     });
     expect(condition.getAttribute("href")).toBe("/legal/returns#section-7");
-    expect(screen.getAllByRole("link")).toHaveLength(promises.length);
+    const links = screen.getAllByRole("link");
+    expect(
+      links.filter((link) => link.getAttribute("href")?.startsWith("/legal/"))
+    ).toHaveLength(promises.length);
+    // And how to claim one that isn't kept.
+    expect(
+      screen
+        .getByRole("link", { name: "If one isn't kept" })
+        .getAttribute("href")
+    ).toBe("/promises");
   });
 
   test("every linked section exists in both languages", () => {
@@ -48,6 +57,7 @@ describe("The promises", () => {
   test("Arabic pages keep their language in the links", () => {
     renderWithApp(<Promises compact />, { locale: "ar" });
 
+    // The compact list (product page, checkout) is the policy links alone.
     for (const link of screen.getAllByRole("link")) {
       expect(link.getAttribute("href")).toMatch(ARABIC_LEGAL);
     }

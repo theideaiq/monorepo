@@ -41,7 +41,9 @@ incidents) is in `docs/platform`.
     organizations; `/search` (the one search: products, events,
     opportunities and posts); `/help` (FAQ, the contact form at
     `#contact`, Ask Droid and the member's support tickets at `/help/<id>`
-    and `/help/new`); `/careers`; `/about` (the company, the version);
+    and `/help/new`); `/promises` (the promises, the policy behind each
+    and how to claim it); `/delivery` (fees and days by governorate, from
+    the delivery zones); `/careers`; `/about` (the company, the version);
     `/r/<code>` (a member's invite link: 10% off a new member's first
     order); `/family/<code>` a Family (Duo) invite to accept; and legal
     pages at `/legal/<policy>` (Markdown in `apps/app/content/legal`).

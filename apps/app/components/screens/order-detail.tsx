@@ -29,7 +29,11 @@ import {
   CardTitle,
 } from "@repo/design-system/components/ui/card";
 import { cn } from "@repo/design-system/lib/utils";
-import { formatDate, formatNumber } from "@repo/internationalization/format";
+import {
+  formatDate,
+  formatDateTime,
+  formatNumber,
+} from "@repo/internationalization/format";
 import { Link } from "@repo/internationalization/navigation";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -76,6 +80,7 @@ import {
   useCancelOrder,
   useOrder,
   useOrderPayments,
+  useOrderTimeline,
 } from "@/lib/store-queries";
 import { useCanSellDigitalGoods } from "@/lib/use-digital-checkout";
 
@@ -138,6 +143,31 @@ const OrderState = ({ order }: { readonly order: Order }) => {
         </ol>
       ) : null}
     </div>
+  );
+};
+
+/**
+ * The order's steps so far with their dates, in plain words: placed, paid,
+ * booked for delivery, delivered. Nothing until the dates load.
+ */
+const OrderTimeline = ({ orderId }: { readonly orderId: string }) => {
+  const t = useTranslations("app.orders.timeline");
+  const locale = useLocale();
+  const steps = useOrderTimeline(orderId).data ?? [];
+  if (steps.length === 0) {
+    return null;
+  }
+  return (
+    <ol aria-label={t("title")} className="grid gap-2 border-s-2 ps-4 text-sm">
+      {steps.map((step) => (
+        <li className="grid" key={step.step}>
+          <span className="font-medium">{t(step.step)}</span>
+          <span className="text-muted-foreground">
+            {formatDateTime(step.at, locale)}
+          </span>
+        </li>
+      ))}
+    </ol>
   );
 };
 
@@ -477,6 +507,7 @@ const OrderView = ({
   return (
     <div className="grid gap-6">
       <OrderState order={order} />
+      <OrderTimeline orderId={order.id} />
       {order.tracking_number ? (
         <p className="text-sm">
           <span className="text-muted-foreground">{t("tracking")}: </span>

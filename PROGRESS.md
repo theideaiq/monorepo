@@ -455,6 +455,27 @@ steps need Xcode, Android Studio and the store/Firebase accounts
 
 ## Decisions
 
+- 2026-11-04: **Store trust, the website and Partners** (PR 2, after the
+  schema): product pages show the chosen copy's condition in the returns
+  policy's words, the shop's own photos of a copy that isn't new, the
+  shop's 90-day score ("Shop score 97/100 … on time, in stock and as
+  described", or "New on The IDEA" under 10 order lines) and the price history of 90 days;
+  `/promises` lists the promises with the policy and the way to claim
+  each; `/delivery` lists fees and days by governorate from the delivery
+  zones; Pass → Orders shows when an order was placed, paid, booked and
+  delivered; a category's Format filter shows only its own formats and
+  "In Plus" only where it has Plus items; Partners → Listings takes 3–10
+  photos of a copy that isn't new. The performance budget (A28) follows on
+  its own.
+- 2026-11-04: **Store trust, schema first** (migration
+  `20270326000000_store_trust.sql`): `sellers.score_lines`, the order lines
+  a shop's 90-day score rests on (0 = no record yet, shown as a new shop,
+  never "100%"), and `seller_offers.photos`, a shop's own 3–10 photos of a
+  listing that isn't new, set with `set_offer_photos` and read on product
+  pages through `offer_photos`; and `order_timeline(order)`, the dates an
+  order was placed, paid, booked for delivery and delivered, for the person
+  who placed it (never the courier's words). The website and Partners use
+  them in the next change.
 - 2026-11-04: Opportunities, part 7 (owner's approved proposal and D8: a catalog
   of programs for Iraqis in Club → Opportunities;
   `20270325000000_opportunity_catalog.sql`). External programs are listed

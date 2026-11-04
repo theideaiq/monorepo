@@ -269,15 +269,23 @@ const withoutJoins = (rows: unknown[]): ProductCard[] =>
  */
 export const listFormats = async (
   supabase: Client,
-  kind: ProductKind = "sale"
+  kind: ProductKind = "sale",
+  /** Only formats sold in these categories (a category and its subcategories). */
+  categoryIds?: readonly string[]
 ): Promise<string[]> => {
-  const query = supabase
+  const base = supabase
     .from("product_variants")
-    .select("attributes, product:products!inner (status, kind, rentable)")
+    .select(
+      "attributes, product:products!inner (status, kind, rentable, category_id)"
+    )
     .eq("active", true)
     .eq("product.status", "active")
     .not("attributes->>Format", "is", null)
     .limit(5000);
+  const query =
+    categoryIds && categoryIds.length > 0
+      ? base.in("product.category_id", [...categoryIds])
+      : base;
   const rows = unwrap(
     await (kind === "rental"
       ? query.eq("product.rentable", true)

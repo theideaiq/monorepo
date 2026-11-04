@@ -1,9 +1,11 @@
 import {
   type BundleItem,
+  type DeliveryZone,
   getBundleItems,
   getProductBySlug,
   getProductOffers,
   listCategories,
+  listDeliveryZones,
   listFormats,
   listProducts,
   PRODUCT_CARD_COLUMNS,
@@ -15,6 +17,7 @@ import {
 import type { Database, Enums, Tables } from "@repo/database";
 import { log } from "@repo/observability/log";
 import { publicFileUrl } from "@repo/storage";
+import { offerPhotoKey, type SellerRecord } from "./offer-facts";
 import { type Availability, toAvailability } from "./plus";
 import type { FeedProduct } from "./product-feed";
 import { type Rating, type Review, ratingsById } from "./reviews";
@@ -98,10 +101,10 @@ export const getProduct = async (slug: string) => {
 };
 
 /** The formats on sale (CD, Vinyl, …), for the store's format filter. */
-export const getFormats = () =>
+export const getFormats = (categoryIds?: readonly string[]) =>
   fallback("listFormats", [] as string[], async () => {
     const supabase = createPublicClient();
-    return supabase ? await listFormats(supabase) : [];
+    return supabase ? await listFormats(supabase, "sale", categoryIds) : [];
   });
 
 /** The copies a product is on offer as (new, used, for rent…). */
@@ -109,6 +112,77 @@ export const getOffers = (productId: string) =>
   fallback("productOffers", [] as ProductOffer[], async () => {
     const supabase = createPublicClient();
     return supabase ? await getProductOffers(supabase, productId) : [];
+  });
+
+/** The records of the shops selling a product, by seller id. */
+export const getSellerRecords = (sellerIds: readonly string[]) =>
+  fallback("sellerRecords", {} as Record<string, SellerRecord>, async () => {
+    const supabase = createPublicClient();
+    if (!supabase || sellerIds.length === 0) {
+      return {};
+    }
+    const found = rows(
+      await supabase
+        .from("sellers")
+        .select("id, score, score_lines")
+        .in("id", [...sellerIds])
+    );
+    return Object.fromEntries(
+      found.map((row) => [
+        row.id,
+        { lines: row.score_lines, score: Number(row.score) },
+      ])
+    );
+  });
+
+/** A shop's own photos of a listing that isn't new, by `offerPhotoKey`. */
+export const getOfferPhotos = (productId: string) =>
+  fallback("offerPhotos", {} as Record<string, string[]>, async () => {
+    const supabase = createPublicClient();
+    if (!supabase) {
+      return {};
+    }
+    const found = rows(
+      await supabase.rpc("offer_photos", { offer_product: productId })
+    );
+    return Object.fromEntries(
+      found.map((row) => [offerPhotoKey(row), row.photos])
+    );
+  });
+
+/** One price a listing was offered at, and from when until when. */
+export interface PricePoint {
+  condition: string;
+  ended_at: string | null;
+  price: number;
+  seller_id: string;
+  started_at: string;
+}
+
+/** The prices a product's listings had over the last 90 days, newest first. */
+export const getPriceHistory = (variantIds: readonly string[]) =>
+  fallback("priceHistory", [] as PricePoint[], async () => {
+    const supabase = createPublicClient();
+    if (!supabase || variantIds.length === 0) {
+      return [];
+    }
+    const since = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000);
+    return rows(
+      await supabase
+        .from("price_history")
+        .select("condition, ended_at, price, seller_id, started_at")
+        .in("variant_id", [...variantIds])
+        .or(`ended_at.is.null,ended_at.gte.${since.toISOString()}`)
+        .order("started_at", { ascending: false })
+        .limit(60)
+    );
+  });
+
+/** Where we deliver, with each zone's fee and days (Staff → Settings → Store). */
+export const getDeliveryZones = () =>
+  fallback("deliveryZones", [] as DeliveryZone[], async () => {
+    const supabase = createPublicClient();
+    return supabase ? await listDeliveryZones(supabase) : [];
   });
 
 /** What a shop's bundle holds; empty for other products. */

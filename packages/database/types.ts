@@ -6070,6 +6070,7 @@ export type Database = {
           condition: Database["public"]["Enums"]["product_condition"];
           created_at: string;
           id: string;
+          photos: string[];
           price: number;
           seller_id: string;
           sku: string | null;
@@ -6081,6 +6082,7 @@ export type Database = {
           condition?: Database["public"]["Enums"]["product_condition"];
           created_at?: string;
           id?: string;
+          photos?: string[];
           price: number;
           seller_id: string;
           sku?: string | null;
@@ -6092,6 +6094,7 @@ export type Database = {
           condition?: Database["public"]["Enums"]["product_condition"];
           created_at?: string;
           id?: string;
+          photos?: string[];
           price?: number;
           seller_id?: string;
           sku?: string | null;
@@ -6130,6 +6133,7 @@ export type Database = {
           plan_billing: string | null;
           plan_since: string | null;
           score: number;
+          score_lines: number;
           score_updated_at: string | null;
           status: Database["public"]["Enums"]["seller_status"];
           updated_at: string;
@@ -6148,6 +6152,7 @@ export type Database = {
           plan_billing?: string | null;
           plan_since?: string | null;
           score?: number;
+          score_lines?: number;
           score_updated_at?: string | null;
           status?: Database["public"]["Enums"]["seller_status"];
           updated_at?: string;
@@ -6166,6 +6171,7 @@ export type Database = {
           plan_billing?: string | null;
           plan_since?: string | null;
           score?: number;
+          score_lines?: number;
           score_updated_at?: string | null;
           status?: Database["public"]["Enums"]["seller_status"];
           updated_at?: string;
@@ -8322,6 +8328,7 @@ export type Database = {
           plan_billing: string | null;
           plan_since: string | null;
           score: number;
+          score_lines: number;
           score_updated_at: string | null;
           status: Database["public"]["Enums"]["seller_status"];
           updated_at: string;
@@ -9518,6 +9525,7 @@ export type Database = {
           plan_billing: string | null;
           plan_since: string | null;
           score: number;
+          score_lines: number;
           score_updated_at: string | null;
           status: Database["public"]["Enums"]["seller_status"];
           updated_at: string;
@@ -10335,6 +10343,15 @@ export type Database = {
         Returns: number;
       };
       notify_rentals_due_soon: { Args: { within?: string }; Returns: number };
+      offer_photos: {
+        Args: { offer_product: string };
+        Returns: {
+          condition: Database["public"]["Enums"]["product_condition"];
+          photos: string[];
+          seller_id: string;
+          variant_id: string;
+        }[];
+      };
       offer_second_chance: {
         Args: { target: string };
         Returns: {
@@ -10437,6 +10454,13 @@ export type Database = {
         Returns: {
           followers: number;
           opportunity_id: string;
+        }[];
+      };
+      order_timeline: {
+        Args: { target: string };
+        Returns: {
+          at: string;
+          step: string;
         }[];
       };
       partner_check: { Args: { org: string; scanned: string }; Returns: Json };
@@ -11610,6 +11634,28 @@ export type Database = {
           condition: Database["public"]["Enums"]["product_condition"];
           created_at: string;
           id: string;
+          photos: string[];
+          price: number;
+          seller_id: string;
+          sku: string | null;
+          updated_at: string;
+          variant_id: string;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "seller_offers";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
+      set_offer_photos: {
+        Args: { offer: string; photos: string[] };
+        Returns: {
+          active: boolean;
+          condition: Database["public"]["Enums"]["product_condition"];
+          created_at: string;
+          id: string;
+          photos: string[];
           price: number;
           seller_id: string;
           sku: string | null;
@@ -11784,6 +11830,7 @@ export type Database = {
           plan_billing: string | null;
           plan_since: string | null;
           score: number;
+          score_lines: number;
           score_updated_at: string | null;
           status: Database["public"]["Enums"]["seller_status"];
           updated_at: string;
@@ -11814,6 +11861,7 @@ export type Database = {
           plan_billing: string | null;
           plan_since: string | null;
           score: number;
+          score_lines: number;
           score_updated_at: string | null;
           status: Database["public"]["Enums"]["seller_status"];
           updated_at: string;

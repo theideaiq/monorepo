@@ -23,6 +23,7 @@ import {
 import { Textarea } from "@repo/design-system/components/ui/textarea";
 import { formatNumber } from "@repo/internationalization/format";
 import {
+  CameraIcon,
   EyeOffIcon,
   FlagIcon,
   PackageIcon,
@@ -67,6 +68,7 @@ import {
   useListings,
   usePauseListings,
   useSetOffer,
+  useSetOfferPhotos,
 } from "@/lib/listing-queries";
 import { useSeller } from "@/lib/seller-queries";
 import { hiddenListings } from "@/lib/today";
@@ -617,7 +619,7 @@ const ListingRow = ({
   const conditions = useTranslations("store.condition");
   const locale = useLocale();
   const setOffer = useSetOffer(sellerId);
-  const [mode, setMode] = useState<"edit" | "flag" | null>(null);
+  const [mode, setMode] = useState<"edit" | "flag" | "photos" | null>(null);
   const [offer, setOfferInput] = useState<OfferInput>({
     condition: listing.condition,
     price: listing.price,
@@ -693,6 +695,16 @@ const ListingRow = ({
               {t("edit")}
             </Button>
           ) : null}
+          {canManage && listing.condition !== "new" ? (
+            <Button
+              onClick={() => setMode("photos")}
+              size="sm"
+              variant="outline"
+            >
+              <CameraIcon />
+              {t("copyPhotos.open")}
+            </Button>
+          ) : null}
           <Button onClick={() => setMode("flag")} size="sm" variant="ghost">
             <FlagIcon />
             {t("flag")}
@@ -726,7 +738,64 @@ const ListingRow = ({
           sellerId={sellerId}
         />
       ) : null}
+      {mode === "photos" ? (
+        <CopyPhotos
+          offerId={listing.offer_id}
+          onDone={() => setMode(null)}
+          sellerId={sellerId}
+        />
+      ) : null}
     </li>
+  );
+};
+
+/** Copies that aren't new show their own photos: at least 3, at most 10. */
+const MIN_COPY_PHOTOS = 3;
+const MAX_COPY_PHOTOS = 10;
+
+/**
+ * The shop's own photos of a copy that isn't new, in daylight on a plain
+ * ground and showing any wear (the brand guide); they replace earlier ones.
+ */
+const CopyPhotos = ({
+  offerId,
+  onDone,
+  sellerId,
+}: {
+  readonly offerId: string;
+  readonly onDone: () => void;
+  readonly sellerId: string;
+}) => {
+  const t = useTranslations("app.company.listings.copyPhotos");
+  const save = useSetOfferPhotos(sellerId);
+  const [photos, setPhotos] = useState<File[]>([]);
+  const enough =
+    photos.length >= MIN_COPY_PHOTOS && photos.length <= MAX_COPY_PHOTOS;
+  return (
+    <div className="grid gap-2 rounded-md border p-3 text-sm">
+      <p className="text-muted-foreground">{t("hint")}</p>
+      <PhotoPicker onChange={setPhotos} photos={photos} />
+      <div className="flex flex-wrap items-center gap-3">
+        <Button
+          disabled={save.isPending || !enough}
+          onClick={() =>
+            save.mutate({ offerId, photos }, { onSuccess: () => onDone() })
+          }
+          size="sm"
+          type="button"
+        >
+          {t("save")}
+        </Button>
+        <Button onClick={onDone} size="sm" type="button" variant="ghost">
+          {t("cancel")}
+        </Button>
+        {save.isError ? (
+          <span className="text-destructive" role="alert">
+            {t("failed")}
+          </span>
+        ) : null}
+      </div>
+    </div>
   );
 };
 

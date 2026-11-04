@@ -30,7 +30,17 @@ export const Promises = ({ className, compact = false }: PromisesProps) => {
       aria-label={t("title")}
       className={cn(compact ? "grid gap-2" : "grid gap-4", className)}
     >
-      {compact ? null : <h2 className="font-semibold text-lg">{t("title")}</h2>}
+      {compact ? null : (
+        <div className="flex flex-wrap items-baseline justify-between gap-2">
+          <h2 className="font-semibold text-lg">{t("title")}</h2>
+          <Link
+            className="font-medium text-pink-text text-sm hover:underline"
+            href="/promises"
+          >
+            {t("claimLink")}
+          </Link>
+        </div>
+      )}
       <ul
         className={cn(
           "grid",
