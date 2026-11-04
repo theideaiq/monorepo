@@ -1,4 +1,5 @@
 import { formatPrice, localized } from "@repo/commerce";
+import { BulbKicker } from "@repo/design-system/components/brand/bulb-kicker";
 import { Highlight } from "@repo/design-system/components/brand/highlight";
 import { PinkBand } from "@repo/design-system/components/brand/pink-band";
 import { Button } from "@repo/design-system/components/ui/button";
@@ -8,6 +9,7 @@ import { Link } from "@repo/internationalization/navigation";
 import { MoveRight } from "lucide-react";
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { Promises } from "@/components/promises";
 import { MemberStrip } from "@/components/shop/member-strip";
 import { Rail } from "@/components/shop/rail";
 import { ShelfTabs } from "@/components/shop/shelf-tabs";
@@ -45,9 +47,11 @@ export const generateMetadata = async ({
 };
 
 /**
- * The Store's "For you" shelf: the campaign running now, the member's
- * Bulbs, New this week, live auctions, more like what they saved, what's
- * back in stock, what's in Plus, and the Pink Band to join Plus.
+ * The Store's "For you" shelf: the positioning and the brand line first,
+ * then the campaign running now, the member's Bulbs, New this week, the
+ * promises, live auctions, more like what they saved, what's in Plus, and
+ * the Pink Band to the Plus waitlist (Plus isn't open for joining yet,
+ * decision D2 of 4 November 2026).
  */
 const Home = async ({ params }: HomeProps) => {
   const { locale } = await params;
@@ -65,7 +69,19 @@ const Home = async ({ params }: HomeProps) => {
   return (
     <>
       <div className="container mx-auto flex flex-col gap-4 px-4 pt-4 pb-2">
-        <h1 className="sr-only">{t("home.title")}</h1>
+        <section className="flex flex-col items-center gap-2 py-4 text-center md:py-8">
+          <BulbKicker />
+          <p className="font-semibold text-pink-text text-sm">
+            {t("home.hero.line")}
+          </p>
+          <h1 className="text-balance text-h2 md:text-h1">
+            {t("home.hero.title")}{" "}
+            <Highlight>{t("home.hero.highlight")}</Highlight>
+          </h1>
+          <p className="max-w-2xl text-balance text-muted-foreground">
+            {t("home.hero.description")}
+          </p>
+        </section>
         <ShelfTabs active="for-you" categories={categories} locale={locale} />
         {campaign ? (
           <Link
@@ -107,6 +123,10 @@ const Home = async ({ params }: HomeProps) => {
         </Rail>
       ) : null}
 
+      <div className="container mx-auto px-4 py-6">
+        <Promises />
+      </div>
+
       <LiveAuctionsRow />
       <SavedRows />
 
@@ -125,7 +145,7 @@ const Home = async ({ params }: HomeProps) => {
         action={
           <Button asChild className="gap-2" size="lg" variant="brand">
             <Link href="/plus/plans">
-              {t("plus.cta")}
+              {t("home.rent.waitlist")}
               <MoveRight className="size-4 rtl:rotate-180" />
             </Link>
           </Button>

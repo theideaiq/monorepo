@@ -21,6 +21,16 @@ describe("Markdown", () => {
     expect(html).toContain("<h2>Next</h2>");
   });
 
+  it("anchors numbered headings as section-<n> in every language", () => {
+    expect(render("## 7. Items not as described")).toContain(
+      '<h2 id="section-7">7. Items not as described</h2>'
+    );
+    expect(render("## 7. المنتجات غير المطابقة للوصف")).toContain(
+      'id="section-7"'
+    );
+    expect(render("## Contact us")).toContain("<h2>Contact us</h2>");
+  });
+
   it("renders headings, emphasis, lists and tables", () => {
     const html = render(
       "# Title\n\nSome **bold** and _italic_.\n\n- one\n- two\n\n| a | b |\n|---|---|\n| 1 | 2 |"

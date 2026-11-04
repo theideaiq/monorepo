@@ -47,9 +47,50 @@ export const Section = ({
   </section>
 );
 
-/** A muted, centred note for empty lists. */
-export const EmptyState = ({ children }: { readonly children: ReactNode }) => (
-  <p className="rounded-md border border-dashed p-8 text-center text-muted-foreground">
-    {children}
-  </p>
-);
+interface EmptyStateProps {
+  /** The next step: a page on the site, or an outside link (Telegram). */
+  readonly action?: {
+    readonly external?: boolean;
+    readonly href: string;
+    readonly label: string;
+  };
+  readonly children: ReactNode;
+}
+
+/** A muted, centred note for empty lists, with the next step when there is one. */
+export const EmptyState = ({ action, children }: EmptyStateProps) => {
+  if (!action) {
+    return (
+      <p className="rounded-md border border-dashed p-8 text-center text-muted-foreground">
+        {children}
+      </p>
+    );
+  }
+  const label = (
+    <>
+      {action.label}
+      <MoveRight aria-hidden="true" className="size-4 rtl:rotate-180" />
+    </>
+  );
+  const linkClass =
+    "inline-flex min-h-11 items-center gap-2 font-medium text-pink-text hover:underline";
+  return (
+    <div className="flex flex-col items-center gap-2 rounded-md border border-dashed p-8 text-center">
+      <p className="text-muted-foreground">{children}</p>
+      {action.external ? (
+        <a
+          className={linkClass}
+          href={action.href}
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          {label}
+        </a>
+      ) : (
+        <Link className={linkClass} href={action.href}>
+          {label}
+        </Link>
+      )}
+    </div>
+  );
+};

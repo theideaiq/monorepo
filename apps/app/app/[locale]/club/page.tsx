@@ -14,6 +14,7 @@ import { PageHero } from "@/components/page-hero";
 import { EmptyState, Section } from "@/components/section";
 import { isThisWeek, joinPath, topicPath } from "@/lib/club";
 import { getEvents, getOpportunities, getPosts } from "@/lib/data";
+import { telegram } from "@/lib/links";
 import { localizedMetadata } from "@/lib/metadata";
 
 interface ClubProps {
@@ -128,7 +129,15 @@ const Club = async ({ params }: ClubProps) => {
               ))}
             </div>
           ) : (
-            <EmptyState>{t("join.empty.events")}</EmptyState>
+            <EmptyState
+              action={{
+                external: true,
+                href: telegram.club,
+                label: t("join.empty.eventsAction"),
+              }}
+            >
+              {t("join.empty.events")}
+            </EmptyState>
           )}
         </Shelf>
         {featuredOpportunities.length > 0 ? (
@@ -161,7 +170,11 @@ const Club = async ({ params }: ClubProps) => {
               ))}
             </div>
           ) : (
-            <EmptyState>{t("empty")}</EmptyState>
+            <EmptyState
+              action={{ href: joinPath("events"), label: t("emptyAction") }}
+            >
+              {t("empty")}
+            </EmptyState>
           )}
         </Shelf>
         <Link

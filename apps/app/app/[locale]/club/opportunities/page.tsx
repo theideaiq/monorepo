@@ -10,6 +10,7 @@ import { PageHero } from "@/components/page-hero";
 import { EmptyState, Section } from "@/components/section";
 import { byDateOrDeadline, joinPath } from "@/lib/club";
 import { getOpportunities } from "@/lib/data";
+import { telegram } from "@/lib/links";
 import { localizedMetadata } from "@/lib/metadata";
 
 interface OpportunitiesProps {
@@ -71,7 +72,15 @@ const OpportunitiesPage = async ({ params }: OpportunitiesProps) => {
             ))}
           </ul>
         ) : (
-          <EmptyState>{t("join.empty.opportunities")}</EmptyState>
+          <EmptyState
+            action={{
+              external: true,
+              href: telegram.club,
+              label: t("join.empty.opportunitiesAction"),
+            }}
+          >
+            {t("join.empty.opportunities")}
+          </EmptyState>
         )}
       </Section>
     </>

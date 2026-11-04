@@ -43,6 +43,8 @@ const zones = {
   error: null,
 };
 
+const PLUS_FULL = /Plus is full/;
+
 describe("The IDEA Plus launch", () => {
   test("when Plus is full, people join the waitlist", async () => {
     const db = fakeDb({
@@ -64,6 +66,25 @@ describe("The IDEA Plus launch", () => {
         name: "join_plus_waitlist",
       })
     );
+  });
+
+  test("with no places, Plus isn't open yet and the waitlist is the way in", async () => {
+    const db = fakeDb({
+      results: { "delivery_zones.select": zones },
+      rpcs: { plus_status: status({ capacity: 0, waiting: 0 }) },
+    });
+    renderWithApp(<JoinPlus />, { locale: "en", supabase: db.supabase });
+
+    expect(
+      await screen.findByText("Plus isn't open for joining yet.")
+    ).toBeTruthy();
+    expect(
+      screen.getByText("Join the waitlist and we'll invite you when it opens.")
+    ).toBeTruthy();
+    expect(screen.queryByText(PLUS_FULL)).toBeNull();
+    expect(
+      screen.getByRole("button", { name: "Join the waitlist" })
+    ).toBeTruthy();
   });
 
   test("someone waiting sees their place", async () => {

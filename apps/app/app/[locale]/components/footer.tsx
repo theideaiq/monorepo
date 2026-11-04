@@ -5,7 +5,6 @@ import {
 import { Link } from "@repo/internationalization/navigation";
 import { getTranslations } from "next-intl/server";
 import { telegram } from "@/lib/links";
-import { APP_VERSION, buildId } from "@/lib/version";
 
 const linkClass = "transition-colors hover:text-foreground";
 
@@ -20,9 +19,10 @@ const links = [
 /**
  * Under every page on wider screens of the website: what the top bar
  * doesn't carry (For partners, About, Careers, Help, Legal), the language
- * and theme, our social links, the copyright and the version. Phones and
- * the apps have no footer: My Pass ends with "About & help" (/about, which
- * holds all of this) and Pass → Settings has the language and theme.
+ * and theme, our social links and the copyright. The version and build are
+ * only on /about. Phones and the apps have no footer: My Pass ends with
+ * "About & help" (/about, which holds all of this and the version) and
+ * Pass → Settings has the language and theme.
  */
 export const Footer = async () => {
   const t = await getTranslations("web");
@@ -57,9 +57,6 @@ export const Footer = async () => {
           </a>
           <span>
             {t("footer.copyright", { year: String(new Date().getFullYear()) })}
-          </span>
-          <span className="ms-auto" dir="ltr">
-            {t("info.versionLine", { build: buildId(), version: APP_VERSION })}
           </span>
         </div>
       </div>

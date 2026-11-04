@@ -46,6 +46,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { type FormEvent, type ReactNode, useId, useState } from "react";
 import { Field, LandmarkFields } from "@/components/address-fields";
 import { PageHeader } from "@/components/page-header";
+import { Promises } from "@/components/promises";
 import { ErrorState, SectionSpinner } from "@/components/states";
 import { CheckoutErrorNote } from "@/components/store/checkout-error";
 import { CheckoutSteps } from "@/components/store/checkout-steps";
@@ -752,6 +753,7 @@ const SummaryCard = ({
           )}
           {cash ? t("cashNote", { amount }) : t("secure")}
         </p>
+        <Promises className="border-t pt-4" compact />
       </CardContent>
     </Card>
   );
