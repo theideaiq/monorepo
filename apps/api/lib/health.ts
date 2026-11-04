@@ -1,5 +1,6 @@
 import type { Database } from "@repo/database";
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { EMAIL_EVENTS } from "./reminder-emails";
 
 /** Every value set (KEY="" reads as unset). */
 const set = (...values: unknown[]) =>
@@ -65,9 +66,9 @@ export type Integrations = ReturnType<typeof integrations>;
 
 /**
  * Notification events that are also emailed (`claim_email_notifications`):
- * the reminders. Keep in step with the job that emails them.
+ * the reminders, the same list the daily job emails.
  */
-export const REMINDER_EMAIL_EVENTS = ["travel_due"] as const;
+export const REMINDER_EMAIL_EVENTS = EMAIL_EVENTS;
 
 /** The events with a WhatsApp template (`claim_whatsapp_notifications`). */
 export const WHATSAPP_EVENTS = [
