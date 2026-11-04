@@ -16,7 +16,9 @@ incidents) is in `docs/platform`.
     `docs/program/ux-overhaul.md`). Store and Plus share one catalogue
     (every product can be bought, and those in a Plus category can also go
     in the Plus queue; there is no one-off renting, and a product without
-    a picture is never listed). The IDEA Store is Home (`/`, shelves),
+    a picture is never listed). The IDEA Store is Home (`/`, shelves: the bulb to switch on,
+    remembered per visitor, then the Music crate and Books shelf of real
+    covers),
     with `/store` the whole catalogue, `/store/<category>` a category,
     `/store/deals`, `/store/shops/<shop>` a shop, `/store/kits/<kit>` a
     game night kit, product pages (Buy, Add to Plus, reviews),
