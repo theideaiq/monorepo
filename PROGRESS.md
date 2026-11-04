@@ -455,6 +455,16 @@ steps need Xcode, Android Studio and the store/Firebase accounts
 
 ## Decisions
 
+- 2026-11-04: **Plus and Pass** (PR 3, no schema): `/plus/plans` has "Help
+  me choose" (how many things at once picks the plan), the plans side by
+  side from the `plans` rows (price, items at a time, home swaps, Bulbs
+  back, free Store delivery) and "Before you join" (the price and billing,
+  the home swaps and what one more costs from `store_settings`, cancelling,
+  and the Plus areas with their day), shown signed out too. `/pass` signed
+  out explains the Pass instead of sending people to sign in; its other
+  pages still do. The At home shelf and the Bulbs page already existed;
+  rent or buy is the product page's own comparison (Buy · price beside In
+  Plus · from a month), with no estimate of how much people would buy.
 - 2026-11-04: **Store trust, the website and Partners** (PR 2, after the
   schema): product pages show the chosen copy's condition in the returns
   policy's words, the shop's own photos of a copy that isn't new, the

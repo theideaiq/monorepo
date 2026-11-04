@@ -91,9 +91,22 @@ test.describe("The IDEA Pass", () => {
     ).toHaveAttribute("href", `/sign-in${returnTo("/store")}`);
   });
 
-  test("signed out, Your Pass asks to sign in", async ({ page }) => {
+  test("signed out, Your Pass explains the Pass and asks to sign in", async ({
+    page,
+  }) => {
     await page.goto(`${urls.web}/pass`);
-    await expect(page).toHaveURL(`${urls.web}/sign-in${returnTo("/pass")}`);
+    await expect(
+      page.getByRole("heading", { level: 1, name: "One Pass. For all of it." })
+    ).toBeVisible();
+    await expectAccessible(page);
+    await expect(
+      page.getByRole("link", { name: "Sign in or get your Pass" })
+    ).toHaveAttribute("href", `/sign-in${returnTo("/pass")}`);
+    // The Pass's own pages still send you to sign in.
+    await page.goto(`${urls.web}/pass/saved`);
+    await expect(page).toHaveURL(
+      `${urls.web}/sign-in${returnTo("/pass/saved")}`
+    );
   });
 
   test.describe("signed in", () => {
