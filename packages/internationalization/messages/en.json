@@ -275,7 +275,9 @@
         "line": "Switch on.",
         "title": "One Pass.",
         "highlight": "Everything worth having.",
-        "description": "The world's best games, music, books, films and gear, from The IDEA and shops across Iraq. Buy, bid or rent with Plus, delivered to your door at a fair price."
+        "description": "The world's best games, music, books, films and gear, from The IDEA and shops across Iraq. Buy, bid or rent with Plus, delivered to your door at a fair price.",
+        "tap": "Tap the bulb",
+        "switchOn": "Switch on"
       }
     },
     "rent": {
@@ -312,7 +314,9 @@
         "dealsTitle": "Deals",
         "dealsDescription": "Honest prices: each one is lower than what it cost for most of the last 30 days.",
         "shopTitle": "{shop}",
-        "shopDescription": "Sold by {shop}, delivered and paid through The IDEA."
+        "shopDescription": "Sold by {shop}, delivered and paid through The IDEA.",
+        "musicCrate": "From the record crate",
+        "booksShelf": "On the books shelf"
       },
       "categories": "Categories",
       "allCategories": "All",

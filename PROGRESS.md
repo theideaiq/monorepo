@@ -455,6 +455,15 @@ steps need Xcode, Android Studio and the store/Firebase accounts
 
 ## Decisions
 
+- 2026-11-04: **Switch on moment and shelves** (PR 5): Home's bulb waits
+  unlit above the headline with "Tap the bulb"; one tap lights it (the
+  bulb itself is unchanged) and reveals the brand line ("Switch on." /
+  "اعلگها") with the "switch on" motion, opacity only with reduced motion.
+  The tap is remembered in that browser (`idea:switched-on`), so the bulb
+  is on next time (`SwitchOn` in `@repo/design-system/components/brand`).
+  Home also shows a Music crate and a Books shelf: in-stock products with
+  real covers only, a plain rail when fewer than 4 have covers, nothing
+  when there are none. Neither shows elsewhere.
 - 2026-11-04: **D10, Arabic is Iraqi Arabic** (owner: "All across the
   platform, convert as much as possible or appropriate into Iraqi
   Arabic"). Every Arabic string on the website, Partners, Staff, Droid,
