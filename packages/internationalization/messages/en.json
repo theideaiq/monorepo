@@ -369,7 +369,18 @@
         "requiresPlanNote": "This item is reserved for members on {plan} and above. Members on other plans can upgrade from Your Pass.",
         "lowest30d": "Lowest in 30 days: {price}",
         "bundle": "In this bundle",
-        "bundleQuantity": "{count} ×"
+        "bundleQuantity": "{count} ×",
+        "history": {
+          "title": "Price history",
+          "description": "Every price this item had in the last 90 days, from every seller. A \"was\" price shows only when the item really sold at it.",
+          "from": "When",
+          "listing": "Seller · condition",
+          "price": "Price",
+          "since": "Since {from}",
+          "between": "{from} to {to}",
+          "theIdea": "The IDEA",
+          "aShop": "A shop"
+        }
       },
       "rating": {
         "label": "Rated {rating} out of 5",
@@ -1482,21 +1493,67 @@
       "items": {
         "price": {
           "title": "The price you see is the price you pay",
-          "policy": "Terms: orders and prices"
+          "policy": "Terms: orders and prices",
+          "means": "The price you pay is worked out at checkout, with any delivery fee, discount and Bulbs, and shown before you confirm.",
+          "claim": "if a price or description was clearly wrong, we contact you and you may cancel for a full refund. If you were charged more than the total you confirmed, tell us with your order number.",
+          "claimAction": "Open a help request"
         },
         "when": {
           "title": "We tell you when",
-          "policy": "Delivery: delivery times"
+          "policy": "Delivery: delivery times",
+          "means": "Delivery times are shown at checkout and start once your order is confirmed.",
+          "claim": "if an order will be much later than estimated, we tell you. Check where it is in your orders, or ask us from there.",
+          "claimAction": "See your orders"
         },
         "condition": {
           "title": "The condition we describe, or your money back",
-          "policy": "Returns: items not as described"
+          "policy": "Returns: items not as described",
+          "means": "Every copy has a condition grade, shown before you buy, and its page describes any wear.",
+          "claim": "tell us within 14 days of delivery, with photos or a video. You get a full refund, delivery fee included, and we collect the item. On items from shops, the refund comes from The IDEA.",
+          "claimAction": "Start a return from your order"
         },
         "leave": {
           "title": "Leave any time",
-          "policy": "Plus: changing, pausing and cancelling"
+          "policy": "Plus: changing, pausing and cancelling",
+          "means": "Cancel your Plus plan any time. It ends at the end of the month you paid for, once your items are back.",
+          "claim": "cancel it yourself in your plan, any time.",
+          "claimAction": "Go to your plan"
         }
+      },
+      "claimLink": "If one isn't kept",
+      "meta": {
+        "title": "Our promises",
+        "description": "What every seller on The IDEA keeps on price, date and condition, where each is written down, and how to claim it when it isn't kept."
+      },
+      "page": {
+        "title": "Every seller,",
+        "highlight": "the same promises.",
+        "subtitle": "The price, the date and the condition you were told, from The IDEA and from every shop. Each promise is written in a policy, and each has a way to claim it.",
+        "ifNot": "If it isn't kept:",
+        "stuck": "Not sure which applies, or the steps above didn't help?",
+        "contact": "Contact us"
       }
+    },
+    "delivery": {
+      "meta": {
+        "title": "Delivery across Iraq",
+        "description": "Where The IDEA delivers, what delivery costs in each governorate and how many days it takes, the same numbers you see at checkout."
+      },
+      "title": "Where we deliver,",
+      "highlight": "and when.",
+      "subtitle": "The fee and the days for each place we deliver to, the same ones checkout shows before you pay.",
+      "caption": "Delivery fees and times by governorate",
+      "zone": "Where",
+      "fee": "Delivery fee",
+      "days": "Delivery time",
+      "free": "Free",
+      "freeFrom": "Free on orders from {total}",
+      "daysOne": "{count, plural, one {1 day} other {{n} days}}",
+      "daysRange": "{min}–{max} days",
+      "empty": "We couldn't load the delivery areas just now.",
+      "ask": "Ask us",
+      "note": "Times start once your order is confirmed and can be longer around holidays. Plus members on Shine and Blaze get free delivery in Baghdad.",
+      "policy": "Read the delivery policy"
     }
   },
   "app": {
@@ -1811,7 +1868,17 @@
         "quantityDeal": "Buy {from} or more: {rate}% off each",
         "studentPrice": "Student price: {price}",
         "earnBulbs": "Earn {bulbs} Bulbs",
-        "plusPrice": "Plus price: {price}"
+        "plusPrice": "Plus price: {price}",
+        "conditionMeans": {
+          "open_box": "Open box: the packaging has been opened, but the item is unused or as good as unused, and complete.",
+          "refurbished": "Refurbished: used before, then checked, cleaned and repaired where needed, and working fully.",
+          "used": "Used: owned before, with the signs of use described here, and working as it should."
+        },
+        "conditionGrades": "How we grade condition",
+        "copyPhotos": "The seller's photos of this copy",
+        "copyPhoto": "Photo {n} of this copy",
+        "shopNew": "New on The IDEA: not enough orders yet for a record.",
+        "shopRecord": "Shop score {score}/100 over the last 90 days: on time, in stock and as described."
       },
       "getIt": {
         "title": "Get it",
@@ -2184,6 +2251,13 @@
         "from": "From {name}",
         "fromSomeone": "A gift for you",
         "claimed": "accepted on {date}"
+      },
+      "timeline": {
+        "title": "What has happened so far",
+        "placed": "Order placed",
+        "paid": "Payment received",
+        "booked": "Booked for delivery",
+        "delivered": "Delivered"
       }
     },
     "plus": {
@@ -3864,6 +3938,13 @@
           "howMany": "How many of {name}",
           "copiesHint": "Copies are how many bundles you have; they don't take copies of the items in it.",
           "create": "List the bundle"
+        },
+        "copyPhotos": {
+          "open": "Photos of this copy",
+          "hint": "Add 3 to 10 photos of this exact copy, in daylight on a plain ground, showing any wear. Buyers see them beside its condition. They replace any photos you added before.",
+          "save": "Save photos",
+          "cancel": "Cancel",
+          "failed": "The photos weren't saved. Try again."
         }
       },
       "shopOrders": {

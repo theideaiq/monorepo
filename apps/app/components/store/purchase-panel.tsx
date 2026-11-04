@@ -30,6 +30,7 @@ import { pickVariant, variantForDeepLink } from "@/lib/app-product";
 import { minimumBid, useProductAuctions } from "@/lib/auctions";
 import { useBulbRules, useMyBulbs } from "@/lib/bulbs-queries";
 import { MAX_QUANTITY } from "@/lib/cart";
+import { offerPhotoKey, type SellerRecord } from "@/lib/offer-facts";
 import { useAddToCart, useMemberPrices } from "@/lib/store-queries";
 import { EndsIn } from "./auctions";
 import { MakeOffer } from "./make-offer";
@@ -521,6 +522,76 @@ const CopyTerms = ({
   );
 };
 
+/** Below this many order lines in 90 days a shop shows as new. */
+export const RECORD_MIN_LINES = 10;
+
+/**
+ * What the chosen copy is: what its condition means (the returns policy's
+ * grades), the shop's own photos of a copy that isn't new, and the shop's
+ * record over 90 days, or that it's new on The IDEA.
+ */
+const CopyFacts = ({
+  offer,
+  photos,
+  record,
+}: {
+  readonly offer: ProductOffer;
+  readonly photos: readonly string[];
+  readonly record: SellerRecord | undefined;
+}) => {
+  const t = useTranslations("app.store.product");
+  const locale = useLocale();
+  const shop = offer.seller_id !== HOUSE_SELLER_ID;
+  const { condition } = offer;
+  const used = condition !== "new";
+  if (!(used || (shop && record))) {
+    return null;
+  }
+  return (
+    <div className="grid gap-2 text-sm">
+      {used ? (
+        <p className="text-muted-foreground">
+          {t(`conditionMeans.${condition}`)}{" "}
+          <Link
+            className="font-medium text-pink-text hover:underline"
+            href="/legal/returns#section-2"
+          >
+            {t("conditionGrades")}
+          </Link>
+        </p>
+      ) : null}
+      {used && photos.length > 0 ? (
+        <ul aria-label={t("copyPhotos")} className="flex gap-2 overflow-x-auto">
+          {photos.map((photo, index) => (
+            <li className="shrink-0" key={photo}>
+              <a href={photo} rel="noopener noreferrer" target="_blank">
+                {/* biome-ignore lint/performance/noImgElement: the shop's own uploads, any host */}
+                <img
+                  alt={t("copyPhoto", { n: formatNumber(index + 1, locale) })}
+                  className="size-16 rounded-md border object-cover"
+                  height={64}
+                  loading="lazy"
+                  src={photo}
+                  width={64}
+                />
+              </a>
+            </li>
+          ))}
+        </ul>
+      ) : null}
+      {shop && record ? (
+        <p className="text-muted-foreground">
+          {record.lines < RECORD_MIN_LINES
+            ? t("shopNew")
+            : t("shopRecord", {
+                score: formatNumber(Math.round(record.score), locale),
+              })}
+        </p>
+      ) : null}
+    </div>
+  );
+};
+
 /** "Added to your cart. View cart", or why it couldn't be added. */
 const AddedNote = ({
   added,
@@ -717,11 +788,17 @@ const useBuy = (
  */
 export const PurchasePanel = ({
   offers = [],
+  photos = {},
   product,
+  records = {},
 }: {
   /** The copies on offer (product_offers); empty when unknown. */
   readonly offers?: readonly ProductOffer[];
+  /** Shops' own photos of listings that aren't new (`offerPhotoKey`). */
+  readonly photos?: Readonly<Record<string, readonly string[]>>;
   readonly product: ProductDetail;
+  /** The shops' 90-day records, by seller id. */
+  readonly records?: Readonly<Record<string, SellerRecord>>;
 }) => {
   const t = useTranslations("app.store.product");
   const tGet = useTranslations("app.store.getIt");
@@ -827,6 +904,11 @@ export const PurchasePanel = ({
         {buying && offer ? (
           <div className="grid gap-2">
             <CopyTerms offer={offer} productId={product.id} />
+            <CopyFacts
+              offer={offer}
+              photos={photos[offerPhotoKey(offer)] ?? []}
+              record={records[offer.seller_id]}
+            />
             <QuantityStepper
               decreaseLabel={t("decrease")}
               disabled={!canAdd}

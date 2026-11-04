@@ -16,6 +16,8 @@ export const staticPaths = [
   "/partners",
   "/about",
   "/careers",
+  "/promises",
+  "/delivery",
   "/help",
 ] as const;
 

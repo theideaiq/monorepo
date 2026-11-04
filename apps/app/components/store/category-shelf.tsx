@@ -22,7 +22,8 @@ const ROW = 8;
 /**
  * A top-level category's shelf (`/store/<category>`): its subcategory
  * chips, rows (New, Bestsellers, In Plus, Used deals), then "See all": the
- * grid with filters.
+ * grid with the filters that fit it (its own formats; In Plus only when it
+ * has something in Plus).
  */
 export const CategoryShelf = async ({
   categories,
@@ -44,7 +45,8 @@ export const CategoryShelf = async ({
   const slug = sub?.slug ?? category.slug;
   const browsing = query.page > 1;
   const [formats, all, fresh, featured, inPlus, preOwned] = await Promise.all([
-    getFormats(),
+    // Only the formats this category sells (Vinyl and CD for Music, …).
+    getFormats([category.id, ...subcategories.map((row) => row.id)]),
     getProducts(gridFilters(query, category.slug)),
     browsing ? [] : getProducts({ category: slug, limit: ROW, sort: "newest" }),
     browsing ? [] : getProducts({ category: slug, featured: true, limit: ROW }),
@@ -156,6 +158,8 @@ export const CategoryShelf = async ({
         formats={formats}
         hasNext={all.length > STORE_PAGE_SIZE}
         locale={locale}
+        // "In Plus" only where the category has something in Plus.
+        plusFilter={browsing || inPlus.length > 0}
         products={all.slice(0, STORE_PAGE_SIZE)}
         query={query}
         subcategories={subcategories}

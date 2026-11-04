@@ -377,6 +377,34 @@ export const useAddListingPhotos = (sellerId: string) => {
   });
 };
 
+/**
+ * Sets the shop's own photos of a listing that isn't new (3 to 10), which
+ * replace any it had; the product page shows them beside the condition.
+ */
+export const useSetOfferPhotos = (sellerId: string) => {
+  const { supabase } = useAuth();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({
+      offerId,
+      photos,
+    }: {
+      offerId: string;
+      photos: readonly File[];
+    }) => {
+      const images = await uploadPhotos(supabase, sellerId, photos);
+      return unwrap(
+        await supabase.rpc("set_offer_photos", {
+          offer: offerId,
+          photos: images,
+        })
+      );
+    },
+    onSettled: () =>
+      queryClient.invalidateQueries({ queryKey: listingsKey(sellerId) }),
+  });
+};
+
 /** At most this many of one item in a bundle (the database enforces it). */
 export const MAX_BUNDLE_QUANTITY = 20;
 

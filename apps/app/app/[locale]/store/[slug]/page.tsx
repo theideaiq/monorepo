@@ -1,6 +1,7 @@
 import {
   discountPercent,
   formatPrice,
+  HOUSE_SELLER_ID,
   hasPriceRange,
   localized,
 } from "@repo/commerce";
@@ -26,15 +27,19 @@ import {
 import { Promises } from "@/components/promises";
 import { BundleContents } from "@/components/store/bundle-contents";
 import { CategoryShelf } from "@/components/store/category-shelf";
+import { PriceHistory } from "@/components/store/price-history";
 import { WriteReview } from "@/components/store/product-reviews";
 import { EarnNote, PurchasePanel } from "@/components/store/purchase-panel";
 import {
   getBundle,
   getCategories,
+  getOfferPhotos,
   getOffers,
+  getPriceHistory,
   getProduct,
   getRatings,
   getReviews,
+  getSellerRecords,
   imageUrl,
   type ProductDetail,
 } from "@/lib/data";
@@ -189,13 +194,23 @@ const ProductView = async ({
   readonly product: ProductDetail;
   readonly slug: string;
 }) => {
-  const [t, store, ratings, reviews, offers, bundle] = await Promise.all([
-    getTranslations({ locale, namespace: "web.store.product" }),
-    getTranslations({ locale, namespace: "store" }),
-    getRatings([product.id]),
-    getReviews(product.id, REVIEWS_SHOWN),
-    getOffers(product.id),
-    getBundle(product.id),
+  const [t, store, ratings, reviews, offers, bundle, photos, history] =
+    await Promise.all([
+      getTranslations({ locale, namespace: "web.store.product" }),
+      getTranslations({ locale, namespace: "store" }),
+      getRatings([product.id]),
+      getReviews(product.id, REVIEWS_SHOWN),
+      getOffers(product.id),
+      getBundle(product.id),
+      getOfferPhotos(product.id),
+      getPriceHistory(product.product_variants.map((variant) => variant.id)),
+    ]);
+  const records = await getSellerRecords([
+    ...new Set(
+      offers
+        .map((offer) => offer.seller_id)
+        .filter((id) => id !== HOUSE_SELLER_ID)
+    ),
   ]);
   // "Lowest in 30 days": of the cheapest copy for sale.
   const lowest30d = offers
@@ -298,7 +313,12 @@ const ProductView = async ({
 
         <aside className="lg:sticky lg:top-20 lg:col-start-3 lg:row-span-2 lg:row-start-1">
           <Suspense>
-            <PurchasePanel offers={offers} product={product} />
+            <PurchasePanel
+              offers={offers}
+              photos={photos}
+              product={product}
+              records={records}
+            />
           </Suspense>
           <Promises className="mt-4" compact />
         </aside>
@@ -314,6 +334,14 @@ const ProductView = async ({
               </p>
             </section>
           ) : null}
+
+          <PriceHistory
+            history={history}
+            locale={locale}
+            sellers={Object.fromEntries(
+              offers.map((offer) => [offer.seller_id, offer.seller_name])
+            )}
+          />
 
           {specs.length > 0 ? (
             <section className="flex flex-col gap-3">

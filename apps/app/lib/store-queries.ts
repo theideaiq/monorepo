@@ -420,6 +420,24 @@ export const useOrders = () => {
   });
 };
 
+/** A step of an order with its date (placed, paid, booked, delivered). */
+export interface OrderTimelineStep {
+  at: string;
+  step: "booked" | "delivered" | "paid" | "placed";
+}
+
+/** When the order was placed, paid, booked for delivery and delivered. */
+export const useOrderTimeline = (orderId: string) => {
+  const { supabase, user } = useAuth();
+  return useQuery({
+    enabled: Boolean(user && orderId),
+    queryFn: async () =>
+      (unwrap(await supabase.rpc("order_timeline", { target: orderId })) ??
+        []) as OrderTimelineStep[],
+    queryKey: [...queryKeys.order(orderId), "timeline"],
+  });
+};
+
 export const useOrder = (orderId: string, refetchInterval?: number | false) => {
   const { supabase, user } = useAuth();
   return useQuery({
