@@ -31,7 +31,8 @@ incidents) is in `docs/platform`.
     available: now, soon, later or coming), `/plus/<category>`,
     `/plus/plans` the plans and tiers with joining and the waitlist, and
     `/plus/plan` your plan (changes, pause, cancel; Family links to the
-    Pass). The IDEA Club is `/club` with `/club/events[/<slug>]` (RSVP),
+    Pass). The IDEA Club is `/club` with `/club/events[/<slug>]` (RSVP, Add to calendar, Share, and a
+    generated share image per event),
     `/club/opportunities[/<slug>]` (filters by kind, level, destination,
     funding, standing for Iraqis and age; who runs it, the source and when
     it was last checked, where to apply and Notify me; for The IDEA's own programs, the package, the application with
