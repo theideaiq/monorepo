@@ -56,7 +56,7 @@ export const categoryOptions = (
         })),
     ]);
 
-/** A price in IQD for display ("720,000 د.ع." / "720,000 IQD"). */
+/** A price in IQD for display ("720,000 دينار عراقي" / "720,000 IQD"). */
 export const formatPrice = (amount: number, locale: string) =>
   formatCurrency(amount, contentLocale(locale));
 

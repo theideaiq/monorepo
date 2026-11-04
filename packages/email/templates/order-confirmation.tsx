@@ -66,8 +66,8 @@ const copy = {
     subtotal: "المجموع الفرعي",
     support: (email: string) =>
       `إذا عندك أي سؤال عن طلبك، راسلنا على ${email} واذكر رقم الطلب.`,
-    total: "الإجمالي المدفوع",
-    totalCash: "الإجمالي المستحق نقداً",
+    total: "المجموع المدفوع",
+    totalCash: "المجموع المستحق نقدًا",
   },
   en: {
     address: "Delivery address",

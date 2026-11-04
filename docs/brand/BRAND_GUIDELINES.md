@@ -105,15 +105,54 @@ We write like we talk to a friend we respect: short sentences, real words, a lit
 - Sentence case for headings, buttons and navigation: "See the plans", "Add to cart".
 - "You" for the customer, "we" for The IDEA.
 - Buttons start with a verb: "Rent with Plus", "Buy", "Rent for 7 days", "Make an offer", "Place bid", "Send as a gift".
-- Latin digits with thousands separators, currency after: **22,750 IQD**, **99,750 دينار عراقي**. The IDEA's own prices end in …4,750 or …9,750. Dates in Baghdad time.
+- Latin digits with thousands separators, currency after: **22,750 IQD**, **99,750 دينار عراقي** (`formatCurrency` writes both): IQD in English, دينار عراقي in full in Arabic, never "د.ع.". The IDEA's own prices end in …4,750 or …9,750. Dates in Baghdad time.
 - Plus plans carry their item count: "Plus Shine · 2 items at a time".
-- **Money and Bulbs:** prices, payments, payouts, fees and deposits are in IQD; rewards and anything The IDEA gives away are in Bulbs (1 Bulb = 1 IQD). Write "Earn 340 Bulbs" and "2,340 Bulbs = 2,340 IQD off"; in Arabic copy "اكسب 340 گلوب" and "2,340 گلوب = خصم 2,340 دينار". Never a rewards percentage on a product; plan cards are the one place a rate appears.
+- **Money and Bulbs:** prices, payments, payouts, fees and deposits are in IQD; rewards and anything The IDEA gives away are in Bulbs (1 Bulb = 1 IQD). Write "Earn 340 Bulbs" and "2,340 Bulbs = 2,340 IQD off"; in Arabic copy "اكسب 340 گلوب" and "2,340 گلوب = خصم 2,340 دينار عراقي". Never a rewards percentage on a product; plan cards are the one place a rate appears.
 - **Sellers:** a shop's offer always says who sells it: "Sold by <shop> · delivered and paid through The IDEA".
 - **Honest prices:** a struck-through "was" price appears only when that offer really sold at that price (15 of the last 30 days). "Lowest in 30 days" backs any "lowest" claim.
 - Headlines: a plain first line and a highlighted second: "One Pass. / **Everything worth having.**"
 - No emoji in the product UI or official copy; sparingly in the Club and captions, never in place of words.
 - Errors say what happened and what to do: "Payment didn't go through. Try another card or pay on delivery."
 - Never mock competitors or other shops. No politics or sectarian references; Eid, Ramadan, Christmas, Nowruz and national days are greeted equally.
+
+**Language standard** (checked by `packages/internationalization/language.test.ts`)
+
+One way to write each thing, in both languages, so the same thing always reads the same:
+
+- **English is American English:** canceled, color, behavior, license, catalog, organization, favorite.
+- **Punctuation:** no exclamation marks in the product (a message may only quote one, as in a password hint); one ellipsis character (…), never three dots. English uses straight quotes ("…"); Arabic uses « » and its own comma, semicolon and question mark (، ؛ ؟).
+- **Arabic spelling:** Latin digits; tanween on the letter before the alef (شكرًا، مجانًا، حاليًا, never شكراً).
+- **Other companies' names** stay in Latin letters in Arabic too: Telegram, WhatsApp, Google, Spotify, ZainCash (على Telegram, رقم WhatsApp). Our own names follow section 2.
+- **Money:** the currency follows the number, IQD in English ("25,000 IQD", "Price (IQD)") and دينار عراقي in full in Arabic ("25,000 دينار عراقي", "السعر (دينار عراقي)"), never د.ع. or a bare دينار after a number. "دينار" alone is for prose ("قيمة الگلوب دينار واحد").
+- **Buttons** are verbs, in Arabic the Iraqi imperative, one word per action:
+
+| English | Arabic | English | Arabic |
+| --- | --- | --- | --- |
+| Save | احفظ | Approve | وافق |
+| Edit | عدّل | Accept | اقبل |
+| Delete | امسح | Decline, Reject | ارفض |
+| Remove | شيل | Publish | انشر |
+| Add | ضيف | Continue | كمّل |
+| Confirm | أكّد | Back | ارجع |
+| Close | سدّ | Cancel (a dialog) | إلغاء |
+
+  Tabs, page titles and statuses keep nouns (الاستيراد، تسجيل الخروج، ملغى).
+- **One word per thing:** email is الإيميل (إيميلك) in Iraqi copy; a game night kit is طقم (أطقم); Total is المجموع; a weekend is عطلة; a comma (in instructions) is فارزة. A sentence repeated in English is translated the same way everywhere ("Something went wrong. Please try again." is always "صارت مشكلة. جرّب مرة ثانية.").
+
+**Iraqi or Modern Standard Arabic** (checked by the same test)
+
+| Write in | Where | Why |
+| --- | --- | --- |
+| Iraqi Arabic | Everything people use: the website and apps, Partners, Staff, Droid, emails, notifications, social and campaigns, support replies, helper text and errors (including Staff → Finance) | It is how our customers and team talk |
+| Modern Standard Arabic | Legal pages (`apps/app/content/legal/*.ar.md`) | Precision matters more than voice |
+| Modern Standard Arabic | Consent wording: the exact lines a person agrees to, such as what a partner site may see when you sign in with your Pass | It records what was agreed |
+| Modern Standard Arabic | Printed documents and their fixed lines: invoices, quotes, receipts, statements, certificates | Others rely on them as records |
+| Modern Standard Arabic | Accounting and tax terms (مدين، دائن، قيد يومية، دليل الحسابات، ضريبة القيمة المضافة) | They are the official terms; sentences around them stay Iraqi |
+
+- One register per message: never mix the two in a sentence.
+- Iraqi copy never uses the Standard forms it has its own words for (لا يوجد → ماكو، الآن → هسه، التي/الذي → اللي، هذه → هاي، هل؟ → drop it، سوف/سيتم → راح، لديك → عندك، يمكنك → تگدر). Standard text never uses Iraqi words (ماكو، هسه، شنو، اللي، تگدر، گ or چ outside our names).
+- Everything else in this section (names, digits, punctuation, money) is the same in both.
+- A new piece of consent or document wording is added to `STANDARD_ARABIC` in `language.test.ts`.
 
 | Instead of | Write |
 | --- | --- |
@@ -124,7 +163,7 @@ We write like we talk to a friend we respect: short sentences, real words, a lit
 | You've been outbid!!! | Someone bid higher. Bid again before Thursday 9 pm. |
 | Your The IDEA Pass | Your Pass |
 | السعر الحصري المميز لدينا فقط | يمنا بـ 99,750 دينار عراقي |
-| ممنون لاختيارك خدماتنا المتميزة | شكراً! طلبك بالطريق. |
+| ممنون لاختيارك خدماتنا المتميزة | شكرًا. طلبك بالطريق. |
 | لا توجد طلبات بعد. | ماكو طلبات بعد. |
 | حدث خطأ. حاول مرة أخرى. | صارت مشكلة. جرّب مرة ثانية. |
 | هل أنت متأكد أنك تريد الحذف؟ | متأكد تريد تمسحه؟ |
