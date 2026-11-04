@@ -1,6 +1,7 @@
 import { describe, expect, test } from "vitest";
 import {
   actionCounts,
+  firstSaleSteps,
   hiddenListings,
   keyNumbers,
   type ShopRows,
@@ -200,5 +201,55 @@ describe("Today", () => {
       rating: { average: 4.75, count: 4 },
       salesWeek: 20_000,
     });
+  });
+});
+
+describe("firstSaleSteps", () => {
+  const draft = {
+    active: true,
+    available: 2,
+    product_status: "draft" as const,
+  };
+  const live = {
+    active: true,
+    available: 1,
+    product_status: "active" as const,
+  };
+
+  test("lists what is left before the first sale", () => {
+    expect(
+      firstSaleSteps({
+        hasBranch: false,
+        hasPayout: true,
+        listings: [draft],
+        sold: false,
+      })
+    ).toEqual([
+      { done: true, step: "payout" },
+      { done: false, step: "branch" },
+      { done: false, step: "listing" },
+      { done: false, step: "sale" },
+    ]);
+  });
+
+  test("a listing counts once it is live", () => {
+    const steps = firstSaleSteps({
+      hasBranch: true,
+      hasPayout: true,
+      listings: [draft, live],
+      sold: false,
+    });
+    expect(steps?.find((row) => row.step === "listing")?.done).toBe(true);
+  });
+
+  test("goes away after the first sale", () => {
+    expect(
+      firstSaleSteps({
+        hasBranch: true,
+        hasPayout: true,
+        listings: [live],
+        sold: true,
+      })
+    ).toBeNull();
   });
 });

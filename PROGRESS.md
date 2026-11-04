@@ -455,6 +455,16 @@ steps need Xcode, Android Studio and the store/Firebase accounts
 
 ## Decisions
 
+- 2026-11-04: **Partners** (PR 4): `/partners` leads with selling: how it
+  works (apply, list, deliver, get paid weekly, with the selling policy),
+  Free (100 active listings) and Pro with Pro's price from
+  `seller_plan_price`, the commission by top-level category from
+  `commission_rates`, and "What you'd be paid" for a price and a category
+  on Free and on Pro. Finance edits those rates in Staff → Finance →
+  Settings (Pro never above standard, 0–50%). Partners → Today shows
+  "Your first sale" until the shop's first order line: payout details, a
+  pickup branch, a live listing, the sale. Payout statements (C24) and
+  photo previews before upload (A25) were already in place.
 - 2026-11-04: **Plus and Pass** (PR 3, no schema): `/plus/plans` has "Help
   me choose" (how many things at once picks the plan), the plans side by
   side from the `plans` rows (price, items at a time, home swaps, Bulbs

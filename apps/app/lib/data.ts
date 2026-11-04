@@ -185,6 +185,64 @@ export const getDeliveryZones = () =>
     return supabase ? await listDeliveryZones(supabase) : [];
   });
 
+/** Commission on a shop's sales in a top-level category (fractions). */
+export interface CommissionRate {
+  name_ar: string;
+  name_en: string;
+  pro: number;
+  slug: string;
+  standard: number;
+}
+
+/**
+ * The commission per top-level category, standard and Pro, as finance sets
+ * it in Staff (`commission_rates`), in the store's category order.
+ */
+export const getCommissionRates = () =>
+  fallback("commissionRates", [] as CommissionRate[], async () => {
+    const supabase = createPublicClient();
+    if (!supabase) {
+      return [];
+    }
+    const found = rows(
+      await supabase
+        .from("commission_rates")
+        .select(
+          "standard_rate, pro_rate, category:product_categories!inner (slug, name_ar, name_en, parent_id, position)"
+        )
+    );
+    return found
+      .filter((row) => row.category.parent_id === null)
+      .sort((a, b) => (a.category.position ?? 0) - (b.category.position ?? 0))
+      .map((row) => ({
+        name_ar: row.category.name_ar,
+        name_en: row.category.name_en,
+        pro: Number(row.pro_rate),
+        slug: row.category.slug,
+        standard: Number(row.standard_rate),
+      }));
+  });
+
+/** What Pro costs a shop, monthly and yearly (`seller_plan_price`). */
+export const getProPrices = () =>
+  fallback(
+    "proPrices",
+    null as { monthly: number; yearly: number } | null,
+    async () => {
+      const supabase = createPublicClient();
+      if (!supabase) {
+        return null;
+      }
+      const [monthly, yearly] = await Promise.all([
+        supabase.rpc("seller_plan_price", { billing: "monthly" }),
+        supabase.rpc("seller_plan_price", { billing: "yearly" }),
+      ]);
+      const month = check(monthly);
+      const year = check(yearly);
+      return month && year ? { monthly: month, yearly: year } : null;
+    }
+  );
+
 /** What a shop's bundle holds; empty for other products. */
 export const getBundle = (productId: string) =>
   fallback("bundleItems", [] as BundleItem[], async () => {
