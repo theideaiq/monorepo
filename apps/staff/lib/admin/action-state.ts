@@ -24,6 +24,7 @@ export type ActionError =
   | "telegramFailed"
   | "telegramSecretMissing"
   | "needsPicture"
+  | "routeNeedsCheck"
   | "unknown";
 
 export type ActionNotice = "saved" | "deleted" | "sent" | "posted";
@@ -59,6 +60,7 @@ export const failure = (
 /** The form fields an error is about, to highlight them. */
 export const errorFields: Partial<Record<ActionError, string[]>> = {
   needsPicture: ["status", "images"],
+  routeNeedsCheck: ["status", "checkedOn"],
 };
 
 interface DatabaseError {
@@ -90,6 +92,10 @@ export const databaseError = (error: DatabaseError): ActionError => {
   // The products trigger: no product goes live without a picture.
   if (message.includes("Add a picture before publishing")) {
     return "needsPicture";
+  }
+  // A Travel Kit route is published only once it has been checked.
+  if (message.includes('"travel_routes_check"')) {
+    return "routeNeedsCheck";
   }
   switch (error.code) {
     case "23505":

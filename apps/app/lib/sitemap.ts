@@ -12,6 +12,7 @@ export const staticPaths = [
   "/club/events",
   "/club/opportunities",
   "/club/surveys",
+  "/club/travel",
   "/club/read",
   "/partners",
   "/about",

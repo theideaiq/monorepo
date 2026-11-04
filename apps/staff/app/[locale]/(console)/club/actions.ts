@@ -25,6 +25,14 @@ import {
   text,
   uuid,
 } from "@/lib/admin/forms";
+import {
+  costsOf,
+  itineraryOf,
+  MAX_COST_LINES,
+  MAX_ITINERARY_STEPS,
+  validCosts,
+  validItinerary,
+} from "@/lib/admin/program-package";
 import { type PublishMode, publishedAtFor } from "@/lib/admin/publishing";
 import type { ServerClient } from "@/lib/admin/session";
 import { postTopics } from "./_components/topics";
@@ -621,6 +629,11 @@ export const deleteOpportunity = staffAction(
 // ── The IDEA's paid programs ───────────────────────────────────────────────
 
 const rows = z.array(z.string().trim().max(20)).max(6).default([]);
+/** Repeated text fields (`key[]`), up to `count` rows of `max` characters. */
+const textRows = (count: number, max: number) =>
+  z.array(z.string().max(max)).max(count).default([]);
+const stepRows = (max: number) => textRows(MAX_ITINERARY_STEPS, max);
+const costRows = (max: number) => textRows(MAX_COST_LINES, max);
 const DAY = /^\d{4}-\d{2}-\d{2}$/;
 const WHOLE = /^\d+$/;
 
@@ -646,15 +659,52 @@ const refundScheduleOf = (days: string[], percents: string[]) =>
     )
     .sort((a, b) => b.days_before - a.days_before);
 
+const itineraryOfRow = (row: {
+  itineraryDay: string[];
+  itineraryDetailAr: string[];
+  itineraryDetailEn: string[];
+  itineraryTitleAr: string[];
+  itineraryTitleEn: string[];
+}) =>
+  itineraryOf({
+    day: row.itineraryDay,
+    detailAr: row.itineraryDetailAr,
+    detailEn: row.itineraryDetailEn,
+    titleAr: row.itineraryTitleAr,
+    titleEn: row.itineraryTitleEn,
+  });
+
+const costsOfRow = (row: {
+  costAmount: string[];
+  costIncluded: string[];
+  costLabelAr: string[];
+  costLabelEn: string[];
+}) =>
+  costsOf({
+    amount: row.costAmount,
+    included: row.costIncluded,
+    labelAr: row.costLabelAr,
+    labelEn: row.costLabelEn,
+  });
+
 const programSchema = z
   .object({
     chaperone: checkbox,
+    costAmount: costRows(30),
+    costIncluded: costRows(5),
+    costLabelAr: costRows(250),
+    costLabelEn: costRows(250),
     id: uuid,
     includesAr: optionalText(2000),
     includesEn: optionalText(2000),
     installmentDue: rows,
     installmentPercent: rows,
     insurance: checkbox,
+    itineraryDay: stepRows(10),
+    itineraryDetailAr: stepRows(1200),
+    itineraryDetailEn: stepRows(1200),
+    itineraryTitleAr: stepRows(250),
+    itineraryTitleEn: stepRows(250),
     maxAge: optionalInt(13, 99),
     minAge: int(13, 99),
     passportRequired: checkbox,
@@ -714,7 +764,11 @@ const programSchema = z
               step.percent <= all[index - 1].percent))
       ),
     { path: ["refundDays"] }
-  );
+  )
+  .refine((row) => validItinerary(itineraryOfRow(row)), {
+    path: ["itineraryTitleEn"],
+  })
+  .refine((row) => validCosts(costsOfRow(row)), { path: ["costLabelEn"] });
 
 /** Sells one of The IDEA's program opportunities as a package. */
 export const saveProgram = staffAction(
@@ -724,6 +778,8 @@ export const saveProgram = staffAction(
     check(
       await supabase.from("programs").upsert({
         chaperone: input.chaperone,
+        // Plain objects, as the JSON columns take them.
+        costs: costsOfRow(input).map((line) => ({ ...line })),
         includes_ar: input.includesAr,
         includes_en: input.includesEn,
         installments: installmentsOf(
@@ -731,6 +787,7 @@ export const saveProgram = staffAction(
           input.installmentDue
         ),
         insurance: input.insurance,
+        itinerary: itineraryOfRow(input).map((step) => ({ ...step })),
         max_age: input.maxAge,
         min_age: input.minAge,
         opportunity_id: input.id,

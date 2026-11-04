@@ -861,7 +861,8 @@
           "events": "Events",
           "opportunities": "Opportunities",
           "surveys": "Surveys",
-          "read": "Read"
+          "read": "Read",
+          "travel": "Travel"
         },
         "home": {
           "thisWeek": "This week",
@@ -1524,6 +1525,15 @@
       "free": "Free",
       "plusPrice": "Plus price: {price}",
       "includes": "What's included",
+      "itinerary": "Day by day",
+      "itineraryDay": "Day {day}",
+      "costs": "What it costs",
+      "packagePrice": "The package",
+      "costIncluded": "Included",
+      "costVaries": "Varies",
+      "onTop": "{amount} on top",
+      "onTopAtLeast": "At least {amount} on top",
+      "onTopVaries": "Some costs on top vary",
       "insurance": "Travel insurance for the whole program",
       "chaperone": "An adult chaperone from The IDEA travels with under-18s",
       "agesFrom": "For ages {min} and over",
@@ -1667,6 +1677,22 @@
       "ask": "Ask us",
       "note": "Times start once your order is confirmed and can be longer around holidays. Plus members on Shine and Blaze get free delivery in Baghdad.",
       "policy": "Read the delivery policy"
+    },
+    "travel": {
+      "title": "Travel Kit",
+      "description": "Pick where you're going and get your folder for the trip: every document, the printouts and a dated schedule. Free with your Pass.",
+      "points": {
+        "documents": "One card per document, each with its source, how sure it is and when we checked it.",
+        "schedule": "Enter your appointment and departure dates, and the schedule works backward from them.",
+        "noScans": "Your Travel Kit never stores documents or scans."
+      },
+      "checked": "Checked {date}",
+      "empty": "No destinations yet. We're checking the first ones.",
+      "program": {
+        "title": "Travel Kit",
+        "description": "Every document, the printouts and a dated schedule for this trip. Free with your Pass.",
+        "route": "{country} · {visa}"
+      }
     }
   },
   "app": {
@@ -1726,7 +1752,8 @@
         "empty": "Nothing matches.",
         "searching": "Searching…",
         "open": "Go to a page"
-      }
+      },
+      "travel": "Travel Kit"
     },
     "roles": {
       "owner": "Owner",
@@ -4824,6 +4851,111 @@
         "title": "Payout details",
         "description": "Where we send your commission."
       }
+    },
+    "travel": {
+      "start": {
+        "start": "Start my Travel Kit",
+        "open": "Open my Travel Kit",
+        "failed": "Couldn't open your Travel Kit. Try again."
+      },
+      "facts": {
+        "confidence": {
+          "official": "Official",
+          "secondary": "Other source",
+          "unconfirmed": "Not confirmed"
+        },
+        "source": "Source:",
+        "checked": "Checked {date}"
+      },
+      "kits": {
+        "title": "Travel Kit",
+        "intro": "One folder per trip: the documents, the printouts and a dated schedule. Free with your Pass.",
+        "hint": "Documents, printouts and a schedule for each trip",
+        "empty": "No Travel Kits yet. Start one from a destination or a program's page.",
+        "findDestination": "Find a destination",
+        "route": "{country} · {visa}",
+        "routeGone": "This destination isn't listed anymore",
+        "departs": "Departs {date}",
+        "noDates": "No dates yet"
+      },
+      "kit": {
+        "back": "Your Travel Kits",
+        "kicker": "Travel Kit",
+        "route": "{country} · {visa}",
+        "routeGone": "This destination isn't listed anymore",
+        "notFound": "This Travel Kit isn't here. It may have been deleted.",
+        "progress": "{ready} of {total} documents ready",
+        "noDocuments": "No documents listed for this trip",
+        "applyAt": "Where to apply",
+        "ask": "Who to ask",
+        "dates": "Your dates",
+        "datesHint": "Enter your appointment and departure dates, and the schedule works backward from them.",
+        "appointment": "Visa appointment",
+        "departure": "Departure",
+        "minor": "Under 18",
+        "minorHint": "Adds the guardian steps.",
+        "notes": "Notes",
+        "notesHint": "Anything to remember for this trip",
+        "save": "Save notes",
+        "failed": "That didn't save. Try again.",
+        "noScans": "Your Travel Kit never stores documents or scans, only where you stand with each.",
+        "guardian": "Guardian step",
+        "tabs": {
+          "documents": "Documents",
+          "printouts": "Printouts",
+          "schedule": "Schedule",
+          "questions": "Open questions"
+        },
+        "letters": {
+          "documents": "A",
+          "printouts": "B",
+          "schedule": "C",
+          "questions": "D"
+        },
+        "delete": "Delete this Travel Kit",
+        "deleteTitle": "Delete this Travel Kit?",
+        "deleteDescription": "Its dates, notes and ticks go. Where you stand with each document stays, for your other trips.",
+        "deleteConfirm": "Delete",
+        "cancel": "Keep it"
+      },
+      "documents": {
+        "shared": "Your documents are one list for every trip: mark your passport Ready once and it counts for all your Travel Kits.",
+        "empty": "No documents listed for this trip yet.",
+        "copies": "Print {copies}",
+        "statusLabel": "Where you are with {document}",
+        "status": {
+          "not_started": "Not started",
+          "in_progress": "In progress",
+          "ready": "Ready"
+        },
+        "failed": "That didn't save. Try again."
+      },
+      "printouts": {
+        "intro": "Print these before your appointment, and bring them with you.",
+        "copies": "× {copies}",
+        "total": "{total} sheets in all",
+        "empty": "Nothing to print for this trip."
+      },
+      "schedule": {
+        "intro": "Worked backward from your dates, soonest first.",
+        "empty": "Nothing scheduled for this trip.",
+        "due": "By {date}",
+        "needsAppointment": "Enter your appointment date to date this",
+        "needsDeparture": "Enter your departure date to date this",
+        "anytime": "Any time before you go",
+        "documentStatus": "Document: {status}",
+        "states": {
+          "overdue": "Overdue",
+          "soon": "Soon",
+          "done": "Done"
+        },
+        "failed": "That didn't save. Try again."
+      },
+      "questions": {
+        "intro": "Ask these before you go, and tick each once you have the answer.",
+        "empty": "No open questions for this trip.",
+        "failed": "That didn't save. Try again."
+      }
     }
   },
   "store": {
@@ -5426,6 +5558,7 @@
       "chooseVariant": "This product has several variants: choose one.",
       "variantPricing": "This product has variants: set price and stock on each variant below.",
       "needsPicture": "Add a picture before publishing",
+      "routeNeedsCheck": "Add the day it was checked before publishing: a route is published only once it has been checked.",
       "notShippable": "This order can't be sent now (already sent, not paid or confirmed, or collected at the store).",
       "noDeliveryArea": "The address has no delivery area Boxy knows. Call the customer and fix the address first.",
       "carrierRejected": "Boxy didn't accept the parcel. Check the address and phone number, then try again.",
@@ -6991,7 +7124,8 @@
         "posts": "Club posts",
         "events": "Events",
         "submissions": "Submissions",
-        "opportunities": "Opportunities"
+        "opportunities": "Opportunities",
+        "travel": "Travel"
       },
       "publish": {
         "label": "Publishing",
@@ -7259,6 +7393,23 @@
         "passportRequired": "Applicants add their passport",
         "includesAr": "What's included (Arabic)",
         "includesEn": "What's included (English)",
+        "itinerary": "Day by day",
+        "itineraryHint": "Shown on the package page in day order. Each day needs its number (1 to 365) and a title in both languages; empty rows are skipped.",
+        "itineraryDay": "Day",
+        "itineraryTitleAr": "Title (Arabic)",
+        "itineraryTitleEn": "Title (English)",
+        "itineraryDetailAr": "What happens (Arabic)",
+        "itineraryDetailEn": "What happens (English)",
+        "addItineraryDay": "Add a day",
+        "removeItineraryDay": "Remove this day",
+        "costs": "Every cost",
+        "costsHint": "Every cost of the program, shown on the package page. Tick Included when the package price covers it; otherwise the member pays it on top. Leave the amount empty when it varies or isn't known yet; amounts go in steps of 250 IQD.",
+        "costLabelAr": "Cost (Arabic)",
+        "costLabelEn": "Cost (English)",
+        "costAmount": "Amount (IQD)",
+        "costIncluded": "Included in the price",
+        "addCost": "Add a cost",
+        "removeCost": "Remove this cost",
         "installments": "Installments",
         "installmentsHint": "Shares of the price that add up to 100%. The first is due within the payment window after acceptance; each later one on its date.",
         "share": "Share {number} (%)",
@@ -7351,6 +7502,99 @@
         "refunded": "{amount} refunded on {date}",
         "refundDue": "{amount} to refund",
         "refundByFinance": "Finance pays it from Finance → Programs."
+      },
+      "travel": {
+        "title": "Travel Kit",
+        "description": "Visa routes and what each needs. Every line has its source, how sure it is and the day it was checked; nothing is filled in for you.",
+        "new": "New route",
+        "empty": "No routes yet.",
+        "country": "Country",
+        "visa": "Visa type",
+        "status": "Status",
+        "checkedOn": "Checked on",
+        "notChecked": "Not checked",
+        "requirements": "Requirements",
+        "unconfirmedCount": "Not confirmed",
+        "statuses": {
+          "draft": "Draft",
+          "published": "Published",
+          "retired": "Retired"
+        },
+        "route": "Route",
+        "countryCode": "Country (ISO code)",
+        "countryHint": "Two letters.",
+        "slug": "Slug",
+        "slugHint": "Lower-case letters, numbers and dashes.",
+        "visaAr": "Visa type in Arabic",
+        "visaEn": "Visa type in English",
+        "applyAtAr": "Where to apply, in Arabic",
+        "applyAtEn": "Where to apply, in English",
+        "askAr": "Whom to ask, in Arabic",
+        "askEn": "Whom to ask, in English",
+        "noteAr": "Note on top, in Arabic",
+        "noteEn": "Note on top, in English",
+        "noteHint": "Shown above the list, for example when the information is thin.",
+        "checkedOnHint": "The day someone checked this route against its sources.",
+        "statusHint": "Only published routes are shown to members. Publishing needs a checked date.",
+        "deleteDescription": "Its requirements go too, and so do members' kits made from it.",
+        "requirementsDescription": "In order. Every line needs a source link, how sure it is and the day it was checked.",
+        "requirementsEmpty": "No requirements yet.",
+        "addRequirement": "Add a requirement",
+        "kind": "Kind",
+        "kinds": {
+          "document": "Document",
+          "task": "Task",
+          "question": "Open question"
+        },
+        "docKey": "Document key",
+        "docKeyHint": "Documents only: lower-case letters, numbers and _. A member's status for a document is shared by all their kits through this key.",
+        "titleAr": "Title in Arabic",
+        "titleEn": "Title in English",
+        "detailAr": "Details in Arabic",
+        "detailEn": "Details in English",
+        "copies": "Printed copies",
+        "copiesHint": "How many copies to bring (0 to 20). Empty if it doesn't apply.",
+        "anchor": "Scheduled before",
+        "anchorNone": "Not scheduled",
+        "anchors": {
+          "appointment": "The appointment",
+          "departure": "Departure"
+        },
+        "leadDays": "Days before",
+        "leadDaysHint": "With a date to schedule before: how many days (0 to 365).",
+        "minorsOnly": "Under 18 only",
+        "minorsOnlyHint": "Shown only when the traveller is under 18 (the guardian's steps).",
+        "minorsBadge": "Under 18",
+        "confidence": "How sure",
+        "confidences": {
+          "official": "Official",
+          "secondary": "Secondary source",
+          "unconfirmed": "Not confirmed"
+        },
+        "confidenceHint": "Official: from the embassy or the government. Secondary: another source. Not confirmed: still to check.",
+        "sourceUrl": "Source link",
+        "sourceUrlHint": "Where this comes from (http:// or https://).",
+        "source": "Source",
+        "checkedLine": "Checked {date}",
+        "copiesLine": "Copies: {count}",
+        "leadAppointment": "{days} days before the appointment",
+        "leadDeparture": "{days} days before departure",
+        "unconfirmedWarning": "Not confirmed yet: check it against an official source.",
+        "deleteRequirementConfirm": "Delete this requirement?",
+        "programs": "Programs",
+        "programsDescription": "Opportunities whose travellers take this route.",
+        "programsEmpty": "No program links this route.",
+        "section": "Travel",
+        "sectionDescription": "The Travel Kit routes this opportunity's travellers take, and its own extra requirements.",
+        "routes": "Routes",
+        "routesEmpty": "No routes linked.",
+        "linkRoute": "Route to link",
+        "link": "Link",
+        "unlink": "Unlink",
+        "unlinkConfirm": "Unlink this route?",
+        "noRoutesToLink": "Every route is linked already, or there are none yet.",
+        "extras": "This opportunity's extras",
+        "extrasDescription": "Lines only this program needs, on top of its routes'."
       }
     },
     "telegram": {
@@ -7676,7 +7920,8 @@
         "payouts": "Shop payouts",
         "coupons": "Coupons",
         "codes": "Digital codes",
-        "programs": "Program refunds"
+        "programs": "Program refunds",
+        "travel": "Travel Kit"
       }
     },
     "companies": {

@@ -455,6 +455,24 @@ steps need Xcode, Android Studio and the store/Firebase accounts
 
 ## Decisions
 
+- 2026-11-04: **Programs, part 2: the Travel Kit, its Staff editor and
+  the package page** (PR 6b, after the schema in #1213). The Travel Kit
+  ("ملف السفر"): "Start my Travel Kit" on a listed opportunity with routes,
+  `/club/travel` (published routes by country), `/pass/travel` (a member's
+  kits) and `/pass/travel/<kit>`, the folder: the cover with the bulb
+  filling as documents are Ready, where to apply and whom to ask, the
+  appointment and departure dates, the under-18 switch (guardian steps),
+  notes, and tabs A–D: Documents (one status per kind of document, shared by
+  every trip), Printouts (copies and the total), Schedule (dated back from
+  the member's dates; overdue, soon, done) and Open questions. Every line
+  shows its confidence (Official, Other source, Not confirmed), source and
+  checked date; the kit never stores a document. Staff → Club → Travel:
+  routes and their requirements, and on each opportunity's page its routes
+  and the program's own extras. Programs' package page (C20) shows the
+  itinerary day by day and every cost (included, or on top with its amount
+  or "Varies", with what's known to be paid on top), edited in Staff's
+  program form. No visa requirement is seeded: editors enter them from
+  official sources.
 - 2026-11-04: **Programs, part 1: Travel Kit and package costs, schema
   first** (PR 6a, taking over the exchange programs work's approved
   proposal; migration `20270327000000_travel_kit.sql`). The Travel Kit

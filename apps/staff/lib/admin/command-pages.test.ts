@@ -19,6 +19,7 @@ describe("the command bar's pages", () => {
       "/club/events",
       "/club/opportunities",
       "/club/submissions",
+      "/club/travel",
     ]);
     // Support runs Plus but not the catalog, which holds the plans.
     const support = commandPages("support").map((page) => page.href);

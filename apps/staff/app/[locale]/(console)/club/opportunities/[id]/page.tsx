@@ -18,6 +18,7 @@ import {
 } from "../../_components/opportunity-review";
 import { ProgramForm } from "../../_components/program-form";
 import { closeOpportunity, deleteOpportunity } from "../../actions";
+import { OpportunityTravel } from "../../travel/_components/opportunity-travel";
 
 type Status =
   | "approved"
@@ -40,7 +41,7 @@ const OpportunityPage = async ({
   if (!isUuid(id)) {
     notFound();
   }
-  const { supabase } = await requireSection("editorial", "write");
+  const { canWrite, supabase } = await requireSection("editorial", "write");
   const locale = await getLocale();
   const t = await getTranslations("admin.editorial");
   const tCommon = await getTranslations("admin.common");
@@ -125,6 +126,11 @@ const OpportunityPage = async ({
               <ProgramForm opportunityId={row.id} program={program} />
             </Panel>
           ) : null}
+          <OpportunityTravel
+            canWrite={canWrite}
+            opportunityId={row.id}
+            supabase={supabase}
+          />
         </div>
         <div className="grid content-start gap-4">
           <Panel title={t("opportunities.status")}>

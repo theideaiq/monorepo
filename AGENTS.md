@@ -36,7 +36,9 @@ incidents) is in `docs/platform`.
     funding, standing for Iraqis and age; who runs it, the source and when
     it was last checked, where to apply and Notify me; for The IDEA's own programs, the package, the application with
     passport scans, its installments, which go through the cart, and
-    withdrawing), `/club/surveys` and `/club/read[/<slug>]` (posts by
+    withdrawing; programs show their itinerary and every cost),
+    `/club/travel` (Travel Kit routes by country; a kit starts from a
+    route or from an opportunity), `/club/surveys` and `/club/read[/<slug>]` (posts by
     topic), then the Telegram rooms; your tickets, applications and
     surveys are in the Pass. `/checkout/done/<order>` follows a paid
     order. `/partners` ("For partners") presents Partners to
@@ -96,7 +98,11 @@ incidents) is in `docs/platform`.
     card, Today (what needs you now) and the Library shelves on top:
     `/pass/at-home` (Plus items you have, swaps and Keep it),
     `/pass/queue`, `/pass/history` (orders and rentals), `/pass/saved`,
-    `/pass/lists`, `/pass/tickets`, `/pass/applications`, `/pass/codes`;
+    `/pass/lists`, `/pass/tickets`, `/pass/applications`, `/pass/codes`,
+    `/pass/travel[/<kit>]` (the Travel Kit folder: documents shared by every
+    trip, printouts, a schedule from the member's dates, open questions;
+    each line with its confidence, source and checked date; no documents
+    stored);
     `/pass/family` (Family: kids' profiles under 13 with their own queue,
     linked teens who ask before they get something, the guardian link and
     Plus Duo), `/pass/bulbs` with invites at `#invite`, and
@@ -197,7 +203,8 @@ incidents) is in `docs/platform`.
     organizations' under an unclaimed organization (one with no members,
     handed over by Pass email), selling The
     IDEA's programs as packages with their applications at
-    `/club/opportunities/<id>/applications`, and `/club/telegram`) · Partners `/partners` (Team
+    `/club/opportunities/<id>/applications`, `/club/travel`, Travel Kit
+    routes and their sourced, dated requirements, and `/club/telegram`) · Partners `/partners` (Team
     `/partners/team` with requests at `/partners/team/<id>` and Plus seats
     at `/partners/team/plus`, then orders, invoices, `/partners/shops`
     where staff approve shops, perks and sign-in) · Finance `/finance` (with

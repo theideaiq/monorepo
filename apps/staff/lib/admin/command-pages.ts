@@ -39,6 +39,7 @@ export const subPages = [
   { href: "/club/events", id: "events", section: "editorial" },
   { href: "/club/opportunities", id: "opportunities", section: "editorial" },
   { href: "/club/submissions", id: "submissions", section: "editorial" },
+  { href: "/club/travel", id: "travel", section: "editorial" },
   { href: "/partners/shops", id: "shops", section: "companies" },
   { href: "/partners/orders", id: "partnerOrders", section: "companies" },
   { href: "/partners/invoices", id: "invoices", section: "companies" },
