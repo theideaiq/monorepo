@@ -4,27 +4,30 @@ import { log } from "@repo/observability/log";
 import { NextResponse } from "next/server";
 import { isAuthorizedCronRequest, unauthorized } from "@/lib/cron";
 import { buyDigitalCodes, reloadlyFromEnv } from "@/lib/digital-codes";
+import { recordJobRun } from "@/lib/job-runs";
 
 /**
  * Daily, as a safety net: buys the digital codes still waiting (each is
  * bought right after its payment, and when Staff release or retry one).
  */
-export const GET = async (request: Request) => {
+export const GET = (request: Request) => {
   if (!isAuthorizedCronRequest(request)) {
     return unauthorized();
   }
-  try {
-    const run = await buyDigitalCodes({
-      admin: createAdminClient(),
-      logger: log,
-      reloadly: reloadlyFromEnv(),
-    });
-    return NextResponse.json({ ok: true, ...run });
-  } catch (error) {
-    log.error(`Digital codes failed: ${parseError(error)}`);
-    return NextResponse.json(
-      { error: "digital_codes_failed" },
-      { status: 500 }
-    );
-  }
+  return recordJobRun(createAdminClient, "digital-codes", async () => {
+    try {
+      const run = await buyDigitalCodes({
+        admin: createAdminClient(),
+        logger: log,
+        reloadly: reloadlyFromEnv(),
+      });
+      return NextResponse.json({ ok: true, ...run });
+    } catch (error) {
+      log.error(`Digital codes failed: ${parseError(error)}`);
+      return NextResponse.json(
+        { error: "digital_codes_failed" },
+        { status: 500 }
+      );
+    }
+  });
 };

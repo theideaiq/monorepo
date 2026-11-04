@@ -5291,6 +5291,10 @@
           "title": "راح تتسكّر قريب",
           "body": "\"{title}\" تتسكّر {date}."
         },
+        "travel_due": {
+          "title": "قرّب موعد بملف سفرك",
+          "body": "{hasMore, select, yes {«{title}» و{more} شغلات ثانية بملف سفرك لـ{country} قرّبت مواعيدها، وأولها {date}.} other {«{title}» بملف سفرك لـ{country} موعده {date}.}}"
+        },
         "program_guardian_request": {
           "title": "وافق على طلب",
           "body": "{name} قدّم طلب لـ «{title}». وافق عليه من الپاس ← الإعدادات."

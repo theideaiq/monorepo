@@ -3,6 +3,7 @@ import { parseError } from "@repo/observability/error";
 import { log } from "@repo/observability/log";
 import { NextResponse } from "next/server";
 import { isAuthorizedCronRequest, unauthorized } from "@/lib/cron";
+import { recordJobRun } from "@/lib/job-runs";
 
 /**
  * Daily: flags The IDEA Plus rentals past their due date as overdue, and
@@ -10,51 +11,52 @@ import { isAuthorizedCronRequest, unauthorized } from "@/lib/cron";
  * per due date). Notifications go out as push and, for customers who opted
  * in, on WhatsApp (POST /webhooks/notifications, GET /cron/push).
  */
-export const GET = async (request: Request): Promise<Response> => {
+export const GET = (request: Request) => {
   if (!isAuthorizedCronRequest(request)) {
     return unauthorized();
   }
-
-  try {
-    const admin = createAdminClient();
-    const { data: overdue, error } = await admin.rpc("mark_overdue_rentals");
-    if (error) {
-      throw new Error(error.message);
+  return recordJobRun(createAdminClient, "rentals", async () => {
+    try {
+      const admin = createAdminClient();
+      const { data: overdue, error } = await admin.rpc("mark_overdue_rentals");
+      if (error) {
+        throw new Error(error.message);
+      }
+      const { data: reminded, error: reminderError } = await admin.rpc(
+        "notify_rentals_due_soon"
+      );
+      if (reminderError) {
+        throw new Error(reminderError.message);
+      }
+      // Expired Plus invites pass to the next person on the waitlist.
+      const { data: invited, error: waitlistError } =
+        await admin.rpc("run_plus_waitlist");
+      if (waitlistError) {
+        throw new Error(waitlistError.message);
+      }
+      // Games for kits whose weekend starts within two days.
+      const { data: kitGames, error: kitError } =
+        await admin.rpc("run_kit_holds");
+      if (kitError) {
+        throw new Error(kitError.message);
+      }
+      // Student prices whose badge has ended go to the full price at renewal.
+      const { data: studentPlans, error: studentError } =
+        await admin.rpc("run_student_expiry");
+      if (studentError) {
+        throw new Error(studentError.message);
+      }
+      return NextResponse.json({
+        dueSoon: reminded ?? 0,
+        invited: invited ?? 0,
+        kitGames: kitGames ?? 0,
+        ok: true,
+        overdue: overdue ?? 0,
+        studentPlans: studentPlans ?? 0,
+      });
+    } catch (error) {
+      log.error(`Rentals job failed: ${parseError(error)}`);
+      return NextResponse.json({ ok: false }, { status: 500 });
     }
-    const { data: reminded, error: reminderError } = await admin.rpc(
-      "notify_rentals_due_soon"
-    );
-    if (reminderError) {
-      throw new Error(reminderError.message);
-    }
-    // Expired Plus invites pass to the next person on the waitlist.
-    const { data: invited, error: waitlistError } =
-      await admin.rpc("run_plus_waitlist");
-    if (waitlistError) {
-      throw new Error(waitlistError.message);
-    }
-    // Games for kits whose weekend starts within two days.
-    const { data: kitGames, error: kitError } =
-      await admin.rpc("run_kit_holds");
-    if (kitError) {
-      throw new Error(kitError.message);
-    }
-    // Student prices whose badge has ended go to the full price at renewal.
-    const { data: studentPlans, error: studentError } =
-      await admin.rpc("run_student_expiry");
-    if (studentError) {
-      throw new Error(studentError.message);
-    }
-    return NextResponse.json({
-      dueSoon: reminded ?? 0,
-      invited: invited ?? 0,
-      kitGames: kitGames ?? 0,
-      ok: true,
-      overdue: overdue ?? 0,
-      studentPlans: studentPlans ?? 0,
-    });
-  } catch (error) {
-    log.error(`Rentals job failed: ${parseError(error)}`);
-    return NextResponse.json({ ok: false }, { status: 500 });
-  }
+  });
 };

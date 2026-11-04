@@ -5291,6 +5291,10 @@
           "title": "Closing soon",
           "body": "\"{title}\" closes {date}."
         },
+        "travel_due": {
+          "title": "Coming up in your Travel Kit",
+          "body": "{hasMore, select, yes {\"{title}\" and {more} more for your {country} trip are coming up; the first is due {date}.} other {\"{title}\" for your {country} trip is due {date}.}}"
+        },
         "program_guardian_request": {
           "title": "Approve an application",
           "body": "{name} applied to \"{title}\". Approve it in Pass → Settings."

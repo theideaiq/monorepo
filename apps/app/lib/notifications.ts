@@ -14,8 +14,10 @@ import {
   formatDate,
   formatDateTime,
   formatNumber,
+  intlLocale,
 } from "@repo/internationalization/format";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { countryName } from "./club";
 import { appLink } from "./links";
 import { queryKeys, requireUserId, unwrap } from "./queries";
 
@@ -99,6 +101,7 @@ export const NOTIFICATION_EVENTS = [
   "offer_declined",
   "opportunity_open",
   "opportunity_deadline",
+  "travel_due",
   "program_guardian_request",
   "program_guardian_approved",
   "program_guardian_declined",
@@ -215,6 +218,27 @@ const opportunityValues = (
   return {
     date: deadline ? formatDate(deadline, locale) : "",
     title: (locale === "ar" ? arabic : english) || english || arabic,
+  };
+};
+
+/**
+ * A Travel Kit's first line due, its date, the trip's country and how many
+ * more lines are due (`travel_due`).
+ */
+const travelValues = (
+  data: Record<string, Json | undefined>,
+  locale: Locale
+) => {
+  const due = text(data.due_on);
+  const count = Number(text(data.count));
+  const code = text(data.country);
+  const more = Number.isFinite(count) && count > 1 ? count - 1 : 0;
+  return {
+    country: code ? countryName(code, intlLocale(locale)) : "",
+    date: due ? formatDate(`${due}T12:00:00Z`, locale) : "",
+    hasMore: more > 0 ? "yes" : "no",
+    more: formatNumber(more, locale),
+    title: opportunityValues(data, locale).title,
   };
 };
 
@@ -405,6 +429,7 @@ const extraValues: Partial<
     };
   },
   survey_rejected: (data) => ({ title: text(data.title) }),
+  travel_due: travelValues,
   wanted_in_store: (data, locale) => ({ name: itemName(data, locale) }),
 };
 
