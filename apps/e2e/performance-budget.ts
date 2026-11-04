@@ -24,8 +24,9 @@ export const budget = {
   cls: 0.1,
   /**
    * JavaScript downloaded until the load event, compressed, in bytes. On
-   * 2026-11-04 the pages took 375–435 KB (they took 825–890 KB before
-   * Sentry, PostHog and the error page's messages stopped loading upfront).
+   * 2026-11-04 the pages took 415–448 KB on CI's build (825–890 KB before
+   * Sentry, PostHog, the error page's messages and /plus's join screens
+   * stopped loading upfront).
    */
   jsBytes: 460_000,
   /** Largest Contentful Paint, in milliseconds ("good" is 2.5 s or less). */

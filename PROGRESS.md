@@ -468,8 +468,17 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   is set on the website; and `global-error.tsx` imported both whole
   messages files for three strings. Sentry now loads only with a DSN and
   Replay once the page is idle; PostHog only with its key; the error page
-  loads its strings when it shows. Measured after: 375–435 KB of
-  JavaScript, CLS 0, LCP 1.4–1.8 s, blocking time under 250 ms.
+  loads its strings when it shows. The first CI run then caught three
+  more on its slower machine: /plus rendered an empty box until it knew
+  whether the visitor had Plus, then the pitch (CLS 0.8, LCP 4.3 s); the
+  Store's gift-card link appeared only after hydration (LCP 4 s); and /plus
+  carried the join, swap and plan screens with their phone input (479 KB).
+  Now the pitch is what the server renders (members see their slots once
+  known), the codes link is server-rendered and hidden in the apps by
+  `html[data-native] .web-only` (an inline script in the body marks the
+  shell before paint), the first row of store covers loads eagerly, and
+  the /plus top lives in `components/plus/plus-home.tsx`. Measured after:
+  415–448 KB of JavaScript, CLS 0–0.007, LCP 1.3–2.0 s.
 - 2026-11-04: **Titles of works stay as published** (owner). In catalogue
   data, album, game, film and book titles, their artists and authors, and
   official program and organization names keep their own script on Arabic

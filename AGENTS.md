@@ -278,7 +278,10 @@ incidents) is in `docs/platform`.
   Largest Contentful Paint, layout shift and blocking time. Keep heavy
   libraries off the first load: Sentry and PostHog load only when their
   keys are set (`@repo/observability/client`, `@repo/analytics`), and a
-  client component never imports a whole messages file.
+  client component never imports a whole messages file. Render on the
+  server what most visitors see and switch after hydration only for the
+  few (a signed-in member), never an empty box that grows; hide what the
+  apps must not show with the `web-only` class, not by rendering it late.
 - `scripts/` — `check-placeholders.ts`, `check-rtl.ts`, `check-i18n.ts` and
   `check-secrets.ts` are repo checks; `vercel-ignore.mjs` is every Vercel project's ignored
   build step.

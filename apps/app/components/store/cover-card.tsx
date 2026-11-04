@@ -72,6 +72,8 @@ interface CoverCardProps {
   readonly needsPlan?: string | null;
   /** A Plus surface: availability, no price and no Plus mark. */
   readonly plus?: boolean;
+  /** In the first row of a grid: the cover loads at once (A28). */
+  readonly priority?: boolean;
   readonly product: ProductCard;
 }
 
@@ -84,6 +86,7 @@ export const CoverCard = ({
   availability,
   needsPlan,
   plus = false,
+  priority = false,
   product,
 }: CoverCardProps) => {
   const locale = useLocale();
@@ -99,6 +102,7 @@ export const CoverCard = ({
           alt={name}
           className="transition-opacity group-hover:opacity-90"
           path={product.images[0]}
+          priority={priority}
           sizes="(min-width: 1024px) 20vw, 45vw"
         />
         {product.rentable && !plus ? (

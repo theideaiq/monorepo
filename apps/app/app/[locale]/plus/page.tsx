@@ -9,13 +9,13 @@ import { MoveRight } from "lucide-react";
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { PlanCard } from "@/components/plan-card";
-import { PlusSurface } from "@/components/plus/plus-surface";
 import {
   HouseholdSlots,
   PlusHomeSwitch,
   QueueRow,
   VisitorOnly,
-} from "@/components/screens/plus";
+} from "@/components/plus/plus-home";
+import { PlusSurface } from "@/components/plus/plus-surface";
 import { Section } from "@/components/section";
 import { CategoryChips } from "@/components/shop/category-chips";
 import { Rail } from "@/components/shop/rail";

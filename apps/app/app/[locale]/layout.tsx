@@ -12,6 +12,7 @@ import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import type { ReactNode } from "react";
 import { AppProviders } from "@/components/providers";
+import { NATIVE_MARK_SCRIPT } from "@/lib/native/user-agent";
 import { Footer } from "./components/footer";
 import { Header } from "./components/header";
 import { SiteChrome } from "./components/site-chrome";
@@ -59,6 +60,11 @@ const RootLayout = async ({ children, params }: RootLayoutProperties) => {
       suppressHydrationWarning
     >
       <body>
+        {/* First in the body: runs before any content is painted. */}
+        <script
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: a fixed one-line script, no user input
+          dangerouslySetInnerHTML={{ __html: NATIVE_MARK_SCRIPT }}
+        />
         <NextIntlClientProvider
           messages={{ app, auth, billing, common, pass, store, web }}
         >
