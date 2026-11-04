@@ -1,3 +1,4 @@
+import { readdirSync, readFileSync } from "node:fs";
 import { describe, expect, test } from "vitest";
 import ar from "./messages/ar.json";
 import en from "./messages/en.json";
@@ -69,9 +70,49 @@ const ARABIC_MARKS =
   /[\u0600-\u06FF][,;?]|"|[\u0660-\u0669\u06F0-\u06F9]|\.\.\./;
 const TANWEEN_ON_ALEF = /ا\u064B/;
 const ARABIZED_NAMES = /تيليغرام|تيليجرام|تلگرام|واتساب|واتس اب/;
-const MSA_EMAIL = /البريد الإلكتروني/;
-const DINAR_AFTER_AMOUNT =
-  /\(دينار\)|(?:\d|\})\s*دينار(?!\s*(?:واحد|لكل|للوحدة))/;
+const MSA_EMAIL = /البريد الإلكتروني|بريدك الإلكتروني/;
+const SHORT_DINAR = /د\.ع/;
+const DINAR_WITHOUT_IRAQI =
+  /(?:\d|\})\s*دينار(?! عراقي)(?!\s*(?:واحد|لكل|للوحدة))|\(دينار\)/;
+
+/**
+ * Where Arabic is Modern Standard Arabic: what binds or is kept as a
+ * record. Everything else is Iraqi Arabic.
+ */
+const STANDARD_ARABIC = [
+  // What a person agrees to share with a partner site.
+  "pass.authorize.shares",
+  "pass.authorize.scopes.",
+  "pass.authorize.never",
+  // Printed documents.
+  "app.company.document.billTo",
+  "app.company.document.footer",
+  "app.company.document.validUntil",
+  "app.company.document.reference",
+  "app.company.document.due",
+  "app.company.document.paidOn",
+  "web.club.surveys.certificate.issued",
+  "web.club.surveys.certificate.terms",
+];
+const isStandard = (path: string) =>
+  STANDARD_ARABIC.some((prefix) => path === prefix || path.startsWith(prefix));
+const standard = arabic.filter(([path]) => isStandard(path));
+const iraqi = arabic.filter(([path]) => !isStandard(path));
+
+/** Words only Iraqi speech uses (our names with گ are taken out first). */
+const IRAQI_WORDS =
+  /(?<![؀-ۿ])(?:ماكو|اكو|هسه|شلون|شنو|شگد|راح|هاي|هذي|مو|اللي|بعدين|ويا|وياك|دز|تگدر|يگدر)(?![؀-ۿ])|[گچ]/;
+const OUR_NAMES_WITH_GAF = /السوگ|سوگ|الگلوبات|گلوبات|گلوب/g;
+/** Modern Standard forms that Iraqi copy says another way. */
+const STANDARD_WORDS =
+  /(?<![؀-ۿ])(?:لا يوجد|لا توجد|سوف|الآن|هل|لماذا|ماذا|يمكنك|تستطيع|لم يتم|سيتم|يتم|التي|الذي|الذين|ليس|ليست|لدينا|لديك|لديه|هذه|هؤلاء|عندما|ينبغي)(?![؀-ۿ])/;
+const withoutOurNames = (list: Entry[]): Entry[] =>
+  list.map(([path, text]) => [path, text.replace(OUR_NAMES_WITH_GAF, "")]);
+
+const LEGAL = new URL("../../apps/app/content/legal/", import.meta.url);
+const legalPages: Entry[] = readdirSync(LEGAL)
+  .filter((name) => name.endsWith(".ar.md"))
+  .map((name) => [name, readFileSync(new URL(name, LEGAL), "utf8")]);
 
 describe("language standard", () => {
   test("English is American English", () => {
@@ -101,9 +142,10 @@ describe("language standard", () => {
   });
 
   test("one word for email and one way to write the currency in Arabic", () => {
-    expect(offending(arabic, MSA_EMAIL)).toEqual([]);
-    // Amounts and field labels: "25,000 د.ع." and "السعر (د.ع)".
-    expect(offending(arabic, DINAR_AFTER_AMOUNT)).toEqual([]);
+    expect(offending(iraqi, MSA_EMAIL)).toEqual([]);
+    // Amounts and field labels: "25,000 دينار عراقي" and "السعر (دينار عراقي)".
+    expect(offending(arabic, SHORT_DINAR)).toEqual([]);
+    expect(offending(arabic, DINAR_WITHOUT_IRAQI)).toEqual([]);
   });
 
   test("each common button has one Arabic word", () => {
@@ -135,5 +177,14 @@ describe("language standard", () => {
       .filter(([, set]) => set.size > 1)
       .map(([text, set]) => `${text} → ${[...set].join(" | ")}`);
     expect(differing).toEqual([]);
+  });
+
+  test("product copy is Iraqi Arabic", () => {
+    expect(offending(iraqi, STANDARD_WORDS)).toEqual([]);
+  });
+
+  test("legal pages, consent wording and documents are Modern Standard Arabic", () => {
+    expect(offending(withoutOurNames(standard), IRAQI_WORDS)).toEqual([]);
+    expect(offending(withoutOurNames(legalPages), IRAQI_WORDS)).toEqual([]);
   });
 });

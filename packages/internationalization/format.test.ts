@@ -31,7 +31,7 @@ describe("regional formatting", () => {
   test("formats IQD without fractional digits", () => {
     // The currency follows the number, joined by a no-break space.
     expect(formatCurrency(25_000, "en")).toBe("25,000\u00a0IQD");
-    expect(formatCurrency(25_000, "ar")).toBe("25,000\u00a0د.ع.");
+    expect(formatCurrency(25_000, "ar")).toBe("25,000\u00a0دينار عراقي");
     expect(formatCurrency(-4750, "en")).toBe("-4,750\u00a0IQD");
   });
 
