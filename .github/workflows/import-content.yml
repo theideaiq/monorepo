@@ -5,11 +5,22 @@ name: Import The IDEA Club content
 # every file upserts its post by slug (keeping the publication date and cover
 # image) and marks its Telegram news item as sent, so an import doesn't flood
 # The IDEA Club. Running it again overwrites the text of those posts.
+# The `opportunities` choice instead loads supabase/content/opportunities: outside
+# programs as drafts under unclaimed organizations; a re-run leaves alone any an
+# editor has approved or changed. Choosing one never runs the other.
 # Run it by hand: Actions → "Import The IDEA Club content" → Run.
 # Uses the same `production` environment secrets as migrate.yml.
 
 on:
   workflow_dispatch:
+    inputs:
+      content:
+        description: What to import
+        type: choice
+        default: posts
+        options:
+          - posts
+          - opportunities
 
 concurrency:
   group: migrate-production
@@ -28,6 +39,7 @@ jobs:
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
       SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
       PROJECT_REF: ${{ vars.SUPABASE_PROJECT_REF }}
+      CONTENT: ${{ inputs.content }}
     steps:
       - uses: actions/checkout@v7
       - uses: oven-sh/setup-bun@v2
@@ -47,11 +59,16 @@ jobs:
         working-directory: packages/database
         run: |
           set -euo pipefail
-          for file in supabase/content/posts/*.sql; do
+          for file in "supabase/content/$CONTENT"/*.sql; do
             echo "::group::$file"
             bunx supabase db query --linked -f "$file"
             echo "::endgroup::"
           done
       - name: Count
         working-directory: packages/database
-        run: bunx supabase db query --linked "select section, count(*) from public.posts where published_at is not null group by section order by section"
+        run: |
+          if [ "$CONTENT" = "opportunities" ]; then
+            bunx supabase db query --linked "select status, count(*) from public.opportunities group by status order by status"
+          else
+            bunx supabase db query --linked "select section, count(*) from public.posts where published_at is not null group by section order by section"
+          fi
