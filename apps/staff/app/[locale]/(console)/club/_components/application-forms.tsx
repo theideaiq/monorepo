@@ -2,7 +2,8 @@
 
 import { useTranslations } from "next-intl";
 import { ActionForm, SubmitButton } from "@/components/admin/action-form";
-import { SelectField, TextareaField } from "@/components/admin/fields";
+import { SelectField } from "@/components/admin/fields";
+import { ReasonField } from "@/components/admin/reason-field";
 import { endApplication, reviewApplication } from "../actions";
 
 const DECISIONS = ["accepted", "waitlisted", "refused"] as const;
@@ -23,10 +24,12 @@ export const ReviewApplicationForm = ({ id }: { readonly id: string }) => {
         }))}
         wrapperClassName="max-w-xs"
       />
-      <TextareaField
+      <ReasonField
         hint={t("noteHint")}
+        kind="applications"
         label={t("note")}
         maxLength={1000}
+        multiline
         name="note"
         rows={3}
       />

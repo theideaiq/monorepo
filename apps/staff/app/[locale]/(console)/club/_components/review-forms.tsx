@@ -8,6 +8,7 @@ import {
   SelectField,
   TextareaField,
 } from "@/components/admin/fields";
+import { ReasonField } from "@/components/admin/reason-field";
 import { assignSubmission, decideSubmission, saveReview } from "../actions";
 
 export const AssignForm = ({
@@ -187,12 +188,13 @@ export const DecisionForm = ({
         name="status"
         options={DECISIONS.map((value) => ({ label: tStore(value), value }))}
       />
-      <TextareaField
+      <ReasonField
         defaultValue={decisionNote ?? ""}
-        dir="auto"
         hint={t("decisionNoteHint")}
+        kind="submissions"
         label={t("decisionNote")}
         maxLength={5000}
+        multiline
         name="decisionNote"
         rows={5}
       />

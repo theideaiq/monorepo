@@ -3,6 +3,7 @@
 import { useTranslations } from "next-intl";
 import { ActionForm, SubmitButton } from "@/components/admin/action-form";
 import { SelectField, TextField } from "@/components/admin/fields";
+import { ReasonField } from "@/components/admin/reason-field";
 import {
   decideReturn,
   markReturnReceived,
@@ -41,11 +42,12 @@ export const DecideReturnForm = ({
             options={faults}
             wrapperClassName="w-40"
           />
-          <TextField
+          <ReasonField
+            kind="returns"
             label={t("note")}
             name="note"
             required
-            wrapperClassName="min-w-48 flex-1"
+            wrapperClassName="grid min-w-48 flex-1 gap-2"
           />
           <SubmitButton size="sm" variant={approve ? "default" : "outline"}>
             {t(approve ? "approve" : "reject")}

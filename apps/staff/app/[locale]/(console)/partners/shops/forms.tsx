@@ -9,6 +9,7 @@ import {
   TextareaField,
   TextField,
 } from "@/components/admin/fields";
+import { ReasonField } from "@/components/admin/reason-field";
 import {
   decideSeller,
   saveIndividualLimit,
@@ -50,11 +51,13 @@ export const DecideSellerForm = ({
           name="deposit"
         />
       </FieldGrid>
-      <TextareaField
+      <ReasonField
         defaultValue={note}
         hint={t("noteHint")}
+        kind="shops"
         label={t("note")}
         maxLength={1000}
+        multiline
         name="note"
         rows={2}
       />
