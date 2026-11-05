@@ -147,6 +147,9 @@ const OpportunitiesPage = async ({
   return (
     <>
       <PageHeader title={t("title")}>
+        <Button asChild variant="outline">
+          <Link href="/club/opportunities/drafts">{t("drafts.link")}</Link>
+        </Button>
         {canWrite ? (
           <Button asChild>
             <Link href="/club/opportunities/new">
