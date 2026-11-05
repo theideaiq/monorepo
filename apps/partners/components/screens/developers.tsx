@@ -52,6 +52,11 @@ interface Urls {
   apiUrl: string;
 }
 
+/** The API's address and the website's, where people sign in. */
+interface Hosts extends Urls {
+  webUrl: string;
+}
+
 /** An error from a mutation, in the reader's language. */
 const Failure = ({ error }: { readonly error: unknown }) => {
   const t = useTranslations(`${NS}.errors`);
@@ -663,11 +668,101 @@ const AppBadges = ({ app }: { readonly app: PassApp }) => {
   );
 };
 
+/** One snippet with a copy button, always left to right. */
+const Snippet = ({
+  label,
+  text,
+}: {
+  readonly label: string;
+  readonly text: string;
+}) => {
+  const t = useTranslations(NS);
+  const [copied, setCopied] = useState(false);
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+    } catch {
+      setCopied(false);
+    }
+  };
+  return (
+    <div className="grid gap-1">
+      <div className="flex items-center justify-between gap-2">
+        <p className="font-medium text-sm">{label}</p>
+        <Button onClick={copy} size="sm" type="button" variant="ghost">
+          {copied ? t("quickStart.copied") : t("quickStart.copy")}
+        </Button>
+      </div>
+      <pre
+        className="overflow-x-auto rounded-md bg-muted p-3 text-xs"
+        dir="ltr"
+      >
+        <code>{text}</code>
+      </pre>
+    </div>
+  );
+};
+
+/**
+ * The quick start, filled in with this app's client id, first return
+ * address and answers: the sign-in link, the token request and the
+ * discovery document. Placeholders in capitals are the developer's own.
+ */
+const QuickStart = ({
+  apiUrl,
+  app,
+  webUrl,
+}: Hosts & { readonly app: PassApp }) => {
+  const t = useTranslations(NS);
+  const redirect = app.redirect_uris[0] ?? "https://example.iq/auth/callback";
+  const scope = ["openid", ...app.answers].join(" ");
+  const authorize = [
+    `${webUrl}/oauth/authorize`,
+    "?response_type=code",
+    `&client_id=${app.client_id}`,
+    `&redirect_uri=${encodeURIComponent(redirect)}`,
+    `&scope=${encodeURIComponent(scope)}`,
+    "&state=STATE&nonce=NONCE",
+    "&code_challenge=CHALLENGE&code_challenge_method=S256",
+  ].join("\n  ");
+  const token = [
+    `curl ${apiUrl}/oidc/token \\`,
+    `  -u "${app.client_id}:$CLIENT_SECRET" \\`,
+    "  -d grant_type=authorization_code \\",
+    '  -d code="$CODE" \\',
+    `  -d redirect_uri=${redirect} \\`,
+    '  -d code_verifier="$VERIFIER"',
+  ].join("\n");
+  return (
+    <details className="rounded-md border p-3">
+      <summary className="cursor-pointer text-sm">
+        {t("quickStart.title")}
+      </summary>
+      <div className="grid gap-3 pt-3">
+        <p className="text-muted-foreground text-sm">
+          {t("quickStart.description")}
+        </p>
+        <Snippet label={t("quickStart.authorize")} text={authorize} />
+        <Snippet label={t("quickStart.token")} text={token} />
+        <Snippet
+          label={t("discovery")}
+          text={`${apiUrl}/oidc/.well-known/openid-configuration`}
+        />
+        <p className="text-muted-foreground text-sm">
+          {app.mode === "live" ? t("quickStart.live") : t("quickStart.testing")}
+        </p>
+      </div>
+    </details>
+  );
+};
+
 const AppCard = ({
   apiUrl,
   app,
   org,
-}: Urls & { readonly app: PassApp; readonly org: string }) => {
+  webUrl,
+}: Hosts & { readonly app: PassApp; readonly org: string }) => {
   const t = useTranslations(NS);
   const locale = useLocale();
   const update = useUpdateApp(org);
@@ -712,6 +807,7 @@ const AppCard = ({
       <div className="flex flex-wrap items-center gap-2">
         <AppState app={app} org={org} />
       </div>
+      <QuickStart apiUrl={apiUrl} app={app} webUrl={webUrl} />
       <details className="rounded-md border p-3">
         <summary className="cursor-pointer text-sm">{t("apps.edit")}</summary>
         <div className="pt-3">
@@ -750,7 +846,7 @@ const AppCard = ({
   );
 };
 
-const Apps = ({ apiUrl, org }: Urls & { readonly org: string }) => {
+const Apps = ({ apiUrl, org, webUrl }: Hosts & { readonly org: string }) => {
   const t = useTranslations(NS);
   const apps = usePassApps(org);
   const domains = usePassDomains(org);
@@ -772,6 +868,7 @@ const Apps = ({ apiUrl, org }: Urls & { readonly org: string }) => {
                 app={app}
                 key={app.client_id}
                 org={org}
+                webUrl={webUrl}
               />
             ))}
           </ul>
@@ -788,7 +885,7 @@ const Apps = ({ apiUrl, org }: Urls & { readonly org: string }) => {
   );
 };
 
-const DevelopersBody = ({ apiUrl }: Urls) => {
+const DevelopersBody = ({ apiUrl, webUrl }: Hosts) => {
   const t = useTranslations(NS);
   const { active, canManage } = useActiveOrganization();
   if (!canManage) {
@@ -798,22 +895,22 @@ const DevelopersBody = ({ apiUrl }: Urls) => {
     <div className="grid max-w-3xl gap-6">
       <Guide apiUrl={apiUrl} />
       <Domains org={active.id} />
-      <Apps apiUrl={apiUrl} org={active.id} />
+      <Apps apiUrl={apiUrl} org={active.id} webUrl={webUrl} />
     </div>
   );
 };
 
-const KeyedDevelopers = ({ apiUrl }: Urls) => {
+const KeyedDevelopers = ({ apiUrl, webUrl }: Hosts) => {
   const { active } = useActiveOrganization();
-  return <DevelopersBody apiUrl={apiUrl} key={active.id} />;
+  return <DevelopersBody apiUrl={apiUrl} key={active.id} webUrl={webUrl} />;
 };
 
 /**
  * Partners → Developers: the company's own Sign in with The IDEA
  * Pass apps (domains, apps, secrets and keys).
  */
-export const Developers = ({ apiUrl }: Urls) => (
+export const Developers = ({ apiUrl, webUrl }: Hosts) => (
   <BusinessShell feature="developers">
-    <KeyedDevelopers apiUrl={apiUrl} />
+    <KeyedDevelopers apiUrl={apiUrl} webUrl={webUrl} />
   </BusinessShell>
 );

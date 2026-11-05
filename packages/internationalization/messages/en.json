@@ -3934,6 +3934,16 @@
           "hint": "We post each change to your student verifications here: a JWT signed with The IDEA's keys (verify it with our JWKS). It must be on a verified domain. Leave it empty to turn it off.",
           "save": "Save the webhook",
           "saved": "Saved."
+        },
+        "quickStart": {
+          "title": "Quick start",
+          "description": "Ready to paste, with this app's client id, its first return address and the answers it asks for. Replace the words in capitals with your own values; keep the secret on your server.",
+          "authorize": "1. Send the person to sign in",
+          "token": "2. Exchange the code on your server",
+          "copy": "Copy",
+          "copied": "Copied",
+          "testing": "While the app is in testing, only your company's members can sign in.",
+          "live": "The app is live: anyone with a Pass can sign in."
         }
       },
       "selling": {
