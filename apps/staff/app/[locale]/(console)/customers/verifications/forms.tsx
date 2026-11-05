@@ -3,6 +3,7 @@
 import { useTranslations } from "next-intl";
 import { ActionForm, SubmitButton } from "@/components/admin/action-form";
 import { TextField } from "@/components/admin/fields";
+import { ReasonField } from "@/components/admin/reason-field";
 import {
   reviewEducatorCheck,
   reviewIdentityCheck,
@@ -25,11 +26,12 @@ const RejectForm = ({
     <ActionForm action={action} className="flex flex-wrap items-end gap-3">
       <input name="id" type="hidden" value={id} />
       <input name="approve" type="hidden" value="false" />
-      <TextField
+      <ReasonField
+        kind="verifications"
         label={t("reason")}
         name="reason"
         required
-        wrapperClassName="min-w-56 flex-1"
+        wrapperClassName="grid min-w-56 flex-1 gap-2"
       />
       <SubmitButton size="sm" variant="outline">
         {t("reject")}

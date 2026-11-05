@@ -8831,6 +8831,11 @@
       },
       "rates": "Commission rates",
       "ratesDescription": "Percent of each delivered order's lines, by top-level category; Plus months by the plan's price. Finance changes them."
+    },
+    "reasons": {
+      "saved": "Saved reasons:",
+      "save": "Save this reason",
+      "remove": "Remove \"{reason}\" from saved reasons"
     }
   },
   "design": {

@@ -463,7 +463,12 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   authenticator-app session reads and saves them (as themselves); the
   author or an admin removes one; changes are in the audit log. A saved
   reason is only a suggestion: what reaches the person is still the text
-  submitted with the decision. Staff's forms use it in the next change.
+  submitted with the decision. Staff's forms use it in the next change:
+  the reason or note of a verification or student check rejected, a
+  return decided, a shop's decision, an application's decision and a
+  submission's decision (`ReasonField`) lists the saved reasons for its
+  kind under the field; a tap fills it, "Save this reason" keeps what was
+  typed, and its author or an admin can remove one.
 
 - 2026-11-05: **PR 7, part 1** (owner: start PR 7 in parts). C8: the
   Store's top-level categories as picture tiles above the catalog, each
