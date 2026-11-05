@@ -70,7 +70,14 @@ import {
   useSetOffer,
   useSetOfferPhotos,
 } from "@/lib/listing-queries";
-import { useSeller } from "@/lib/seller-queries";
+import {
+  FREE_LISTING_LIMIT,
+  type PlanBilling,
+  type Seller,
+  useProPrices,
+  useSeller,
+  useSetSellerPlan,
+} from "@/lib/seller-queries";
 import { hiddenListings } from "@/lib/today";
 
 const toInteger = (value: string) =>
@@ -1275,6 +1282,93 @@ const YourListings = ({
   );
 };
 
+/** From this many live listings, a Free shop sees the Pro offer. */
+const NEAR_LIMIT = 90;
+
+/**
+ * C25: a Free shop's live listings against its limit of 100, and from 90 the
+ * Pro offer (no limit, a lower commission, the fee taken from the weekly
+ * payout), monthly or yearly. Owners and admins switch; others see the
+ * count. Pro shops see their plan.
+ */
+const PlanBar = ({
+  canManage,
+  listings,
+  organizationId,
+  seller,
+}: {
+  readonly canManage: boolean;
+  readonly listings: readonly Listing[];
+  readonly organizationId: string;
+  readonly seller: Seller;
+}) => {
+  const t = useTranslations("app.company.listings.plan");
+  const locale = useLocale();
+  const prices = useProPrices();
+  const setPlan = useSetSellerPlan(organizationId);
+  if (seller.plan === "pro") {
+    return (
+      <p className="text-muted-foreground text-sm">
+        {t(seller.plan_billing === "yearly" ? "proYearly" : "proMonthly")}
+      </p>
+    );
+  }
+  const live = listings.filter((listing) => listing.active).length;
+  const count = t("count", {
+    limit: formatNumber(FREE_LISTING_LIMIT, locale),
+    live: formatNumber(live, locale),
+  });
+  if (live < NEAR_LIMIT) {
+    return <p className="text-muted-foreground text-sm">{count}</p>;
+  }
+  const choose = (billing: PlanBilling) =>
+    setPlan.mutate({ billing, plan: "pro", sellerId: seller.id });
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>
+          {live >= FREE_LISTING_LIMIT ? t("full") : t("near")}
+        </CardTitle>
+        <CardDescription>{count}</CardDescription>
+      </CardHeader>
+      <CardContent className="grid gap-3 text-sm">
+        <p>{t("pitch")}</p>
+        {canManage && prices.data ? (
+          <div className="flex flex-wrap gap-2">
+            <Button
+              disabled={setPlan.isPending}
+              onClick={() => choose("monthly")}
+              size="sm"
+            >
+              {t("monthly", {
+                price: formatPrice(prices.data.monthly ?? 0, locale),
+              })}
+            </Button>
+            <Button
+              disabled={setPlan.isPending}
+              onClick={() => choose("yearly")}
+              size="sm"
+              variant="outline"
+            >
+              {t("yearly", {
+                price: formatPrice(prices.data.yearly ?? 0, locale),
+              })}
+            </Button>
+          </div>
+        ) : null}
+        {canManage ? null : (
+          <p className="text-muted-foreground">{t("askAdmin")}</p>
+        )}
+        {setPlan.isError ? (
+          <p className="text-destructive" role="alert">
+            {t("failed")}
+          </p>
+        ) : null}
+      </CardContent>
+    </Card>
+  );
+};
+
 const ListingsBody = () => {
   const t = useTranslations("app.company.listings");
   const { active, canManage } = useActiveOrganization();
@@ -1295,6 +1389,14 @@ const ListingsBody = () => {
 
   return (
     <div className="grid max-w-3xl gap-6">
+      {listings.data && shop.data ? (
+        <PlanBar
+          canManage={canManage}
+          listings={listings.data}
+          organizationId={active.id}
+          seller={shop.data.seller}
+        />
+      ) : null}
       {listings.data ? (
         <NeedsPhoto
           canManage={canManage}

@@ -41,6 +41,11 @@ describe("listings", () => {
         message: "Only owners and admins of an approved shop can list",
       })
     ).toBe("notAllowed");
+    expect(
+      toListingProblem({
+        message: "Free allows 100 active listings; upgrade to Pro for more",
+      })
+    ).toBe("limit");
     expect(toListingProblem(new Error("boom"))).toBe("unknown");
   });
 

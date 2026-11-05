@@ -182,3 +182,55 @@ export const useRemoveDocument = (
       queryClient.invalidateQueries({ queryKey: sellerKey(organizationId) }),
   });
 };
+
+export type SellerPlan = Database["public"]["Enums"]["seller_plan"];
+export type PlanBilling = "monthly" | "yearly";
+
+/** Free shops' limit on live listings (`private.seller_plan_limit('free')`). */
+export const FREE_LISTING_LIMIT = 100;
+
+/** What Pro costs, monthly and yearly (`seller_plan_price`), in IQD. */
+export const useProPrices = () => {
+  const { supabase } = useAuth();
+  return useQuery({
+    queryFn: async () => {
+      const [monthly, yearly] = await Promise.all([
+        supabase.rpc("seller_plan_price", { billing: "monthly" }),
+        supabase.rpc("seller_plan_price", { billing: "yearly" }),
+      ]);
+      return { monthly: unwrap(monthly), yearly: unwrap(yearly) };
+    },
+    queryKey: ["seller-plan-price"],
+    staleTime: Number.POSITIVE_INFINITY,
+  });
+};
+
+/**
+ * Moves the shop to Pro (monthly or yearly, its fee taken from the weekly
+ * payout) or back to Free (only with 100 live listings or fewer). Owners
+ * and admins only (`set_seller_plan`).
+ */
+export const useSetSellerPlan = (organizationId: string) => {
+  const { supabase } = useAuth();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({
+      billing,
+      plan,
+      sellerId,
+    }: {
+      billing?: PlanBilling;
+      plan: SellerPlan;
+      sellerId: string;
+    }) =>
+      unwrap(
+        await supabase.rpc("set_seller_plan", {
+          billing,
+          new_plan: plan,
+          target: sellerId,
+        })
+      ),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: sellerKey(organizationId) }),
+  });
+};
