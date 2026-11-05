@@ -1,7 +1,7 @@
 "use client";
 
 import { useAuth } from "@repo/auth/provider";
-import { planName } from "@repo/commerce";
+import { formatPrice, planName } from "@repo/commerce";
 import { Badge } from "@repo/design-system/components/ui/badge";
 import { Button } from "@repo/design-system/components/ui/button";
 import {
@@ -44,6 +44,7 @@ import {
   isLivePlan,
   type RentalAllowance,
   usePlanCheckout,
+  usePlusValue,
   useRentalAllowance,
 } from "@/lib/plus-queries";
 import { usePlans, usePlusPayments, usePlusSubscription } from "@/lib/queries";
@@ -430,6 +431,34 @@ const PassLinks = () => {
   );
 };
 
+/**
+ * C15: what Plus has been worth, from real prices: the items had through
+ * Plus and what they cost to buy in the Store today. Nothing until the
+ * first item has gone out.
+ */
+const PlusValue = () => {
+  const t = useTranslations("app.plus.planPage.value");
+  const locale = useLocale();
+  const value = usePlusValue().data;
+  if (!value || value.items === 0) {
+    return null;
+  }
+  return (
+    <section className="grid gap-1 rounded-lg border p-4">
+      <h2 className="font-semibold">{t("title")}</h2>
+      <p className="text-sm">
+        {value.value > 0
+          ? t("worth", {
+              count: formatNumber(value.items, locale),
+              price: formatPrice(value.value, locale),
+            })
+          : t("items", { count: formatNumber(value.items, locale) })}
+      </p>
+      <p className="text-muted-foreground text-xs">{t("note")}</p>
+    </section>
+  );
+};
+
 const PlanPageMember = () => {
   const t = useTranslations("app.plus.planPage");
   const [confirming, setConfirming] = useState(hasPendingCheckout);
@@ -463,6 +492,7 @@ const PlanPageMember = () => {
           <Link href="/plus/plans">{t("choose")}</Link>
         </Button>
       )}
+      {member ? <PlusValue /> : null}
       {member ? <PassLinks /> : null}
       {member && !partner ? <ManagePlus /> : null}
       <section className="grid gap-3">
