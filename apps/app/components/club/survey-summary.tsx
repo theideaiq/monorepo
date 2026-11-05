@@ -5,6 +5,7 @@ import { formatNumber } from "@repo/internationalization/format";
 import { useLocale, useTranslations } from "next-intl";
 import { RunBy } from "@/components/club/run-by";
 import { useSurveySummary } from "@/lib/survey-queries";
+import { optionShare } from "@/lib/surveys";
 
 /**
  * The results summary respondents see once a survey closes: how people
@@ -42,15 +43,36 @@ export const SurveySummaryPanel = ({
           {data.questions.map((question) => (
             <li className="grid gap-2" key={question.id}>
               <p className="font-medium text-sm">{question.prompt}</p>
-              <ul className="grid gap-1 text-sm">
-                {question.options.map((option) => (
-                  <li className="flex justify-between gap-4" key={option.label}>
-                    <span>{option.label}</span>
-                    <span className="text-muted-foreground tabular-nums">
-                      {number(option.count)}
-                    </span>
-                  </li>
-                ))}
+              <ul className="grid gap-2 text-sm">
+                {question.options.map((option) => {
+                  const share = optionShare(option.count, question.answered);
+                  return (
+                    <li className="grid gap-1" key={option.label}>
+                      <span className="flex justify-between gap-4">
+                        <span>{option.label}</span>
+                        <span className="text-muted-foreground tabular-nums">
+                          {share === null
+                            ? number(option.count)
+                            : t("share", {
+                                count: number(option.count),
+                                share: formatNumber(share, locale),
+                              })}
+                        </span>
+                      </span>
+                      {share === null ? null : (
+                        <span
+                          aria-hidden="true"
+                          className="block h-1.5 overflow-hidden rounded-full bg-muted"
+                        >
+                          <span
+                            className="block h-full rounded-full bg-primary"
+                            style={{ width: `${share}%` }}
+                          />
+                        </span>
+                      )}
+                    </li>
+                  );
+                })}
               </ul>
             </li>
           ))}
