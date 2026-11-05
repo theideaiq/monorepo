@@ -13,7 +13,7 @@ import {
   formatNumber,
 } from "@repo/internationalization/format";
 import { Link } from "@repo/internationalization/navigation";
-import { MoveLeft } from "lucide-react";
+import { BellIcon, BellOffIcon, MoveLeft } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useId, useState } from "react";
 import { CoverImage } from "@/components/cover-image";
@@ -31,9 +31,11 @@ import {
   minimumBid,
   useAddCartAuction,
   useAuction,
+  useAuctionWatch,
   useCartAuctions,
   useMyBid,
   usePlaceBid,
+  useToggleAuctionWatch,
 } from "@/lib/auctions";
 
 type Refusal =
@@ -186,6 +188,42 @@ const BidForm = ({ auction }: { readonly auction: Auction }) => {
   );
 };
 
+/**
+ * Watch a live auction (C9): The IDEA says so once in its last day. Hidden
+ * while unknown or when watching isn't available.
+ */
+const WatchButton = ({ auctionId }: { readonly auctionId: string }) => {
+  const t = useTranslations("app.auctions.page");
+  const watch = useAuctionWatch(auctionId, true);
+  const toggle = useToggleAuctionWatch(auctionId);
+  if (typeof watch.data !== "boolean") {
+    return null;
+  }
+  const watching = watch.data;
+  return (
+    <div className="grid gap-1">
+      <Button
+        aria-pressed={watching}
+        className="justify-self-start"
+        disabled={toggle.isPending}
+        onClick={() => toggle.mutate(!watching)}
+        size="sm"
+        variant="outline"
+      >
+        {watching ? (
+          <BellOffIcon aria-hidden="true" />
+        ) : (
+          <BellIcon aria-hidden="true" />
+        )}
+        {t(watching ? "unwatch" : "watch")}
+      </Button>
+      <p className="text-muted-foreground text-xs">
+        {t(watching ? "watching" : "watchHint")}
+      </p>
+    </div>
+  );
+};
+
 /** What a signed-in member can do now: bid, or pay what they won. */
 const Actions = ({ auction }: { readonly auction: Auction }) => {
   const t = useTranslations("app.auctions.page");
@@ -217,7 +255,12 @@ const Actions = ({ auction }: { readonly auction: Auction }) => {
     ) : null;
   }
   if (live) {
-    return <BidForm auction={auction} />;
+    return (
+      <div className="grid gap-3">
+        <BidForm auction={auction} />
+        <WatchButton auctionId={auction.id} />
+      </div>
+    );
   }
   const state = mine ? bidState(mine) : null;
   if ((state === "won" || state === "offered") && auction.final_price) {

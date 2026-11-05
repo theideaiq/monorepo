@@ -33,24 +33,42 @@ export const useAuctionPhoto = () => {
       : null;
 };
 
+const HOUR_MS = 60 * 60 * 1000;
+
+/** "12:05" for the time left in the last hour (minutes and seconds). */
+export const lastHour = (left: number) => {
+  const seconds = Math.max(0, Math.ceil(left / 1000));
+  const pad = (value: number) => String(value).padStart(2, "0");
+  return `${pad(Math.floor(seconds / 60))}:${pad(seconds % 60)}`;
+};
+
 /**
  * "in 2 days", "in 5 minutes": rendered after mounting (the server's clock
- * isn't the visitor's) and refreshed every half minute.
+ * isn't the visitor's) and refreshed every half minute; in the last hour,
+ * minutes and seconds, every second (C9).
  */
 export const EndsIn = ({ endsAt }: { readonly endsAt: string }) => {
   const locale = useLocale() as Locale;
   const [now, setNow] = useState<number | null>(null);
+  const end = new Date(endsAt).getTime();
+  const left = now === null ? 0 : end - now;
+  const final = left > 0 && HOUR_MS - left > 0;
   useEffect(() => {
     setNow(Date.now());
-    const timer = setInterval(() => setNow(Date.now()), 30_000);
+    const timer = setInterval(() => setNow(Date.now()), final ? 1000 : 30_000);
     return () => clearInterval(timer);
-  }, []);
+  }, [final]);
   if (now === null) {
     return <time dateTime={endsAt}>{formatDateTime(endsAt, locale)}</time>;
   }
   return (
-    <time dateTime={endsAt} title={formatDateTime(endsAt, locale)}>
-      {formatRelativeTime(endsAt, locale, now)}
+    <time
+      className={final ? "font-mono tabular-nums" : undefined}
+      dateTime={endsAt}
+      dir={final ? "ltr" : undefined}
+      title={formatDateTime(endsAt, locale)}
+    >
+      {final ? lastHour(left) : formatRelativeTime(endsAt, locale, now)}
     </time>
   );
 };

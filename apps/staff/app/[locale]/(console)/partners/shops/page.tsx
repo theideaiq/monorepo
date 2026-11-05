@@ -92,6 +92,25 @@ const SupplyDetails = ({
  * documents and payout details, newest applications first within each
  * status, and the decision with its note and deposit.
  */
+/** An approved shop's 90-day score (A24), as buyers see it. */
+const ShopScore = ({
+  format,
+  shop,
+  t,
+}: {
+  readonly format: ReturnType<typeof formatters>;
+  readonly shop: { score: number; score_lines: number; status: string };
+  readonly t: Awaited<ReturnType<typeof getTranslations>>;
+}) =>
+  shop.status === "approved" ? (
+    <p className="text-muted-foreground text-xs">
+      {t("score", {
+        lines: format.number(shop.score_lines),
+        score: format.number(Math.round(shop.score)),
+      })}
+    </p>
+  ) : null;
+
 const ShopsPage = async () => {
   const { canWrite, staff, supabase } = await requireSection("companies");
   // Supplier fees are for staff admins (the database checks it too).
@@ -110,7 +129,7 @@ const ShopsPage = async () => {
       supabase
         .from("sellers")
         .select(
-          "id, name, status, kind, applied_at, decided_at, organization:organizations (name), details:seller_details (documents, payout_bank, payout_account_name, payout_iban, deposit_required, deposit_held, review_note)"
+          "id, name, status, kind, applied_at, decided_at, score, score_lines, organization:organizations (name), details:seller_details (documents, payout_bank, payout_account_name, payout_iban, deposit_required, deposit_held, review_note)"
         )
         .eq("is_house", false)
         .order("applied_at", { ascending: false }),
@@ -169,6 +188,7 @@ const ShopsPage = async () => {
                           organization: shop.organization?.name ?? "",
                         })}
                       </p>
+                      <ShopScore format={format} shop={shop} t={t} />
                     </div>
                     <div className="flex flex-wrap gap-2">
                       <KindBadge kind={shop.kind} labels={kindLabels} />

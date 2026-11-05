@@ -249,6 +249,35 @@ export type Database = {
           },
         ];
       };
+      auction_watches: {
+        Row: {
+          auction_id: string;
+          created_at: string;
+          reminded_at: string | null;
+          user_id: string;
+        };
+        Insert: {
+          auction_id: string;
+          created_at?: string;
+          reminded_at?: string | null;
+          user_id?: string;
+        };
+        Update: {
+          auction_id?: string;
+          created_at?: string;
+          reminded_at?: string | null;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "auction_watches_auction_id_fkey";
+            columns: ["auction_id"];
+            isOneToOne: false;
+            referencedRelation: "auctions";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       auctions: {
         Row: {
           bid_count: number;
@@ -11494,6 +11523,10 @@ export type Database = {
       };
       release_return_refund: { Args: { target: string }; Returns: undefined };
       release_survey_refund: { Args: { target: string }; Returns: undefined };
+      remind_auction_watchers: {
+        Args: Record<PropertyKey, never>;
+        Returns: number;
+      };
       remove_coupon: { Args: Record<PropertyKey, never>; Returns: undefined };
       remove_duo_partner: {
         Args: { keep?: boolean };
@@ -12622,6 +12655,19 @@ export type Database = {
           list_name: string;
           owner_name: string;
           product_id: string;
+        }[];
+      };
+      shop_health: {
+        Args: { shop: string };
+        Returns: {
+          late: number;
+          lines: number;
+          marks_reviewed: number;
+          out_of_stock: number;
+          score: number;
+          score_updated_at: string;
+          shop_returns: number;
+          wrong_marks: number;
         }[];
       };
       shop_limit: { Args: { shop: string }; Returns: Json };

@@ -116,6 +116,7 @@ export const NOTIFICATION_EVENTS = [
   "return_refund_due",
   "return_refunded",
   "auction_outbid",
+  "auction_ending",
   "auction_won",
   "auction_unpaid",
   "auction_second_chance",
@@ -295,11 +296,12 @@ const auctionValues = (
   locale: Locale
 ) => {
   const amount = Number(text(data.amount));
-  const payBy = text(data.pay_by);
+  // When to pay for a win, or when a watched auction ends.
+  const time = text(data.pay_by) || text(data.ends_at);
   return {
     amount: Number.isFinite(amount) ? formatPrice(amount, locale) : "",
     name: itemName(data, locale),
-    time: payBy ? formatDateTime(payBy, locale) : "",
+    time: time ? formatDateTime(time, locale) : "",
   };
 };
 
@@ -319,6 +321,7 @@ const extraValues: Partial<
     ) => Record<string, string>
   >
 > = {
+  auction_ending: auctionValues,
   auction_mark_wrong: auctionValues,
   auction_outbid: auctionValues,
   auction_second_chance: auctionValues,

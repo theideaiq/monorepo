@@ -455,6 +455,59 @@ steps need Xcode, Android Studio and the store/Firebase accounts
 
 ## Decisions
 
+- 2026-11-05: **A28 budget, sturdier timings.** `main` went red on Total
+  Blocking Time (737 and 765 ms against 600) on a run where every page was
+  slower, while the same pages measured about 230 ms the run before: the
+  shared runner, not the code. A page over its time budget (LCP or TBT)
+  now loads twice more and the median of the three is judged; bytes and
+  layout shift still come from the first load. A real regression, over
+  budget on two of three loads, still fails. The budget is unchanged.
+
+- 2026-11-05: **PR 7, C9: auction improvements** (migration
+  `20270404000000_auction_watches.sql`, pgTAP `…_auction_watches.test.sql`).
+  A member watches a live auction (`auction_watches`, their own rows only)
+  from its page; the API's daily selling sweep runs
+  `remind_auction_watchers()`, which tells each watcher once
+  (`auction_ending`) when the auction is in its last 24 hours, unless they
+  already lead it. The API's crons are daily, so "in its last day" is the
+  promise; a failure of this step is logged and doesn't stop the sweep. In
+  an auction's last hour its time left ticks in minutes and seconds. The
+  Watch button stays hidden until the table exists. Not done: an archive of
+  ended auctions and a share image (next). New Arabic for native review:
+  `app.auctions.page.watch*`/`unwatch`/`watching`,
+  `store.notifications.events.auction_ending`.
+
+- 2026-11-05: **PR 7, A24: shop health** (migration
+  `20270403000000_shop_health.sql`, pgTAP `…_shop_health.test.sql`).
+  `shop_health(shop)` returns a shop's 90-day score (the nightly
+  `sellers.score` buyers see) and what it is made of: lines due, lines
+  ready late, out of stock, shop-fault returns, auction marks reviewed and
+  judged wrong. Only the shop's people and staff get a row (security
+  definer in `private`, invoker wrapper in `public`). Partners → Today
+  shows it as "Shop health" with what each part costs (once for late,
+  twice for the rest, as in `private.seller_score`); the card is left out
+  when the function isn't there yet. Staff → Partners → Shops shows each
+  approved shop's score and line count. New Arabic for native review:
+  `app.business.today.health.*`, `admin.companies.shops.score`.
+
+- 2026-11-05: **PR 7, A16, A11 and A12: sharing and printing, no schema.**
+  A16: an invite link (`/r/<code>`) has its own share image
+  (`opengraph-image.tsx`, `InviteShareImage`): the lock-up, "A friend
+  invited you to The IDEA" and the offer with its real cap, in the
+  visitor's language; nothing personal, and none for a code that isn't an
+  invite. The event image's lock-up and text line are exported for it.
+  A11: Staff → an order → "Print the packing slip" (`/orders/<id>/slip`,
+  outside the console frame for printing): order number, date, who it's
+  for, the physical lines (no prices, no deposit or digital lines), the
+  gift message, and a QR code to the buyer's order page on the website, or
+  to Help for a gift. It prints in the buyer's language when their Pass
+  has one. A12: Partners → Shop settings, for an approved shop, "Sold on
+  The IDEA": the two lock-ups the brand guide allows (light and pink) to
+  download, the guide's three rules, the shop page link, its QR code (SVG)
+  and a snippet for the shop's website. New Arabic for native review:
+  `web.invite.imageOffer`, `app.company.selling.kit.*`,
+  `admin.orders.slip.*`.
+
 - 2026-11-05: **PR 7, R4: drafts to review in Staff, nothing deleted.**
   Staff → Club → Opportunities → Drafts to review
   (`/club/opportunities/drafts`) lists every opportunity still a draft (the

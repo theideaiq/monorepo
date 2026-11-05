@@ -1,8 +1,11 @@
 import type { createAdminClient } from "@repo/database/admin";
+import { log } from "@repo/observability/log";
 
 type AdminClient = ReturnType<typeof createAdminClient>;
 
 export interface SellingSweep {
+  /** Watchers told an auction ends within a day; null if that step failed. */
+  auctionReminders: number | null;
   auctions: number;
   getOffers: number;
   offers: number;
@@ -16,7 +19,9 @@ export interface SellingSweep {
  * The selling deadlines, once a day: unanswered returns are accepted and
  * unchecked returned items count as fine (`sweep_returns`), unanswered and
  * unordered offers expire (`sweep_offers`), auction deadlines are applied
- * (`settle_auctions`, which auction pages also run), requests for offers
+ * (`settle_auctions`, which auction pages also run), watchers of auctions
+ * in their last day hear so (`remind_auction_watchers`; a failure there is
+ * logged and doesn't stop the sweep), requests for offers
  * from shops past their time expire (`sweep_sell_requests`), shop scores are refreshed
  * (`refresh_seller_scores`), prices left by sales that started or ended
  * are recorded (`sweep_listing_sales`) and "was" prices older than 30 days
@@ -37,6 +42,10 @@ export const sweepSelling = async (
   if (auctions.error) {
     throw new Error(`settle_auctions: ${auctions.error.message}`);
   }
+  const reminders = await admin.rpc("remind_auction_watchers");
+  if (reminders.error) {
+    log.warn(`remind_auction_watchers: ${reminders.error.message}`);
+  }
   const getOffers = await admin.rpc("sweep_sell_requests");
   if (getOffers.error) {
     throw new Error(`sweep_sell_requests: ${getOffers.error.message}`);
@@ -54,6 +63,7 @@ export const sweepSelling = async (
     throw new Error(`refresh_was_prices: ${wasPrices.error.message}`);
   }
   return {
+    auctionReminders: reminders.error ? null : (reminders.data ?? 0),
     auctions: auctions.data ?? 0,
     getOffers: getOffers.data ?? 0,
     offers: offers.data?.length ?? 0,

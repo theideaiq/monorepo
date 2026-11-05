@@ -785,6 +785,7 @@
     "invite": {
       "title": "A friend invited you to The IDEA",
       "description": "Join The IDEA with a friend's invite and get 10% off your first order.",
+      "imageOffer": "10% off your first order, up to {cap}.",
       "offer": "Join with a Pass and get 10% off your first order (up to {cap}).",
       "claimed": "You're in: 10% off your first order (up to {cap}).",
       "claimedBy": "{name} invited you: 10% off your first order (up to {cap}).",
@@ -3030,6 +3031,29 @@
               "description": "Orders show here with what to pack and by when."
             }
           }
+        },
+        "health": {
+          "title": "Shop health",
+          "description": "Your shop score over the last 90 days, as buyers see it beside \"Sold by\", and what it's made of. It updates every night.",
+          "outOf": "out of 100",
+          "quiet": "No orders due in the last 90 days, so your shop starts at 100.",
+          "lines": "{lines} order lines were due in the last 90 days.",
+          "late": {
+            "label": "Ready late",
+            "weight": "Counts once each"
+          },
+          "outOfStock": {
+            "label": "Out of stock",
+            "weight": "Counts twice each"
+          },
+          "returns": {
+            "label": "Returns that were the shop's fault",
+            "weight": "Counts twice each"
+          },
+          "wrongMarks": {
+            "label": "Auction marks judged wrong",
+            "weight": "Counts twice each"
+          }
         }
       },
       "organization": {
@@ -4052,6 +4076,23 @@
           "individual": "Individual trader",
           "individualHint": "With the owner's ID only. Sales are limited each month.",
           "used": "Sold this month: {sold} of {limit}."
+        },
+        "kit": {
+          "title": "Sold on The IDEA",
+          "description": "Show buyers they can find you on The IDEA: on your shop sign, receipts, packaging, social posts and website.",
+          "alt": "Sold on The IDEA",
+          "onLight": "On a light background",
+          "onPink": "On The IDEA Pink",
+          "ruleBeside": "Put it beside your own logo, never merged with it.",
+          "ruleBulb": "Never use the bulb as your shop's own mark.",
+          "ruleColors": "Don't recolor, outline, stretch or add effects to it.",
+          "link": "Your shop page",
+          "copy": "Copy",
+          "copied": "Copied",
+          "qrAlt": "QR code of your shop page",
+          "qrHint": "For stickers, receipts and packaging. Print it at 2 cm or larger.",
+          "qrDownload": "Download the QR code",
+          "snippet": "For your website"
         }
       },
       "listings": {
@@ -4843,7 +4884,11 @@
         "reserveNotMet": "The reserve price isn't met yet.",
         "condition": "Condition",
         "product": "About this product",
-        "back": "Auctions"
+        "back": "Auctions",
+        "watch": "Watch",
+        "unwatch": "Stop watching",
+        "watchHint": "We'll tell you once when it's in its last day.",
+        "watching": "Watching: we'll tell you once when it's in its last day."
       }
     },
     "codes": {
@@ -5419,6 +5464,10 @@
         "auction_outbid": {
           "title": "You've been outbid",
           "body": "Someone bid more for {name}. The current bid is {amount}."
+        },
+        "auction_ending": {
+          "title": "An auction you watch ends soon",
+          "body": "{name} ends at {time}. The current bid is {amount}."
         },
         "auction_won": {
           "title": "You won the auction",
@@ -6562,6 +6611,21 @@
         "hint": "Sent as a gift: it ships to the recipient's address once they accept it.",
         "noMessage": "No message.",
         "hidePrice": "The price is hidden: leave the receipt and prices out of the parcel."
+      },
+      "slip": {
+        "title": "Packing slip",
+        "open": "Print the packing slip",
+        "print": "Print",
+        "heading": "Packing slip",
+        "number": "Order #{number}",
+        "for": "For {name}",
+        "someone": "you",
+        "item": "Item",
+        "quantity": "Quantity",
+        "giftMessage": "A message for you",
+        "qrLabel": "QR code",
+        "scan": "Scan to see your order, return something or get help.",
+        "scanGift": "Scan for help with your gift."
       }
     },
     "rentals": {
@@ -8585,7 +8649,8 @@
           "activeHint": "Paused suppliers earn nothing until switched on again.",
           "save": "Save fees",
           "start": "Make a supplier"
-        }
+        },
+        "score": "Score {score}/100 over 90 days, from {lines} order lines."
       }
     },
     "partnerCrm": {

@@ -39,6 +39,7 @@ import {
 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { BusinessShell } from "@/components/business/business-shell";
+import { ShopHealth } from "@/components/business/shop-health";
 import { ListActions } from "@/components/list-actions";
 import { useActiveOrganization } from "@/components/organization-provider";
 import { ErrorState, SectionSpinner } from "@/components/states";
@@ -404,6 +405,7 @@ const TodayBody = () => {
       {shopTasks.rows ? (
         <KeyNumbers rows={shopTasks.rows} sellerId={sellerId} />
       ) : null}
+      {sellerId ? <ShopHealth sellerId={sellerId} /> : null}
       {shopTasks.rows ? (
         <FirstSale
           hasPayout={Boolean(
