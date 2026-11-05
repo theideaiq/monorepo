@@ -316,7 +316,8 @@
         "shopTitle": "{shop}",
         "shopDescription": "Sold by {shop}, delivered and paid through The IDEA.",
         "musicCrate": "From the record crate",
-        "booksShelf": "On the books shelf"
+        "booksShelf": "On the books shelf",
+        "categories": "Categories"
       },
       "categories": "Categories",
       "allCategories": "All",
@@ -1705,6 +1706,50 @@
         "description": "Every document, the printouts and a dated schedule for this trip. Free with your Pass.",
         "route": "{country} · {visa}"
       }
+    },
+    "status": {
+      "meta": {
+        "title": "Status",
+        "description": "Whether The IDEA's website, Partners, Staff, API and developer docs are working right now, refreshed every minute."
+      },
+      "title": "Right now:",
+      "subtitle": "Each part of The IDEA and whether it's working, from checks every few minutes. Refreshed every minute.",
+      "services": {
+        "website": {
+          "name": "Website and apps",
+          "what": "Store, Plus, Club and your Pass, on the web and in the apps"
+        },
+        "partners": {
+          "name": "Partners",
+          "what": "Shops' and organizations' dashboard"
+        },
+        "staff": {
+          "name": "Staff",
+          "what": "The IDEA team's console"
+        },
+        "api": {
+          "name": "API",
+          "what": "Payments, delivery updates, sign-in for partner sites"
+        },
+        "docs": {
+          "name": "Developer docs",
+          "what": "Guides for partner sites"
+        },
+        "feed": {
+          "name": "Product feed",
+          "what": "Our catalog for Google and Meta"
+        }
+      },
+      "states": {
+        "up": "Working",
+        "down": "Not working",
+        "maintenance": "Under maintenance",
+        "unknown": "Checking"
+      },
+      "refresh": "Something not working for you that shows as working here? Tell us in Help.",
+      "history": "See the full history",
+      "empty": "We can't show the status right now.",
+      "ask": "Tell us what's wrong"
     }
   },
   "app": {

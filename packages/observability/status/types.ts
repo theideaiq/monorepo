@@ -61,8 +61,28 @@ export interface BetterStackResponse {
   };
 }
 
-/** What the status badge shows, served by apps/api at `GET /status`. */
+/** A part of The IDEA that Better Stack watches. */
+export type Service =
+  | "api"
+  | "docs"
+  | "feed"
+  | "partners"
+  | "staff"
+  | "website";
+
+/** One service's state: the worst of its monitors. */
+export interface ServiceStatus {
+  service: Service;
+  state: "down" | "maintenance" | "unknown" | "up";
+}
+
+/**
+ * What the status badge and the website's status page show, served by
+ * apps/api at `GET /status`.
+ */
 export interface SystemStatus {
+  /** Each service, in a fixed order (absent when Better Stack can't be read). */
+  services?: ServiceStatus[];
   state: "degraded" | "operational" | "partial" | "unknown";
   /** The public status page. */
   url: string;

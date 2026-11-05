@@ -16,6 +16,7 @@ const pages = [
   { name: "Partners", path: "/partners" },
   { name: "About", path: "/about" },
   { name: "Help", path: "/help" },
+  { name: "status", path: "/status" },
   {
     name: "search",
     path: `/search?${new URLSearchParams({ q: product.name })}`,

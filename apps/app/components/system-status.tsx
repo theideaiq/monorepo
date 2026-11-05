@@ -1,15 +1,19 @@
 "use client";
 
+import { localePath } from "@repo/internationalization";
 import {
   Status,
   type StatusLabels,
   type SystemStatus,
 } from "@repo/observability/status";
+import { useLocale } from "next-intl";
 import { useEffect, useState } from "react";
 
 /**
  * The footer's status badge. apps/api reads Better Stack (its token stays
  * there) and answers 204 when it isn't configured, which hides the badge.
+ * It opens the website's own status page (`/status`), in the reader's
+ * language.
  */
 export const SystemStatusBadge = ({
   apiUrl,
@@ -18,6 +22,7 @@ export const SystemStatusBadge = ({
   readonly apiUrl: string | undefined;
   readonly labels: StatusLabels;
 }) => {
+  const locale = useLocale();
   const [status, setStatus] = useState<SystemStatus | null>(null);
 
   useEffect(() => {
@@ -38,5 +43,11 @@ export const SystemStatusBadge = ({
     return () => controller.abort();
   }, [apiUrl]);
 
-  return status ? <Status labels={labels} status={status} /> : null;
+  return status ? (
+    <Status
+      href={localePath(locale, "/status")}
+      labels={labels}
+      status={status}
+    />
+  ) : null;
 };
