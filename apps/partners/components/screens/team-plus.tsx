@@ -20,10 +20,10 @@ import {
 import { formatCurrency, formatDate } from "@repo/internationalization/format";
 import { useLocale, useTranslations } from "next-intl";
 import { type FormEvent, useId, useState } from "react";
-import { BusinessShell } from "@/components/business/business-shell";
+import { PartnersShell } from "@/components/organization/partners-shell";
 import { useActiveOrganization } from "@/components/organization-provider";
 import { ErrorState, SectionSpinner } from "@/components/states";
-import { useMembers } from "@/lib/business-queries";
+import { useMembers } from "@/lib/organization-queries";
 import { usePlans } from "@/lib/queries";
 import {
   useEndPlusSeat,
@@ -237,9 +237,9 @@ const Seats = () => {
   );
 };
 
-/** /business/plus: The IDEA Plus the company pays for its members. */
+/** /team/plus: The IDEA Plus the company pays for its members. */
 export const TeamPlus = () => (
-  <BusinessShell feature="team">
+  <PartnersShell feature="team">
     <Seats />
-  </BusinessShell>
+  </PartnersShell>
 );

@@ -8,9 +8,10 @@ import { MoveLeft } from "lucide-react";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { CoverImage } from "@/components/cover-image";
+import { ProductCard } from "@/components/store/product-card";
 import { postPath, topicPath } from "@/lib/club";
-import { editorialUrl, getPost } from "@/lib/data";
-import { Markdown, markdownToText } from "@/lib/markdown";
+import { editorialUrl, getPost, getProductCards } from "@/lib/data";
+import { embeddedProductSlugs, Markdown, markdownToText } from "@/lib/markdown";
 import { siteUrl } from "@/lib/metadata";
 
 const WORDS = /\s+/;
@@ -44,6 +45,25 @@ export const PostArticle = async ({
   const author = post.byline ?? t("theIdea");
   const body = localized(post, "body", locale);
   const minutes = readingMinutes(markdownToText(body, body.length));
+  const placed = await getProductCards(embeddedProductSlugs(body));
+  const bySlug = new Map(placed.map((card) => [card.slug, card]));
+  // A21: a product placed in the text shows as its card, with live price.
+  const product = (productSlug: string, key: string) => {
+    const card = bySlug.get(productSlug);
+    return card ? (
+      <ul className="not-prose my-6 grid max-w-56 list-none ps-0" key={key}>
+        <ProductCard product={card} />
+      </ul>
+    ) : null;
+  };
+  // A20: in a guide, numbered lists are step cards.
+  const step = post.topics.includes("guides")
+    ? (number: number, total: number) =>
+        t("step", {
+          step: formatNumber(number, locale),
+          total: formatNumber(total, locale),
+        })
+    : undefined;
 
   return (
     <article className="container mx-auto max-w-3xl px-4 py-10">
@@ -110,7 +130,9 @@ export const PostArticle = async ({
       <Markdown
         className="prose prose-neutral dark:prose-invert max-w-none"
         locale={locale}
+        product={product}
         source={body}
+        step={step}
       />
     </article>
   );

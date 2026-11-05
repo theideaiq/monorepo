@@ -30,7 +30,7 @@ const RequestForm = ({
 }: {
   readonly organizationId: string;
 }) => {
-  const t = useTranslations("app.business.settings.verification");
+  const t = useTranslations("app.partners.settings.verification");
   const id = useId();
   const request = useRequestOrganizationCheck(organizationId);
   const [method, setMethod] = useState<"domain" | "letter">("domain");
@@ -143,7 +143,7 @@ const RequestForm = ({
  * and (for owners and admins) how to ask.
  */
 export const OrganizationVerificationCard = () => {
-  const t = useTranslations("app.business.settings.verification");
+  const t = useTranslations("app.partners.settings.verification");
   const locale = useLocale() as Locale;
   const { active, canManage } = useActiveOrganization();
   const status = useOrganizationVerification(active.id);

@@ -130,6 +130,7 @@ export const PostForm = ({
           maxLength={100_000}
           name="bodyEn"
         />
+        <p className="text-muted-foreground text-sm">{t("bodyExtras")}</p>
       </Panel>
       <Panel>
         <PublishField defaultMode={mode} defaultPublishAt={publishAt} />

@@ -23,7 +23,7 @@ import {
   ToggleGroupItem,
 } from "@repo/design-system/components/ui/toggle-group";
 import { Link } from "@repo/internationalization/navigation";
-import { HeartIcon, ShoppingCartIcon } from "lucide-react";
+import { DiscIcon, HeartIcon, ShoppingCartIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 import { PageHeader } from "@/components/page-header";
@@ -325,11 +325,19 @@ export const Wishlist = () => {
 /** Pass → Lists (`/pass/lists`): the member's named lists, to share. */
 export const Lists = () => {
   const t = useTranslations("app.wishlist");
+  const mixtape = useTranslations("app.mixtape");
   const wishlist = useWishlist();
   const items = (wishlist.data ?? []).filter((item) => item.product);
   return (
     <>
-      <PageHeader title={t("tabs.lists")} />
+      <PageHeader title={t("tabs.lists")}>
+        <Button asChild size="sm" variant="outline">
+          <Link href="/pass/lists/mixtape">
+            <DiscIcon />
+            {mixtape("link")}
+          </Link>
+        </Button>
+      </PageHeader>
       <div className="flex max-w-3xl flex-1 flex-col gap-6">
         {wishlist.isPending ? <SectionSpinner /> : <SavedLists items={items} />}
       </div>

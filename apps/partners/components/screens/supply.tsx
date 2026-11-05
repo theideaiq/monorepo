@@ -13,7 +13,7 @@ import type { Locale } from "@repo/internationalization";
 import { formatDate, formatNumber } from "@repo/internationalization/format";
 import { Link } from "@repo/internationalization/navigation";
 import { useLocale, useTranslations } from "next-intl";
-import { BusinessShell } from "@/components/business/business-shell";
+import { PartnersShell } from "@/components/organization/partners-shell";
 import { useActiveOrganization } from "@/components/organization-provider";
 import { ErrorState, SectionSpinner } from "@/components/states";
 import { useSeller } from "@/lib/seller-queries";
@@ -253,7 +253,7 @@ const SupplyBody = () => {
  * with the weekly payout).
  */
 export const Supply = () => (
-  <BusinessShell feature="supply">
+  <PartnersShell feature="supply">
     <SupplyBody />
-  </BusinessShell>
+  </PartnersShell>
 );

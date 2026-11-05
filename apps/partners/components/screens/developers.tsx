@@ -19,7 +19,7 @@ import {
 } from "@repo/internationalization/format";
 import { useLocale, useTranslations } from "next-intl";
 import { type FormEvent, type ReactNode, useId, useState } from "react";
-import { BusinessShell } from "@/components/business/business-shell";
+import { PartnersShell } from "@/components/organization/partners-shell";
 import { useActiveOrganization } from "@/components/organization-provider";
 import { ErrorState, SectionSpinner } from "@/components/states";
 import {
@@ -910,7 +910,7 @@ const KeyedDevelopers = ({ apiUrl, webUrl }: Hosts) => {
  * Pass apps (domains, apps, secrets and keys).
  */
 export const Developers = ({ apiUrl, webUrl }: Hosts) => (
-  <BusinessShell feature="developers">
+  <PartnersShell feature="developers">
     <KeyedDevelopers apiUrl={apiUrl} webUrl={webUrl} />
-  </BusinessShell>
+  </PartnersShell>
 );

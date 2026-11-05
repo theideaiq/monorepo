@@ -15,7 +15,7 @@ import type { Locale } from "@repo/internationalization";
 import { formatDate, formatNumber } from "@repo/internationalization/format";
 import { useLocale, useTranslations } from "next-intl";
 import { useId, useState } from "react";
-import { BusinessShell } from "@/components/business/business-shell";
+import { PartnersShell } from "@/components/organization/partners-shell";
 import { useActiveOrganization } from "@/components/organization-provider";
 import { ErrorState, SectionSpinner } from "@/components/states";
 import { type Listing, useListings } from "@/lib/listing-queries";
@@ -624,7 +624,7 @@ const SalesBody = () => {
  * days, a share off each copy from a quantity on, and its student price.
  */
 export const ShopSales = () => (
-  <BusinessShell feature="selling" page="promotions">
+  <PartnersShell feature="selling" page="promotions">
     <SalesBody />
-  </BusinessShell>
+  </PartnersShell>
 );

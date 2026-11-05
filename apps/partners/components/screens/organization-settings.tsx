@@ -15,14 +15,14 @@ import { Label } from "@repo/design-system/components/ui/label";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { type FormEvent, useId, useState } from "react";
-import { BusinessShell } from "@/components/business/business-shell";
+import { PartnersShell } from "@/components/organization/partners-shell";
 import { useActiveOrganization } from "@/components/organization-provider";
 import { OrganizationVerificationCard } from "@/components/organization-verification";
 import { type OrganizationError, toOrganizationError } from "@/lib/errors";
 import { useSetOrganizationFeature } from "@/lib/queries";
 import { isValidSlug } from "@/lib/slug";
 
-const OrganizationSettings = () => {
+const SettingsForm = () => {
   const t = useTranslations();
   const id = useId();
   const { supabase } = useAuth();
@@ -64,9 +64,9 @@ const OrganizationSettings = () => {
   return (
     <Card className="max-w-2xl">
       <CardHeader>
-        <CardTitle>{t("app.business.settings.title")}</CardTitle>
+        <CardTitle>{t("app.partners.settings.title")}</CardTitle>
         <CardDescription>
-          {t("app.business.settings.description")}
+          {t("app.partners.settings.description")}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -74,7 +74,7 @@ const OrganizationSettings = () => {
           <fieldset className="grid gap-4" disabled={!canManage}>
             <div className="grid gap-2">
               <Label htmlFor={`${id}-name`}>
-                {t("app.business.settings.name")}
+                {t("app.partners.settings.name")}
               </Label>
               <Input
                 id={`${id}-name`}
@@ -86,7 +86,7 @@ const OrganizationSettings = () => {
             </div>
             <div className="grid gap-2">
               <Label htmlFor={`${id}-slug`}>
-                {t("app.business.settings.slug")}
+                {t("app.partners.settings.slug")}
               </Label>
               <Input
                 autoCapitalize="none"
@@ -134,9 +134,9 @@ const Sections = () => {
   return (
     <Card className="max-w-2xl">
       <CardHeader>
-        <CardTitle>{t("business.sections.settingsTitle")}</CardTitle>
+        <CardTitle>{t("partners.sections.settingsTitle")}</CardTitle>
         <CardDescription>
-          {t("business.sections.settingsDescription")}
+          {t("partners.sections.settingsDescription")}
         </CardDescription>
       </CardHeader>
       <CardContent className="grid gap-3">
@@ -152,15 +152,15 @@ const Sections = () => {
                 <span className="grid gap-0.5">
                   <span className="font-medium">{section}</span>
                   <span className="text-muted-foreground text-sm">
-                    {t(`business.sections.${feature}.description`)}
+                    {t(`partners.sections.${feature}.description`)}
                   </span>
                 </span>
                 {canManage ? (
                   <Button
                     aria-label={t(
                       on
-                        ? "business.sections.removeSection"
-                        : "business.sections.addSection",
+                        ? "partners.sections.removeSection"
+                        : "partners.sections.addSection",
                       { section }
                     )}
                     disabled={setFeature.isPending}
@@ -169,7 +169,7 @@ const Sections = () => {
                     variant={on ? "ghost" : "outline"}
                   >
                     {t(
-                      on ? "business.sections.remove" : "business.sections.add"
+                      on ? "partners.sections.remove" : "partners.sections.add"
                     )}
                   </Button>
                 ) : null}
@@ -179,12 +179,12 @@ const Sections = () => {
         </ul>
         {canManage ? null : (
           <p className="text-muted-foreground text-sm">
-            {t("business.sections.managersOnly")}
+            {t("partners.sections.managersOnly")}
           </p>
         )}
         {setFeature.isError ? (
           <p className="text-destructive text-sm" role="alert">
-            {t("business.sections.failed")}
+            {t("partners.sections.failed")}
           </p>
         ) : null}
       </CardContent>
@@ -197,15 +197,15 @@ const KeyedSettings = () => {
   // Switching organization starts the form over.
   return (
     <div className="grid gap-6">
-      <OrganizationSettings key={active.id} />
+      <SettingsForm key={active.id} />
       <OrganizationVerificationCard key={`verification-${active.id}`} />
       <Sections />
     </div>
   );
 };
 
-export const BusinessSettings = () => (
-  <BusinessShell organization>
+export const OrganizationSettings = () => (
+  <PartnersShell organization>
     <KeyedSettings />
-  </BusinessShell>
+  </PartnersShell>
 );

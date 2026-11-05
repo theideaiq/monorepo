@@ -1,6 +1,7 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import {
+  embeddedProductSlugs,
   localizeHref,
   Markdown,
   markdownToText,
@@ -129,5 +130,44 @@ describe("markdownToText", () => {
       "Hi Some bold x text"
     );
     expect(markdownToText("word ".repeat(100), 20)).toHaveLength(20);
+  });
+});
+
+describe("guides and placed products", () => {
+  const step = (number: number, total: number) => `Step ${number} of ${total}`;
+
+  it("turns a guide's numbered list into step cards, nested lists kept plain", () => {
+    const html = renderToStaticMarkup(
+      <Markdown
+        source={"1. Open the box\n   1. Gently\n2. Plug it in"}
+        step={step}
+      />
+    );
+    expect(html).toContain("Step 1 of 2");
+    expect(html).toContain("Step 2 of 2");
+    expect(html).not.toContain("Step 1 of 1");
+    expect(html).toContain("Gently");
+  });
+
+  it("leaves numbered lists alone outside guides", () => {
+    expect(render("1. One\n2. Two")).not.toContain("Step");
+  });
+
+  it("renders a placed product through the callback, and only a whole paragraph", () => {
+    const html = renderToStaticMarkup(
+      <Markdown
+        product={(slug, key) => <aside key={key}>card:{slug}</aside>}
+        source={"Listen:\n\n[[product:abbey-road]]\n\nSee [[product:x]] here."}
+      />
+    );
+    expect(html).toContain("<aside>card:abbey-road</aside>");
+    expect(html).toContain("See [[product:x]] here.");
+    expect(html).not.toContain("card:x");
+  });
+
+  it("finds placed products and keeps them out of plain text", () => {
+    const source = "[[product:a]]\n\n[[product:b-2]] and [[product:a]]";
+    expect(embeddedProductSlugs(source)).toEqual(["a", "b-2"]);
+    expect(markdownToText("Hi\n\n[[product:a]]\n\nthere")).toBe("Hi there");
   });
 });

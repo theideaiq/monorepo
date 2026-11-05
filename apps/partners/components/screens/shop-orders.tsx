@@ -25,7 +25,7 @@ import { Link } from "@repo/internationalization/navigation";
 import { PrinterIcon, TruckIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useId, useState } from "react";
-import { BusinessShell } from "@/components/business/business-shell";
+import { PartnersShell } from "@/components/organization/partners-shell";
 import { useActiveOrganization } from "@/components/organization-provider";
 import { ErrorState, SectionSpinner } from "@/components/states";
 import { ApiError } from "@/lib/api";
@@ -337,7 +337,7 @@ const OrdersBody = () => {
  * parcel is the only place with their phone and address.
  */
 export const ShopOrders = () => (
-  <BusinessShell feature="selling" page="orders">
+  <PartnersShell feature="selling" page="orders">
     <OrdersBody />
-  </BusinessShell>
+  </PartnersShell>
 );

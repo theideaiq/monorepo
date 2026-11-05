@@ -60,6 +60,16 @@ export const useCreateList = () =>
     supabase.from("saved_lists").insert({ name: name.trim() })
   );
 
+/** Creates a list and returns it, for builders that fill it straight away. */
+export const useCreateListReturning = () =>
+  useListMutation((supabase, name: string) =>
+    supabase
+      .from("saved_lists")
+      .insert({ name: name.trim() })
+      .select("id, name, shared, share_token")
+      .single()
+  );
+
 /** Shares a list by link, or makes it private again. */
 export const useShareList = () =>
   useListMutation((supabase, input: { id: string; shared: boolean }) =>

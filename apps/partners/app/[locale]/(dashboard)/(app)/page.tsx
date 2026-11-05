@@ -1,14 +1,14 @@
 import { Suspense } from "react";
-import { Business } from "@/components/screens/business";
+import { Today } from "@/components/screens/today";
 import { SectionSpinner } from "@/components/states";
 import { titleFrom } from "@/lib/metadata";
 
 export const generateMetadata = titleFrom((t) => t("app.nav.today"));
 
-const BusinessPage = () => (
+const TodayPage = () => (
   <Suspense fallback={<SectionSpinner />}>
-    <Business />
+    <Today />
   </Suspense>
 );
 
-export default BusinessPage;
+export default TodayPage;

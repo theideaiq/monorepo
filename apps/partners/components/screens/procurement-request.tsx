@@ -31,7 +31,7 @@ import { Link } from "@repo/internationalization/navigation";
 import { ArrowLeftIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { type FormEvent, type ReactNode, useId, useState } from "react";
-import { BusinessShell } from "@/components/business/business-shell";
+import { PartnersShell } from "@/components/organization/partners-shell";
 import { useActiveOrganization } from "@/components/organization-provider";
 import { ErrorState, SectionSpinner } from "@/components/states";
 import {
@@ -327,7 +327,7 @@ const RequestDetail = ({ requestId }: { requestId: string }) => {
 };
 
 export const ProcurementRequest = ({ requestId }: { requestId: string }) => (
-  <BusinessShell feature="team">
+  <PartnersShell feature="team">
     <RequestDetail requestId={requestId} />
-  </BusinessShell>
+  </PartnersShell>
 );

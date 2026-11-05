@@ -5,8 +5,8 @@ import { formatPrice } from "@repo/commerce";
 import type { Enums, Json } from "@repo/database";
 import type { Locale } from "@repo/internationalization";
 import {
-  businessPath,
   currentAppPath,
+  partnersPath,
   type StoredLinkContext,
   safeNextPath,
 } from "@repo/internationalization/app-paths";
@@ -522,7 +522,7 @@ export const notificationHref = (
   if (!path) {
     return null;
   }
-  const business = businessPath(path);
+  const business = partnersPath(path);
   return business
     ? appLink(appUrl, locale, business)
     : currentAppPath(path, context);

@@ -16,7 +16,7 @@ import type { Locale } from "@repo/internationalization";
 import { formatDateTime } from "@repo/internationalization/format";
 import { useLocale, useTranslations } from "next-intl";
 import { useId, useState } from "react";
-import { BusinessShell } from "@/components/business/business-shell";
+import { PartnersShell } from "@/components/organization/partners-shell";
 import { useActiveOrganization } from "@/components/organization-provider";
 import { ErrorState, SectionSpinner } from "@/components/states";
 import { useSeller } from "@/lib/seller-queries";
@@ -325,7 +325,7 @@ const ReturnsBody = () => {
  * confirm. Disputes go to The IDEA, which decides.
  */
 export const ShopReturns = () => (
-  <BusinessShell feature="selling" page="returns">
+  <PartnersShell feature="selling" page="returns">
     <ReturnsBody />
-  </BusinessShell>
+  </PartnersShell>
 );

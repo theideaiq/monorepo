@@ -25,20 +25,12 @@ import type { WishlistItem } from "@/lib/wishlist-queries";
 /** Where a shared list opens, for friends. */
 export const sharedListPath = (token: string) => `/lists/${token}`;
 
-const ListCard = ({
-  items,
-  list,
-  wanted,
-}: {
-  readonly items: readonly WishlistItem[];
-  readonly list: SavedList;
-  readonly wanted: readonly WantedItem[];
-}) => {
+/** "Shared by link" and, once shared, "Copy link". */
+export const ShareControls = ({ list }: { readonly list: SavedList }) => {
   const t = useTranslations("app.wishlist.lists");
   const locale = useLocale() as Locale;
   const id = useId();
   const share = useShareList();
-  const remove = useDeleteList();
   const [copied, setCopied] = useState(false);
 
   const copy = async () => {
@@ -50,6 +42,38 @@ const ListCard = ({
       setCopied(false);
     }
   };
+
+  return (
+    <div className="flex flex-wrap items-center gap-3">
+      <Switch
+        checked={list.shared}
+        disabled={share.isPending}
+        id={`${id}-shared`}
+        onCheckedChange={(on) => share.mutate({ id: list.id, shared: on })}
+      />
+      <Label htmlFor={`${id}-shared`}>{t("shared")}</Label>
+      {list.shared ? (
+        <Button onClick={copy} size="sm" variant="outline">
+          <CopyIcon />
+          {copied ? t("copied") : t("copyLink")}
+        </Button>
+      ) : null}
+    </div>
+  );
+};
+
+const ListCard = ({
+  items,
+  list,
+  wanted,
+}: {
+  readonly items: readonly WishlistItem[];
+  readonly list: SavedList;
+  readonly wanted: readonly WantedItem[];
+}) => {
+  const t = useTranslations("app.wishlist.lists");
+  const locale = useLocale() as Locale;
+  const remove = useDeleteList();
 
   return (
     <li className="grid gap-3 rounded-lg border p-4">
@@ -85,21 +109,7 @@ const ListCard = ({
       )}
       <WantedItems items={wanted} />
       <ImportList listId={list.id} />
-      <div className="flex flex-wrap items-center gap-3">
-        <Switch
-          checked={list.shared}
-          disabled={share.isPending}
-          id={`${id}-shared`}
-          onCheckedChange={(on) => share.mutate({ id: list.id, shared: on })}
-        />
-        <Label htmlFor={`${id}-shared`}>{t("shared")}</Label>
-        {list.shared ? (
-          <Button onClick={copy} size="sm" variant="outline">
-            <CopyIcon />
-            {copied ? t("copied") : t("copyLink")}
-          </Button>
-        ) : null}
-      </div>
+      <ShareControls list={list} />
     </li>
   );
 };

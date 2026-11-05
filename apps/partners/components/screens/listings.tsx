@@ -34,8 +34,8 @@ import {
 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { type FormEvent, useId, useState } from "react";
-import { BusinessShell } from "@/components/business/business-shell";
 import { ListActions } from "@/components/list-actions";
+import { PartnersShell } from "@/components/organization/partners-shell";
 import { useActiveOrganization } from "@/components/organization-provider";
 import {
   PhotoPicker,
@@ -1430,11 +1430,11 @@ const ListingsBody = () => {
 
 /** Partners → Sell → Listings: the shop's offers. */
 export const Listings = () => (
-  <BusinessShell
+  <PartnersShell
     actions={<ListActions onPage />}
     feature="selling"
     page="listings"
   >
     <ListingsBody />
-  </BusinessShell>
+  </PartnersShell>
 );

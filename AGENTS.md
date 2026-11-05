@@ -72,7 +72,7 @@ incidents) is in `docs/platform`.
     version, tapped to copy), and Pass → Settings has the language and
     theme. Old addresses
     have no HTTP redirects; links stored in notifications are mapped to
-    current pages by `currentAppPath`/`businessPath` in
+    current pages by `currentAppPath`/`partnersPath` in
     `packages/internationalization/app-paths.ts` (used by the website,
     Partners, Telegram and push);
   - **The IDEA Pass** (`app/[locale]/(pass)`): `/{locale}/sign-in` (an
@@ -126,7 +126,7 @@ incidents) is in `docs/platform`.
 - `apps/partners` — **Partners** (package `partners`, port 3000,
   `partners.theideaiq.com`), the organization dashboard, server-rendered
   with a `proxy.ts` (locale, session refresh, security headers): its pages
-  are at the root (`app/[locale]/(business)`), in the menu's groups
+  are at the root (`app/[locale]/(dashboard)`), in the menu's groups
   (`docs/program/ux-overhaul.md`): Today `/` (key numbers: sales this
   week, next payout, live listings, rating; "Your first sale" until the
   shop's first order; then every task with its
@@ -160,7 +160,7 @@ incidents) is in `docs/platform`.
   (with `/settings/members`, `/settings/billing`, `/settings/invoices`),
   plus `/new`, `/documents/<kind>/<id>` and invitations. Old addresses
   (`/selling/*`, `/organization/*`) have no redirects; stored links map
-  through `businessPath`. Every page header is breadcrumb · title ·
+  through `partnersPath`. Every page header is breadcrumb · title ·
   status chip · actions at the end (primary last). The sidebar holds the
   organization switcher and the menu (`components/nav-items.ts`):
   sections not switched on (`organizations.features`) stay greyed with

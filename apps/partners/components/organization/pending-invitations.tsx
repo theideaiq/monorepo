@@ -47,9 +47,9 @@ export const PendingInvitations = ({ onJoined }: PendingInvitationsProps) => {
   return (
     <section className="grid gap-3 rounded-md border p-4">
       <div className="grid gap-1">
-        <h2 className="font-medium">{t("business.invitations.title")}</h2>
+        <h2 className="font-medium">{t("partners.invitations.title")}</h2>
         <p className="text-muted-foreground text-sm">
-          {t("business.invitations.description")}
+          {t("partners.invitations.description")}
         </p>
       </div>
       <ul className="grid gap-2">
@@ -63,7 +63,7 @@ export const PendingInvitations = ({ onJoined }: PendingInvitationsProps) => {
                 {invitation.organization_name}
               </span>
               <span className="text-muted-foreground text-xs">
-                {t("business.invitations.as", {
+                {t("partners.invitations.as", {
                   role: t(`roles.${invitation.role}`),
                 })}
               </span>
@@ -74,8 +74,8 @@ export const PendingInvitations = ({ onJoined }: PendingInvitationsProps) => {
               size="sm"
             >
               {join.isPending && join.variables === invitation.token
-                ? t("business.invitations.joining")
-                : t("business.invitations.join")}
+                ? t("partners.invitations.joining")
+                : t("partners.invitations.join")}
             </Button>
           </li>
         ))}

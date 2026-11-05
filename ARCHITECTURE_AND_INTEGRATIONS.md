@@ -153,7 +153,7 @@ load on every page (never inside the iOS/Android apps).
   older shapes (notifications, push, Telegram), including the static-export
   detail links (`/store/product?slug=…`, `/orders/view?id=…`,
   `/support/view?id=…`), are mapped to the current page by
-  `currentAppPath` (and `businessPath` for The IDEA Partners) in
+  `currentAppPath` (and `partnersPath` for The IDEA Partners) in
   `packages/internationalization/app-paths.ts`.
 - **Locale.** English, the default, has no prefix (`/store`); Arabic is
   `/ar/store` (next-intl `localePrefix: "as-needed"`). `proxy.ts` sends
@@ -176,7 +176,7 @@ namespaces.
 
 | Area | Routes | Code |
 | --- | --- | --- |
-| Organization dashboard | The sidebar: the organization switcher, then Home · Perks · Bulk buying · Developers · Organization (Perks, Bulk buying and Developers once the organization adds them from Home, `organizations.features`; Developers for owners and admins). `/{locale}` Home (unpaid invoices, Plus members, quotes and requests with Bulk buying, plan, "Add to your organization"), `/perks`, `/bulk-buying` (requests and quotes, `/bulk-buying/<id>`), `/developers`, `/organization` (details and Sections, then the tabs `/organization/members`, `/organization/plus` (The IDEA Plus for the team), `/organization/billing`, `/organization/invoices`), `/documents/<quote\|order\|invoice>/<id>` (printable), `/new`, `/invite` | `app/[locale]/(business)`, `components/screens`, `components/business`, `components/nav-items.ts` |
+| Organization dashboard | The sidebar: the organization switcher, then Home · Perks · Bulk buying · Developers · Organization (Perks, Bulk buying and Developers once the organization adds them from Home, `organizations.features`; Developers for owners and admins). `/{locale}` Home (unpaid invoices, Plus members, quotes and requests with Bulk buying, plan, "Add to your organization"), `/perks`, `/bulk-buying` (requests and quotes, `/bulk-buying/<id>`), `/developers`, `/organization` (details and Sections, then the tabs `/organization/members`, `/organization/plus` (The IDEA Plus for the team), `/organization/billing`, `/organization/invoices`), `/documents/<quote\|order\|invoice>/<id>` (printable), `/new`, `/invite` | `app/[locale]/(dashboard)`, `components/screens`, `components/organization`, `components/nav-items.ts` |
 
 - **Sign-in.** The IDEA Partners has none of its own: signed-out visitors
   go to The IDEA Pass on the website (`passUrl` from `@repo/auth/pass`)
@@ -185,7 +185,7 @@ namespaces.
   (`/business/…`, `/admin/…`) and the old host `business.theideaiq.com`
   have no redirects; stored notification links
   under `/business…` open the page at the root here (`/business/invoices`
-  → `/invoices`, `businessPath` in `packages/internationalization/app-paths.ts`).
+  → `/invoices`, `partnersPath` in `packages/internationalization/app-paths.ts`).
 - **Procurement.** A company's owners and admins send a
   request (what they need, an optional budget and date). Support answers in
   Staff → Companies with one or more quotes (priced lines) and

@@ -26,6 +26,7 @@ import {
 import { DISPLAY_MIN, withCovers } from "@/lib/display";
 import { localizedMetadata } from "@/lib/metadata";
 import { cheapestMonthly, weekAgo } from "@/lib/plus";
+import { pickOfTheDay } from "@/lib/tonight";
 
 export const revalidate = 300;
 
@@ -89,9 +90,36 @@ const Display = ({
   );
 };
 
+/** A2: one game or film from the Store, a new one every day. */
+const TonightsPick = ({
+  hint,
+  product,
+  title,
+}: {
+  readonly hint: string;
+  readonly product: ProductCard | null;
+  readonly title: string;
+}) =>
+  product ? (
+    <section
+      aria-labelledby="tonights-pick"
+      className="container mx-auto flex items-center gap-6 px-4 py-6"
+    >
+      <div className="w-36 shrink-0 sm:w-44">
+        <CoverCard product={product} />
+      </div>
+      <div className="grid gap-2">
+        <h2 className="font-bold text-2xl tracking-tight" id="tonights-pick">
+          <Highlight>{title}</Highlight>
+        </h2>
+        <p className="text-muted-foreground">{hint}</p>
+      </div>
+    </section>
+  ) : null;
+
 /**
  * The Store's "For you" shelf: the positioning and the bulb to switch on (it
- * reveals the brand line, remembered per visitor), then the campaign running now, the member's Bulbs, New this week, the
+ * reveals the brand line, remembered per visitor), then the campaign running now, the member's Bulbs, Tonight's pick, New this week, the
  * Music crate and Books shelf, the promises, live auctions, more like what they saved, what's in Plus, and
  * the Pink Band to the Plus waitlist (Plus isn't open for joining yet,
  * decision D2 of 4 November 2026).
@@ -100,26 +128,37 @@ const Home = async ({ params }: HomeProps) => {
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "web" });
-  const [categories, campaign, fresh, inPlus, plans, music, books] =
-    await Promise.all([
-      getCategories("sale"),
-      getLiveCampaign(),
-      getProducts({ limit: ROW, since: weekAgo(), sort: "newest" }),
-      getProducts({ kind: "rental", limit: ROW, sort: "newest" }),
-      getPlans("plus"),
-      getProducts({
-        category: "music",
-        inStock: true,
-        limit: 12,
-        sort: "newest",
-      }),
-      getProducts({
-        category: "books",
-        inStock: true,
-        limit: 12,
-        sort: "newest",
-      }),
-    ]);
+  const [
+    categories,
+    campaign,
+    fresh,
+    inPlus,
+    plans,
+    music,
+    books,
+    games,
+    films,
+  ] = await Promise.all([
+    getCategories("sale"),
+    getLiveCampaign(),
+    getProducts({ limit: ROW, since: weekAgo(), sort: "newest" }),
+    getProducts({ kind: "rental", limit: ROW, sort: "newest" }),
+    getPlans("plus"),
+    getProducts({
+      category: "music",
+      inStock: true,
+      limit: 12,
+      sort: "newest",
+    }),
+    getProducts({
+      category: "books",
+      inStock: true,
+      limit: 12,
+      sort: "newest",
+    }),
+    getProducts({ category: "games", inStock: true, limit: 24 }),
+    getProducts({ category: "films", inStock: true, limit: 24 }),
+  ]);
   const from = cheapestMonthly(plans);
 
   return (
@@ -168,6 +207,12 @@ const Home = async ({ params }: HomeProps) => {
         ) : null}
         <MemberStrip />
       </div>
+
+      <TonightsPick
+        hint={t("store.shelf.tonightHint")}
+        product={pickOfTheDay(withCovers([...games, ...films]))}
+        title={t("store.shelf.tonight")}
+      />
 
       {fresh.length > 0 ? (
         <Rail

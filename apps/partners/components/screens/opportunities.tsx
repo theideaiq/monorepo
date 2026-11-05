@@ -19,7 +19,7 @@ import { formatDate, formatNumber } from "@repo/internationalization/format";
 import { PlusIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { type FormEvent, type ReactNode, useId, useState } from "react";
-import { BusinessShell } from "@/components/business/business-shell";
+import { PartnersShell } from "@/components/organization/partners-shell";
 import { useActiveOrganization } from "@/components/organization-provider";
 import { ErrorState, SectionSpinner } from "@/components/states";
 import {
@@ -745,7 +745,7 @@ const OpportunitiesBody = () => {
  * IDEA before it appears, with how many members follow it.
  */
 export const Opportunities = () => (
-  <BusinessShell feature="opportunities">
+  <PartnersShell feature="opportunities">
     <OpportunitiesBody />
-  </BusinessShell>
+  </PartnersShell>
 );

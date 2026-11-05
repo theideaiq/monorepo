@@ -155,7 +155,7 @@ decisions with a date.
   `/post/…`; `/pass` has four pages (card, orders, bulbs, settings);
   `/saved`, `/help`, `/careers` and `/r/<code>` are new addresses; one
   sign-in page (no `/sign-up`). Old addresses have no redirects; stored
-  notification links are mapped by `currentAppPath`/`businessPath`.
+  notification links are mapped by `currentAppPath`/`partnersPath`.
 - Migration `20261217000000_program_revision_names.sql`: Droid FAQ topics
   general, store, plus, club, business, and `referral_kind(code)`.
 - The Spark Catcher mini-game was removed. Telegram handles change in a
@@ -455,6 +455,54 @@ steps need Xcode, Android Studio and the store/Firebase accounts
 
 ## Decisions
 
+- 2026-11-05: **PR 7, R5: retired code names renamed** (D9, last; no
+  schema). Partners' code no longer says "business": the route group is
+  `app/[locale]/(dashboard)`, the shell `components/organization/
+  partners-shell.tsx` (`PartnersShell`), the screens `today.tsx` (`Today`),
+  `members.tsx` and `organization-settings.tsx`, the queries
+  `lib/organization-queries.ts`, the messages namespace `app.partners`
+  (was `app.business`) and the stored-link mapper `partnersPath` (was
+  `businessPath`). Kept on purpose: database names and values (the plans'
+  `audience = 'business'`, D9), public addresses (`/legal/business`) and
+  the old-link mapping of `/business…` and `/selling…`, so links already
+  sent still open. No other retired name (Megastore, Suite, Spark,
+  Discover, Academy, Launcher) is left in code; "journal" is the
+  accounting journal, and Staff's internal "admin" stays as documented.
+
+- 2026-11-05: **PR 7, A20 and A21: guides and products in reads** (no
+  schema). In a post under Guides, numbered lists show as step cards ("Step
+  2 of 5") with nested lists kept plain. Any read can place a product with
+  `[[product:<slug>]]` on a line of its own: it shows the product's card
+  with its live price, or nothing when the product isn't on sale (drafts
+  and archived products drop out). Reading time and descriptions ignore
+  the placeholder. Staff's post form says how. New Arabic for native
+  review: `web.club.step`, `admin.editorial.posts.bodyExtras`.
+
+- 2026-11-05: **PR 7, A7: make a mixtape** (no schema). Pass → Lists has
+  "Make a mixtape" (`/pass/lists/mixtape`): name it, find records on the
+  Music shelf, add them, then share the link like any list (a mixtape is a
+  saved list). A record already saved elsewhere moves into the mixtape,
+  and the button says so. New Arabic for native review: `app.mixtape.*`.
+
+- 2026-11-05: **PR 7, A4: your year at The IDEA** (no schema). Pass →
+  "Your year" (`/pass/year`) counts, since 1 January in Baghdad and from
+  the member's own records only: orders (paid onwards), Plus rentals,
+  Club events checked in at and Bulbs earned (purchases and bonuses).
+  Nothing yet says so; no invented numbers. New Arabic for native review:
+  `app.pass.year.*`.
+
+- 2026-11-05: **PR 7, A2: tonight's pick** (no schema). The home page shows
+  one game or film in stock with a cover, the same for everyone for the
+  whole Baghdad day and a new one each day (`pickOfTheDay` in
+  `lib/tonight.ts`). No pick when nothing qualifies. New Arabic for native
+  review: `web.store.shelf.tonight`, `tonightHint`.
+
+- 2026-11-05: **PR 7, A15: Pass perks** (D3, no schema). `/pass/perks`
+  lists partner perks for everyone with a Pass: "Yours now" first, then
+  those that need a student badge or Plus, from `my_perks`. The Pass home
+  links to it. New Arabic for native review: `pass.partnerPerks.hub.*`,
+  `app.pass.perks`, `app.pass.perksHint`.
+
 - 2026-11-05: **PR 7, A26: the Droid Mini App, part 2** (no schema). Inside
   the Mini App, the cart also shows Telegram's own main button ("Checkout",
   at the bottom of Telegram) while the cart can be checked out; it opens
@@ -569,7 +617,7 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   twice for the rest, as in `private.seller_score`); the card is left out
   when the function isn't there yet. Staff → Partners → Shops shows each
   approved shop's score and line count. New Arabic for native review:
-  `app.business.today.health.*`, `admin.companies.shops.score`.
+  `app.partners.today.health.*`, `admin.companies.shops.score`.
 
 - 2026-11-05: **PR 7, A16, A11 and A12: sharing and printing, no schema.**
   A16: an invite link (`/r/<code>`) has its own share image
@@ -876,7 +924,7 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   (`/pass/family`, kids' profiles and teen requests). Partners opens on Today
   with `/sell/*` and `/settings/*`; Staff on one Inbox with a `/plus` area and
   Demand; both have a command bar. No HTTP redirects: stored links map
-  through `currentAppPath`/`businessPath`.
+  through `currentAppPath`/`partnersPath`.
 - 2026-10-28: Master brief from the owner, the last word on everything
   decided so far (recorded in `docs/program/decisions-2026-10-28.md`,
   "Master brief"). Where it differs from earlier messages it wins:
@@ -1303,7 +1351,7 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   history by alias); a product's live auctions sit under its normal
   offers; Saved shows "Your bids"; a win is a cart line paid online (no
   cash on delivery) and counts as goods; eight `auction_*` notifications
-  (the shop's link to Partners: `businessPath` now treats `/selling…` as a
+  (the shop's link to Partners: `partnersPath` now treats `/selling…` as a
   Partners page). Partners → Selling → Auctions: put a copy of a listing
   up for auction (photos to `auction-photos/<seller id>/`, condition,
   mark, start price, hidden reserve, days), follow live ones and wins,
@@ -1945,7 +1993,7 @@ steps need Xcode, Android Studio and the store/Firebase accounts
     Members, The IDEA Plus, Plan, Invoices and the settings are tabs of
     Organization (`/organization/…`). Links already stored in
     notifications (`/business/procurement/…`, `/business/invoices`) open
-    the new pages through `businessPath`.
+    the new pages through `partnersPath`.
   - **Staff:** one menu, Inbox (with Support) · Catalog (with Reviews) ·
     Orders and delivery · Rentals and Plus · Customers · Club (with
     Telegram) · Partners · The IDEA Space (the counter) · Finance ·
@@ -2009,7 +2057,7 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   - **The IDEA Business is renamed The IDEA Partners.** `apps/business` is
     `apps/partners` (package `partners`, port 3000,
     `partners.theideaiq.com`) and holds only the organization dashboard
-    (`app/[locale]/(business)`: `/`, `/procurement`, `/invoices`, `/plus`,
+    (`app/[locale]/(dashboard)`: `/`, `/procurement`, `/invoices`, `/plus`,
     `/perks`, `/developers`, `/members`, `/billing`, `/settings`, `/new`,
     `/documents/<kind>/<id>`, invitations), no Staff code. The website's
     `/business` is `/partners` ("For partners").
@@ -2023,7 +2071,7 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   - **Rename without redirects:** `business.theideaiq.com`,
     `design.theideaiq.com` and `/business` on the website are gone, with
     no redirects (stored notification links are still mapped by
-    `businessPath`).
+    `partnersPath`).
   - **The design site moved into Staff:** Storybook's source and
     configuration are in `apps/staff` (`.storybook`, `stories/`,
     `assets/`), built into `public/design` and served at

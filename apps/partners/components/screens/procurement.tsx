@@ -17,7 +17,7 @@ import { Link, useRouter } from "@repo/internationalization/navigation";
 import { ChevronRightIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { type FormEvent, useId, useState } from "react";
-import { BusinessShell } from "@/components/business/business-shell";
+import { PartnersShell } from "@/components/organization/partners-shell";
 import { useActiveOrganization } from "@/components/organization-provider";
 import { ErrorState, SectionSpinner } from "@/components/states";
 import {
@@ -188,7 +188,7 @@ const RequestList = () => {
 };
 
 export const Procurement = () => (
-  <BusinessShell feature="team">
+  <PartnersShell feature="team">
     <RequestList />
-  </BusinessShell>
+  </PartnersShell>
 );
