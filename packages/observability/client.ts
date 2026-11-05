@@ -1,43 +1,84 @@
 /*
- * This file configures the initialization of Sentry on the client.
- * The config you add here will be used whenever a users loads a page in their browser.
- * https://docs.sentry.io/platforms/javascript/guides/nextjs/
+ * Sentry in the browser (https://docs.sentry.io/platforms/javascript/guides/nextjs/).
+ *
+ * The SDK is the largest library on every page, so it is downloaded only
+ * when a DSN is set, and Session Replay only once the page is idle: a phone
+ * on a slow network gets the page first (A28, apps/e2e/performance-budget.ts).
+ * Errors reported before the SDK arrives are sent once it has loaded.
  */
-
-// biome-ignore lint/performance/noNamespaceImport: Sentry SDK convention
-import * as Sentry from "@sentry/nextjs";
 import { keys } from "./keys";
 
-export const initializeSentry = (): ReturnType<typeof Sentry.init> =>
-  Sentry.init({
-    // Setting this option to true will print useful information to the console while you're setting up Sentry.
-    debug: false,
-    dsn: keys().NEXT_PUBLIC_SENTRY_DSN,
+type SentryModule = typeof import("@sentry/nextjs");
 
-    // Enable logging
-    enableLogs: true,
+let sentry: SentryModule | undefined;
+let loading: Promise<SentryModule | undefined> | undefined;
 
-    // You can remove this option if you're not planning to use the Sentry Session Replay feature:
-    integrations: [
-      Sentry.replayIntegration({
-        blockAllMedia: true,
-        // Additional Replay configuration goes in here, for example:
-        maskAllText: true,
-      }),
-      // Send console.log, console.error, and console.warn calls as logs to Sentry
-      Sentry.consoleLoggingIntegration({ levels: ["log", "error", "warn"] }),
-    ],
+const whenIdle = (callback: () => void) => {
+  if ("requestIdleCallback" in window) {
+    window.requestIdleCallback(callback, { timeout: 10_000 });
+  } else {
+    setTimeout(callback, 3000);
+  }
+};
 
-    replaysOnErrorSampleRate: 1,
+/** Session Replay, downloaded once the page is idle. */
+const addReplay = async (Sentry: SentryModule) => {
+  try {
+    const { replayIntegration } = await import("@sentry/replay");
+    Sentry.addIntegration(
+      replayIntegration({ blockAllMedia: true, maskAllText: true })
+    );
+  } catch {
+    // Replay is optional; errors are still reported without it.
+  }
+};
 
-    /*
-     * This sets the sample rate to be 10%. You may want this to be 100% while
-     * in development and sample at a lower rate in production
-     */
-    replaysSessionSampleRate: 0.1,
+const load = (): Promise<SentryModule | undefined> => {
+  const dsn = keys().NEXT_PUBLIC_SENTRY_DSN;
+  if (!dsn || typeof window === "undefined") {
+    return Promise.resolve(undefined);
+  }
+  loading ??= (async () => {
+    const Sentry = await import("@sentry/nextjs");
+    Sentry.init({
+      debug: false,
+      dsn,
+      enableLogs: true,
+      integrations: [
+        // Send console.log, console.error and console.warn as logs.
+        Sentry.consoleLoggingIntegration({ levels: ["log", "error", "warn"] }),
+      ],
+      replaysOnErrorSampleRate: 1,
+      replaysSessionSampleRate: 0.1,
+      tracesSampleRate: 1,
+    });
+    sentry = Sentry;
+    whenIdle(() => addReplay(Sentry));
+    return Sentry;
+  })();
+  return loading;
+};
 
-    // Adjust this value in production, or use tracesSampler for greater control
-    tracesSampleRate: 1,
+/** Starts Sentry in the background when a DSN is set. */
+export const initializeSentry = (): void => {
+  load().catch(() => {
+    // A failed download leaves error reporting off for this visit.
   });
+};
 
-export const onRouterTransitionStart = Sentry.captureRouterTransitionStart;
+/** Reports an error, loading Sentry first if it hasn't arrived yet. */
+export const captureError = (error: unknown): void => {
+  load()
+    .then((Sentry) => Sentry?.captureException(error))
+    .catch(() => {
+      // Nothing more to do: reporting is best effort.
+    });
+};
+
+/** Next.js calls this on every client-side navigation (instrumentation-client). */
+export const onRouterTransitionStart = (
+  href: string,
+  navigationType: string
+): void => {
+  sentry?.captureRouterTransitionStart(href, navigationType);
+};

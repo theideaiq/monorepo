@@ -328,14 +328,19 @@ export const OrderCodes = ({
   );
 };
 
-/** The Store's way to gift cards and codes, hidden in the apps. */
+/**
+ * The Store's way to gift cards and codes, hidden in the apps. The server
+ * renders it, so it doesn't appear late and push the page down; inside the
+ * apps `.web-only` hides it from the first frame and it is removed once the
+ * app is detected.
+ */
 export const CodesLink = () => {
   const t = useTranslations("app.codes");
-  if (useInApp() !== false) {
+  if (useInApp() === true) {
     return null;
   }
   return (
-    <p className="mb-6 rounded-lg border bg-muted/40 p-4 text-sm">
+    <p className="web-only mb-6 rounded-lg border bg-muted/40 p-4 text-sm">
       <KeyRoundIcon
         aria-hidden="true"
         className="me-2 inline size-4 text-pink-text"

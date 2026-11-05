@@ -1,7 +1,7 @@
 "use client";
 
 import { useAuth } from "@repo/auth/provider";
-import { localized, planName } from "@repo/commerce";
+import { planName } from "@repo/commerce";
 import { Badge } from "@repo/design-system/components/ui/badge";
 import { Button } from "@repo/design-system/components/ui/button";
 import {
@@ -22,7 +22,7 @@ import {
 import { Link } from "@repo/internationalization/navigation";
 import { CheckIcon, CrownIcon, MoveRight } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
-import { type ReactNode, useEffect, useId, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { AgeAwareError } from "@/components/age-aware-error";
 import { JoinPlus } from "@/components/plus/join-plus";
 import {
@@ -30,11 +30,10 @@ import {
   PlanChooser,
   PlanCompare,
 } from "@/components/plus/plan-compare";
+import { Slots, usePlusMember } from "@/components/plus/plus-home";
 import { ManagePlus } from "@/components/plus/plus-tools";
-import { Rail } from "@/components/shop/rail";
 import { SignedInSection } from "@/components/signed-in-section";
 import { ErrorState, SectionSpinner } from "@/components/states";
-import { CoverCard } from "@/components/store/cover-card";
 import {
   hasPendingCheckout,
   reportCompletedCheckout,
@@ -45,159 +44,14 @@ import {
   isLivePlan,
   type RentalAllowance,
   usePlanCheckout,
-  usePlusAvailability,
   useRentalAllowance,
-  useRentals,
 } from "@/lib/plus-queries";
 import { usePlans, usePlusPayments, usePlusSubscription } from "@/lib/queries";
-import { type QueueItem, useQueue } from "@/lib/queue-queries";
 import { useMyStudent, useStudentPlans } from "@/lib/student-queries";
 import { studentChoice } from "@/lib/students";
 import { useCanSellDigitalGoods } from "@/lib/use-digital-checkout";
 
 const POLL_MS = 3000;
-
-/** Whether the signed-in person has Plus (their own plan or a Duo place). */
-const usePlusMember = () => {
-  const { loading, user } = useAuth();
-  const subscription = usePlusSubscription();
-  const duo = useMyDuo();
-  const member =
-    isLivePlan(subscription.data?.status) || isDuoPartner(duo.data);
-  const known =
-    !loading && (!user || (subscription.isFetched && duo.isFetched));
-  return { known, member };
-};
-
-/**
- * /plus opens on the household's slots for a member, on the pitch for
- * everyone else; the catalogue rows (rendered on the server) follow.
- */
-export const PlusHomeSwitch = ({
-  member,
-  visitor,
-}: {
-  readonly member: ReactNode;
-  readonly visitor: ReactNode;
-}) => {
-  const { known, member: isMember } = usePlusMember();
-  if (!known) {
-    return <div className="min-h-24" />;
-  }
-  return isMember ? member : visitor;
-};
-
-/** What only those without Plus see (the three plan cards on /plus). */
-export const VisitorOnly = ({ children }: { readonly children: ReactNode }) => {
-  const { known, member } = usePlusMember();
-  return known && !member ? children : null;
-};
-
-/** A slot bar: one segment per item the plan keeps at home. */
-const Slots = ({ allowance }: { readonly allowance: RentalAllowance }) => (
-  <div aria-hidden="true" className="flex flex-1 gap-1">
-    {Array.from({ length: allowance.slots }, (_, index) => (
-      <span
-        className={cn(
-          "h-2 flex-1 rounded-full",
-          index < allowance.used ? "bg-idea-pink" : "bg-muted"
-        )}
-        // biome-ignore lint/suspicious/noArrayIndexKey: fixed slots
-        key={index}
-      />
-    ))}
-  </div>
-);
-
-/**
- * What needs the member first: "At home 2 of 2", what's at home, what's
- * next in the queue, and Send one back.
- */
-export const HouseholdSlots = () => {
-  const t = useTranslations("app.plus.home");
-  const locale = useLocale();
-  const allowance = useRentalAllowance().data;
-  const rentals = useRentals().data ?? [];
-  const queue = useQueue();
-  const atHome = rentals.filter((rental) =>
-    ["requested", "active", "overdue"].includes(rental.status)
-  );
-  const next = queue.items[0]?.product;
-
-  if (!allowance) {
-    return <SectionSpinner className="py-6" />;
-  }
-  return (
-    <section
-      aria-labelledby="household"
-      className="grid gap-4 rounded-[28px] border bg-surface-raised p-5 md:p-6"
-    >
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 className="font-bold text-xl" id="household">
-          {t("atHome", {
-            count: formatNumber(allowance.used, locale),
-            slots: formatNumber(allowance.slots, locale),
-          })}
-        </h2>
-        <Button asChild variant="outline">
-          <Link href="/pass/at-home">{t("sendBack")}</Link>
-        </Button>
-      </div>
-      <Slots allowance={allowance} />
-      {atHome.length > 0 ? (
-        <ul className="grid gap-1 text-sm">
-          {atHome.map((rental) => (
-            <li className="flex justify-between gap-3" key={rental.id}>
-              <span className="truncate">
-                {localized(rental, "name", locale)}
-              </span>
-              <span className="shrink-0 text-muted-foreground text-xs">
-                {rental.due_at
-                  ? t("due", { date: formatDate(rental.due_at, locale) })
-                  : t(rental.status === "requested" ? "onTheWay" : "atHomeNow")}
-              </span>
-            </li>
-          ))}
-        </ul>
-      ) : null}
-      <p className="text-sm">
-        {next ? (
-          <Link className="hover:underline" href="/pass/queue">
-            {t("nextUp", { name: localized(next, "name", locale) })}
-          </Link>
-        ) : (
-          <span className="text-muted-foreground">{t("queueEmpty")}</span>
-        )}
-      </p>
-    </section>
-  );
-};
-
-const QueueCover = ({ item }: { readonly item: QueueItem }) => {
-  const availability = usePlusAvailability(item.product_id).data;
-  return item.product ? (
-    <CoverCard availability={availability} plus product={item.product} />
-  ) : null;
-};
-
-/** "Your queue", in order, with availability on every cover. */
-export const QueueRow = () => {
-  const t = useTranslations("app.plus.home");
-  const queue = useQueue();
-  if (queue.items.length === 0) {
-    return null;
-  }
-  return (
-    <Rail
-      action={{ href: "/pass/queue", label: t("seeQueue") }}
-      title={t("yourQueue")}
-    >
-      {queue.items.slice(0, 8).map((item) => (
-        <QueueCover item={item} key={item.product_id} />
-      ))}
-    </Rail>
-  );
-};
 
 const YourPlan = ({
   allowance,

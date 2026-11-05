@@ -103,3 +103,8 @@ html {
     overscroll-behavior-y: none;
   }
 }
+
+/* Inside the iOS/Android shell (NATIVE_MARK_SCRIPT sets data-native). */
+html[data-native] .web-only {
+  display: none !important;
+}

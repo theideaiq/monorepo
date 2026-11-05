@@ -12,6 +12,7 @@ import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import type { ReactNode } from "react";
 import { AppProviders } from "@/components/providers";
+import { NATIVE_MARK_SCRIPT } from "@/lib/native/user-agent";
 import { Footer } from "./components/footer";
 import { Header } from "./components/header";
 import { SiteChrome } from "./components/site-chrome";
@@ -58,6 +59,13 @@ const RootLayout = async ({ children, params }: RootLayoutProperties) => {
       lang={locale}
       suppressHydrationWarning
     >
+      <head>
+        {/* Runs before the first paint (Next.js' "Preventing flash before hydration"). */}
+        <script
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: a fixed one-line script, no user input
+          dangerouslySetInnerHTML={{ __html: NATIVE_MARK_SCRIPT }}
+        />
+      </head>
       <body>
         <NextIntlClientProvider
           messages={{ app, auth, billing, common, pass, store, web }}

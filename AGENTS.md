@@ -271,6 +271,17 @@ incidents) is in `docs/platform`.
 - `apps/e2e` — Playwright journeys with axe accessibility checks; it starts
   all four apps (Staff on port 3003). Staff journeys run against the staff
   host (`tests/admin.spec.ts`), partner journeys are `tests/partners.spec.ts`.
+  `tests/performance.spec.ts` is the website's performance budget
+  (`performance-budget.ts`): the home page, store, a product page, Plus and
+  Club, in Arabic and English, on a mid-range Android phone (CPU four
+  times slower, slow 4G), held to limits on JavaScript and total bytes,
+  Largest Contentful Paint, layout shift and blocking time. Keep heavy
+  libraries off the first load: Sentry and PostHog load only when their
+  keys are set (`@repo/observability/client`, `@repo/analytics`), and a
+  client component never imports a whole messages file. Render on the
+  server what most visitors see and switch after hydration only for the
+  few (a signed-in member), never an empty box that grows; hide what the
+  apps must not show with the `web-only` class, not by rendering it late.
 - `scripts/` — `check-placeholders.ts`, `check-rtl.ts`, `check-i18n.ts` and
   `check-secrets.ts` are repo checks; `vercel-ignore.mjs` is every Vercel project's ignored
   build step.

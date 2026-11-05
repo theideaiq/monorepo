@@ -10,6 +10,10 @@ interface ProductImageProps {
   readonly alt: string;
   readonly className?: string;
   readonly path: string | null | undefined;
+  /**
+   * Above the fold (the first row of a grid, a product page's picture):
+   * loads at once and first, so it is not the late Largest Contentful Paint.
+   */
   readonly priority?: boolean;
   readonly sizes?: string;
 }
@@ -38,8 +42,9 @@ export const ProductImage = ({
           // The whole picture: covers, posters, box art and photos have
           // different shapes; cropping them made the tiles look random.
           className="object-contain p-2"
+          fetchPriority={priority ? "high" : undefined}
           fill
-          priority={priority}
+          loading={priority ? "eager" : undefined}
           sizes={sizes}
           src={src}
         />

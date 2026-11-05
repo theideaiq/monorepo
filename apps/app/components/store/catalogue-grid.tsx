@@ -21,6 +21,13 @@ import {
 import { FilterSheet, SortMenu } from "./catalogue-controls";
 import { CoverCard } from "./cover-card";
 
+/**
+ * Covers that load at once: the first row on a wide screen and the first
+ * two rows on a phone, where the first cover is the Largest Contentful
+ * Paint (A28).
+ */
+const FIRST_ROW = 4;
+
 /** Formats with a name in the messages files; others show as stored. */
 const NAMED_FORMATS = [
   "CD",
@@ -295,11 +302,12 @@ export const CatalogueGrid = async ({
         <div>
           {products.length > 0 ? (
             <ul className="grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-3 xl:grid-cols-4">
-              {products.map((product) => (
+              {products.map((product, index) => (
                 <li className="flex" key={product.id}>
                   <CoverCard
                     availability={availability?.[product.id] ?? null}
                     plus={availability !== undefined}
+                    priority={index < FIRST_ROW}
                     product={product}
                   />
                 </li>

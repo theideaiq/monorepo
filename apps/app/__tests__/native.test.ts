@@ -13,6 +13,7 @@ import {
 import { shareLink } from "../lib/native/share";
 import {
   isNativeShellUserAgent,
+  NATIVE_MARK_SCRIPT,
   PUSH_USER_AGENT,
   SHELL_USER_AGENT,
   shellHasPush,
@@ -102,6 +103,21 @@ describe("capacitor.config", () => {
     expect(
       shellHasPush(`${safari} ${SHELL_USER_AGENT} ${PUSH_USER_AGENT}`)
     ).toBe(true);
+  });
+
+  test("the head script marks the page inside the shell only", () => {
+    const mark = (userAgent: string) => {
+      const dataset: Record<string, string> = {};
+      new Function("navigator", "document", NATIVE_MARK_SCRIPT)(
+        { userAgent },
+        { documentElement: { dataset } }
+      );
+      return "native" in dataset;
+    };
+    const safari =
+      "Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15";
+    expect(mark(`${safari} ${SHELL_USER_AGENT}`)).toBe(true);
+    expect(mark(safari)).toBe(false);
   });
 
   test("only a build with Firebase's config says it takes push", () => {

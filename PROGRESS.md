@@ -455,6 +455,30 @@ steps need Xcode, Android Studio and the store/Firebase accounts
 
 ## Decisions
 
+- 2026-11-04: **A28, performance budget on a mid-range Android phone.**
+  `apps/e2e/tests/performance.spec.ts` (Playwright project "mid-range
+  Android", in the CI e2e job) loads the home page, store, a product page,
+  Plus and Club in both languages on a Galaxy A55 screen with the CPU four
+  times slower and slow 4G, and holds them to `performance-budget.ts`:
+  460 KB of compressed JavaScript and 760 KB in all until load, LCP 2.5 s,
+  CLS 0.1, blocking time 600 ms. The first measurement found every page
+  downloading 825–890 KB of JavaScript, Plus shifting its layout by 0.8
+  and Store and Plus painting in 7–8 s. Three causes, all fixed: Sentry
+  (with Session Replay) and PostHog were in every page though neither key
+  is set on the website; and `global-error.tsx` imported both whole
+  messages files for three strings. Sentry now loads only with a DSN and
+  Replay once the page is idle; PostHog only with its key; the error page
+  loads its strings when it shows. The first CI run then caught three
+  more on its slower machine: /plus rendered an empty box until it knew
+  whether the visitor had Plus, then the pitch (CLS 0.8, LCP 4.3 s); the
+  Store's gift-card link appeared only after hydration (LCP 4 s); and /plus
+  carried the join, swap and plan screens with their phone input (479 KB).
+  Now the pitch is what the server renders (members see their slots once
+  known), the codes link is server-rendered and hidden in the apps by
+  `html[data-native] .web-only` (an inline script in the head marks the
+  shell before paint), the first row of store covers loads eagerly, and
+  the /plus top lives in `components/plus/plus-home.tsx`. Measured after:
+  415–448 KB of JavaScript, CLS 0–0.007, LCP 1.3–2.0 s.
 - 2026-11-04: **Titles of works stay as published** (owner). In catalogue
   data, album, game, film and book titles, their artists and authors, and
   official program and organization names keep their own script on Arabic
