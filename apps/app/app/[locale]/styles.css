@@ -108,3 +108,37 @@ html {
 html[data-native] .web-only {
   display: none !important;
 }
+
+/* A27, view transitions: on a navigation the page content crossfades
+   (old out quickly, new in a little slower); the header and tab bar are
+   outside the <ViewTransition> and don't move. Clicks pass through while
+   it runs, and people who ask for less motion get the plain swap. */
+::view-transition {
+  pointer-events: none;
+}
+
+::view-transition-old(.page) {
+  animation: 120ms ease-in both page-fade reverse;
+}
+
+::view-transition-new(.page) {
+  animation: 180ms ease-out 80ms both page-fade;
+}
+
+@keyframes page-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(*),
+  ::view-transition-new(*),
+  ::view-transition-group(*) {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+  }
+}
