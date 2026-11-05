@@ -4903,7 +4903,8 @@
         "unwatch": "Stop watching",
         "watchHint": "We'll tell you once when it's in its last day.",
         "watching": "Watching: we'll tell you once when it's in its last day."
-      }
+      },
+      "endedTitle": "Recently ended"
     },
     "codes": {
       "title": "Gift cards and codes",

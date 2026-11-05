@@ -455,6 +455,14 @@ steps need Xcode, Android Studio and the store/Firebase accounts
 
 ## Decisions
 
+- 2026-11-05: **PR 7, C9: ended auctions** (no schema). Store → Auctions
+  now lists, under the live ones, auctions that ended in the last 90 days
+  (newest first, up to 24): each with the price it went for ("Ended · sold
+  at …", from the winning bid) or "Ended" when it went unsold, and the day it
+  ended. Cancelled auctions stay hidden (their policy already does that).
+  The auction page uses the same rule (`soldPrice` in `lib/auctions.ts`).
+  C9 is complete. New Arabic for native review: `app.auctions.endedTitle`.
+
 - 2026-11-05: **PR 7, C9: an auction's share image** (no schema). A link
   to `/store/auctions/<number>` shared in a chat now shows the product's
   name and picture and when the auction ends (Baghdad time), drawn like a

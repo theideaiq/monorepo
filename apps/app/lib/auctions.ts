@@ -48,6 +48,50 @@ export const useLiveAuctions = () => {
   });
 };
 
+/** How far back Store → Auctions keeps ended auctions (C9). */
+export const ENDED_DAYS = 90;
+
+/**
+ * Ended auctions, newest first: won, paid, unpaid and unsold ones that
+ * ended in the last `ENDED_DAYS` days (cancelled ones are never public).
+ */
+export const useEndedAuctions = () => {
+  const { supabase } = useAuth();
+  return useQuery({
+    queryFn: async () => {
+      const since = new Date(
+        Date.now() - ENDED_DAYS * 24 * 60 * 60 * 1000
+      ).toISOString();
+      return (
+        unwrap(
+          await supabase
+            .from("auctions")
+            .select(AUCTION_COLUMNS)
+            .in("status", ["won", "paid", "unpaid", "unsold"])
+            .gte("ends_at", since)
+            .order("ends_at", { ascending: false })
+            .limit(24)
+        ) ?? []
+      );
+    },
+    queryKey: [...auctionsKey, "ended"],
+  });
+};
+
+/**
+ * The price an ended auction went for, or null: a winning bid (won, paid,
+ * or won but not paid in time), never one that ended unsold.
+ */
+export const soldPrice = (auction: {
+  final_price: number | null;
+  status: AuctionStatus;
+}) =>
+  auction.status === "won" ||
+  auction.status === "paid" ||
+  auction.status === "unpaid"
+    ? auction.final_price
+    : null;
+
 export type Auction = NonNullable<
   ReturnType<typeof useLiveAuctions>["data"]
 >[number];
