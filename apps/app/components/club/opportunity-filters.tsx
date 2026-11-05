@@ -4,7 +4,7 @@ import { Input } from "@repo/design-system/components/ui/input";
 import { Label } from "@repo/design-system/components/ui/label";
 import type { Locale } from "@repo/internationalization";
 import { localePath } from "@repo/internationalization";
-import { intlLocale } from "@repo/internationalization/format";
+import { formatNumber, intlLocale } from "@repo/internationalization/format";
 import { Link } from "@repo/internationalization/navigation";
 import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
@@ -149,4 +149,54 @@ export const OpportunityFiltersForm = async ({
       </div>
     </form>
   );
+};
+
+/**
+ * C19: the destinations listed now, as chips with how many opportunities
+ * go there (most first), each opening the list filtered to that country.
+ */
+export const OpportunitiesByCountry = async ({
+  locale,
+  opportunities,
+}: {
+  readonly locale: Locale;
+  readonly opportunities: readonly OpportunityRow[];
+}) => {
+  const t = await getTranslations({ locale, namespace: "web.opportunities" });
+  const language = intlLocale(locale);
+  const counts = new Map<string, number>();
+  for (const row of opportunities) {
+    for (const code of new Set(row.destination_countries ?? [])) {
+      counts.set(code, (counts.get(code) ?? 0) + 1);
+    }
+  }
+  const countries = [...counts]
+    .map(([code, count]) => ({
+      code,
+      count,
+      name: countryName(code, language),
+    }))
+    .sort(
+      (a, b) => b.count - a.count || a.name.localeCompare(b.name, language)
+    );
+  return countries.length > 1 ? (
+    <nav aria-label={t("byCountry")} className="grid gap-2">
+      <h2 className="font-semibold text-sm">{t("byCountry")}</h2>
+      <ul className="no-scrollbar -mx-4 flex snap-x gap-2 overflow-x-auto px-4 md:mx-0 md:flex-wrap md:px-0">
+        {countries.map(({ code, count, name }) => (
+          <li className="shrink-0 snap-start" key={code}>
+            <Link
+              className="inline-flex items-center gap-1.5 rounded-full border bg-card px-3 py-1.5 text-sm transition-colors hover:bg-muted"
+              href={`${joinPath("opportunities")}?country=${code}`}
+            >
+              {name}
+              <span className="text-muted-foreground text-xs">
+                {formatNumber(count, locale)}
+              </span>
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  ) : null;
 };

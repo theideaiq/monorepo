@@ -1531,7 +1531,8 @@
         "named_secondary": "Iraq named by another source",
         "inferred": "Iraqis seem eligible (not stated)",
         "unconfirmed": "Not confirmed for Iraqis"
-      }
+      },
+      "byCountry": "By country"
     },
     "programs": {
       "package": "The package",
