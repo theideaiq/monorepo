@@ -466,7 +466,7 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   **Owner:** import both at Staff → Partners → CRM → Import (organizations
   first), assign owners, then send the emails yourself. (3) Programs: the
   49 programs marked ready were already batch 01. Of the 227 new research
-  rows, 21 have a named official source and aren't unverified or ended; 13
+  rows, 21 have a named official source and aren't unverified or ended; 11
   repeat the catalogue or rows held back for a stated reason (doubtful,
   grouped or stale), 2 are corrections batch 01 already has (MAECI and
   ICGEB list Iraq), and the other 8 are past or one-off (calls from 2018 to
