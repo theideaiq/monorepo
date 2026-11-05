@@ -7696,6 +7696,23 @@
         "noRoutesToLink": "Every route is linked already, or there are none yet.",
         "extras": "This opportunity's extras",
         "extrasDescription": "Lines only this program needs, on top of its routes'."
+      },
+      "drafts": {
+        "link": "Drafts to review",
+        "title": "Drafts to review",
+        "description": "Every opportunity still a draft, the imported outside programs among them, oldest check first. Read both titles, open the source to check it still says the same, then publish it or note today's check. Nothing here deletes a draft; to change one, open it.",
+        "empty": "No drafts. Everything has been published or sent back.",
+        "titleEn": "English title",
+        "titleAr": "Arabic title",
+        "host": "Run by",
+        "deadline": "Deadline",
+        "checked": "Last checked",
+        "never": "Never",
+        "source": "Open the source",
+        "actions": "Actions",
+        "checkedToday": "Checked today",
+        "publish": "Publish",
+        "publishConfirm": "Publish \"{title}\" as it stands?"
       }
     },
     "telegram": {

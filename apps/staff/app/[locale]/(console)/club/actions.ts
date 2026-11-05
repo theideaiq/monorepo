@@ -10,6 +10,7 @@ import {
 } from "@/lib/admin/action";
 import { success } from "@/lib/admin/action-state";
 import { slugify } from "@/lib/admin/catalog-import";
+import { todayInBaghdad } from "@/lib/admin/dates";
 import {
   checkbox,
   countryCodes,
@@ -610,6 +611,42 @@ export const closeOpportunity = staffAction(
       await supabase
         .from("opportunities")
         .update({ status: "closed" })
+        .eq("id", input.id)
+        .select("id")
+    );
+    return success("saved");
+  }
+);
+
+/**
+ * R4: publishes a draft as it stands, once an editor has read it in
+ * Club → Opportunities → Drafts (only a draft; nothing else changes).
+ */
+export const publishDraft = staffAction(
+  "editorial",
+  z.object({ id: uuid }),
+  async ({ input, supabase }) => {
+    affected(
+      await supabase
+        .from("opportunities")
+        .update({ status: "approved" })
+        .eq("id", input.id)
+        .eq("status", "draft")
+        .select("id")
+    );
+    return success("saved");
+  }
+);
+
+/** R4: records that a draft's source was checked today (Baghdad date). */
+export const markDraftChecked = staffAction(
+  "editorial",
+  z.object({ id: uuid }),
+  async ({ input, supabase }) => {
+    affected(
+      await supabase
+        .from("opportunities")
+        .update({ last_checked_on: todayInBaghdad() })
         .eq("id", input.id)
         .select("id")
     );

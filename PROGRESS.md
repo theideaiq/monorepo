@@ -455,6 +455,16 @@ steps need Xcode, Android Studio and the store/Firebase accounts
 
 ## Decisions
 
+- 2026-11-05: **PR 7, R4: drafts to review in Staff, nothing deleted.**
+  Staff → Club → Opportunities → Drafts to review
+  (`/club/opportunities/drafts`) lists every opportunity still a draft (the
+  49 imported outside programs among them), oldest check first, with the
+  English and Arabic titles side by side for the native read, who runs it,
+  the deadline, when it was last checked and a link to its source. An
+  editor publishes one as it stands (`publishDraft`, drafts only), records
+  that the source was checked today (`markDraftChecked`), or opens it to
+  edit. The page has no delete.
+
 - 2026-11-05: **PR 7, C15: what Plus has been worth.** `/plus/plan` shows a
   member how many items they have had through Plus (Plus rentals that went
   out) and what those versions cost in the Store today (`usePlusValue`,

@@ -51,6 +51,7 @@ import { usePlans, usePlusPayments, usePlusSubscription } from "@/lib/queries";
 import { useMyStudent, useStudentPlans } from "@/lib/student-queries";
 import { studentChoice } from "@/lib/students";
 import { useCanSellDigitalGoods } from "@/lib/use-digital-checkout";
+import { useHydrated } from "@/lib/use-hydrated";
 
 const POLL_MS = 3000;
 
@@ -236,6 +237,30 @@ const JoinStep = ({
 };
 
 /**
+ * The plans, student plans and student status for the plan sheet. The
+ * sheet sits in its own Suspense boundary, which can hydrate after the rest
+ * of the page has already fetched the plans (GivePlus asks for them too);
+ * until it has hydrated it gets what the server rendered with: nothing
+ * fetched yet.
+ */
+const useSheetData = () => {
+  const hydrated = useHydrated();
+  const plans = usePlans("plus");
+  const studentPlans = useStudentPlans();
+  const myStudent = useMyStudent().data;
+  return {
+    isStudent: hydrated && (myStudent?.verified ?? false),
+    plans: {
+      data: hydrated ? plans.data : undefined,
+      isError: hydrated && plans.isError,
+      isPending: !hydrated || plans.isPending,
+      refetch: plans.refetch,
+    },
+    studentPlans: { data: hydrated ? studentPlans.data : undefined },
+  };
+};
+
+/**
  * `/plus/plans`: Monthly or Yearly; Glow · Shine · Blaze; the Family switch
  * (the Duo plans: a second Pass and kids' profiles, sharing the slots);
  * the student price applied for verified students (a link to verify for
@@ -249,10 +274,8 @@ export const PlanSheet = () => {
   const tPlans = useTranslations("app.plus.plans");
   const locale = useLocale();
   const id = useId();
-  const plans = usePlans("plus");
+  const { isStudent, plans, studentPlans } = useSheetData();
   const checkout = usePlanCheckout("/plus/plan");
-  const studentPlans = useStudentPlans();
-  const isStudent = useMyStudent().data?.verified ?? false;
   const [billing, setBilling] = useState<"month" | "year">("month");
   const [family, setFamily] = useState(false);
   const [chosen, setChosen] = useState<string | null>(null);
