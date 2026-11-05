@@ -4884,7 +4884,11 @@
         "reserveNotMet": "The reserve price isn't met yet.",
         "condition": "Condition",
         "product": "About this product",
-        "back": "Auctions"
+        "back": "Auctions",
+        "watch": "Watch",
+        "unwatch": "Stop watching",
+        "watchHint": "We'll tell you once when it's in its last day.",
+        "watching": "Watching: we'll tell you once when it's in its last day."
       }
     },
     "codes": {
@@ -5460,6 +5464,10 @@
         "auction_outbid": {
           "title": "You've been outbid",
           "body": "Someone bid more for {name}. The current bid is {amount}."
+        },
+        "auction_ending": {
+          "title": "An auction you watch ends soon",
+          "body": "{name} ends at {time}. The current bid is {amount}."
         },
         "auction_won": {
           "title": "You won the auction",

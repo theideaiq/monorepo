@@ -316,3 +316,54 @@ export const useRemoveCartAuction = () => {
       }),
   });
 };
+
+const watchKey = (auctionId: string) => [...auctionsKey, "watch", auctionId];
+
+/**
+ * Whether the member watches this auction (C9, `auction_watches`): null
+ * while unknown or when watching isn't available (the table not deployed
+ * yet), so the button stays hidden rather than failing.
+ */
+export const useAuctionWatch = (auctionId: string, enabled: boolean) => {
+  const { supabase } = useAuth();
+  return useQuery({
+    enabled: enabled && Boolean(auctionId),
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("auction_watches")
+        .select("auction_id")
+        .eq("auction_id", auctionId)
+        .maybeSingle();
+      return error ? null : Boolean(data);
+    },
+    queryKey: watchKey(auctionId),
+  });
+};
+
+/** Watch an auction, or stop: told once when it is in its last day. */
+export const useToggleAuctionWatch = (auctionId: string) => {
+  const { supabase, user } = useAuth();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (watch: boolean) => {
+      const userId = requireUserId(user?.id);
+      if (watch) {
+        unwrap(
+          await supabase
+            .from("auction_watches")
+            .insert({ auction_id: auctionId })
+        );
+      } else {
+        unwrap(
+          await supabase
+            .from("auction_watches")
+            .delete()
+            .eq("auction_id", auctionId)
+            .eq("user_id", userId)
+        );
+      }
+      return watch;
+    },
+    onSuccess: (watch) => queryClient.setQueryData(watchKey(auctionId), watch),
+  });
+};

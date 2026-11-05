@@ -455,6 +455,20 @@ steps need Xcode, Android Studio and the store/Firebase accounts
 
 ## Decisions
 
+- 2026-11-05: **PR 7, C9: auction improvements** (migration
+  `20270404000000_auction_watches.sql`, pgTAP `…_auction_watches.test.sql`).
+  A member watches a live auction (`auction_watches`, their own rows only)
+  from its page; the API's daily selling sweep runs
+  `remind_auction_watchers()`, which tells each watcher once
+  (`auction_ending`) when the auction is in its last 24 hours, unless they
+  already lead it. The API's crons are daily, so "in its last day" is the
+  promise; a failure of this step is logged and doesn't stop the sweep. In
+  an auction's last hour its time left ticks in minutes and seconds. The
+  Watch button stays hidden until the table exists. Not done: an archive of
+  ended auctions and a share image (next). New Arabic for native review:
+  `app.auctions.page.watch*`/`unwatch`/`watching`,
+  `store.notifications.events.auction_ending`.
+
 - 2026-11-05: **PR 7, A24: shop health** (migration
   `20270403000000_shop_health.sql`, pgTAP `…_shop_health.test.sql`).
   `shop_health(shop)` returns a shop's 90-day score (the nightly

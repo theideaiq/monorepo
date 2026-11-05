@@ -9,10 +9,11 @@ const adminWith = (
 };
 
 describe("sweepSelling", () => {
-  it("runs the seven sweeps and counts what changed", async () => {
+  it("runs the eight sweeps and counts what changed", async () => {
     const { admin, rpc } = adminWith({
       refresh_seller_scores: { data: 4, error: null },
       refresh_was_prices: { data: 3, error: null },
+      remind_auction_watchers: { data: 7, error: null },
       settle_auctions: { data: 5, error: null },
       sweep_listing_sales: { data: 2, error: null },
       sweep_offers: { data: [{ id: "o1" }], error: null },
@@ -20,6 +21,7 @@ describe("sweepSelling", () => {
       sweep_sell_requests: { data: 6, error: null },
     });
     await expect(sweepSelling(admin)).resolves.toEqual({
+      auctionReminders: 7,
       auctions: 5,
       getOffers: 6,
       offers: 1,
@@ -32,11 +34,29 @@ describe("sweepSelling", () => {
       "sweep_returns",
       "sweep_offers",
       "settle_auctions",
+      "remind_auction_watchers",
       "sweep_sell_requests",
       "refresh_seller_scores",
       "sweep_listing_sales",
       "refresh_was_prices",
     ]);
+  });
+
+  it("goes on when the auction reminders fail", async () => {
+    const { admin } = adminWith({
+      refresh_seller_scores: { data: 0, error: null },
+      refresh_was_prices: { data: 0, error: null },
+      remind_auction_watchers: { data: null, error: { message: "missing" } },
+      settle_auctions: { data: 0, error: null },
+      sweep_listing_sales: { data: 0, error: null },
+      sweep_offers: { data: [], error: null },
+      sweep_returns: { data: [], error: null },
+      sweep_sell_requests: { data: 0, error: null },
+    });
+    await expect(sweepSelling(admin)).resolves.toMatchObject({
+      auctionReminders: null,
+      auctions: 0,
+    });
   });
 
   it("stops at the first failure", async () => {
