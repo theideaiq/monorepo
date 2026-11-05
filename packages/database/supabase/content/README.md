@@ -2,7 +2,7 @@
 
 Content for The IDEA Club (`/club`), not schema, run by hand from the **Import
 The IDEA Club content** workflow (`.github/workflows/import-content.yml`):
-choose `posts` or `opportunities`.
+choose `posts`, `opportunities` or `travel`.
 
 ## Posts
 
@@ -43,3 +43,25 @@ Writing rules: at most 300 characters per summary, what it is and who it's
 for; Modern Standard Arabic with Latin digits; tanween al-fath on the letter
 before the alif (شكرًا); an official Arabic name only if the source gives one;
 never free or funded unless the source says so.
+
+## Travel
+
+`travel/` holds batches of Travel Kit routes (one country and visa type
+each) with their lines: documents, tasks and open questions, every line
+with its source, its confidence and the date it was checked. Every route
+goes in as a `draft`, so nothing appears publicly until an editor checks it
+and publishes it in Staff → Club → Travel.
+
+Running a file again rewrites only the import's own untouched routes,
+matched by slug, with their lines. It leaves alone any route an editor has
+published or changed, including one whose lines were edited or added to.
+A route deleted in Staff comes back on a re-run, so retire one instead.
+`scripts/travel-content.test.ts` checks each file's fields and Arabic rules.
+
+Writing rules: only what a source says, and the source on every line.
+Confidence is `official` for the responsible government, its mission in
+Iraq or its appointed visa centre; `secondary` for media or commercial
+pages; `unconfirmed` for the same country's mission elsewhere. Anything not
+sourced is a question to ask, never a requirement. Arabic as above, with
+Latin letters only inside « » (form names and codes), in emails and in web
+addresses; other companies' names in Arabic letters.

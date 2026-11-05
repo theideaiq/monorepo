@@ -455,6 +455,27 @@ steps need Xcode, Android Studio and the store/Firebase accounts
 
 ## Decisions
 
+- 2026-11-05: **Programs handover, part 1: the first Travel Kit routes**
+  (content, no schema; `supabase/content/travel/01-first-routes.sql`, run
+  by hand from the Import The IDEA Club content workflow, now with a
+  `travel` choice). 15 routes for ordinary Iraqi passports from the
+  handover's visa research (checked 2026-11-04): China (youth camp,
+  student), Tunisia (visa waiver), Türkiye (short visit, student), Czechia
+  (study), Hungary (Stipendium Hungaricum), Germany (study), the UK
+  (student, standard visitor), the US (J-1, F-1), Japan (short stay,
+  student) and Malaysia (not confirmed), with 78 lines. Each line keeps its
+  source and confidence: official (the government, its mission in Iraq or
+  its visa centre), secondary (media or commercial), unconfirmed (the same
+  country's mission elsewhere, and every open question). Anything the
+  research could not source is a question, never a requirement; conflicts
+  and what was not read are in each route's note. Everything lands as a
+  draft; a re-run leaves alone any route an editor touched
+  (`scripts/travel-content.test.ts` checks the file). The Iraq-side notes
+  (Foreign Ministry attestation, passports) are not loaded. **To do
+  (owner):** run the import with `travel`, have the Arabic read, then
+  check and publish each route in Staff → Club → Travel. New Arabic for
+  native review: the whole file.
+
 - 2026-11-05: **PR 7, R5: retired code names renamed** (D9, last; no
   schema). Partners' code no longer says "business": the route group is
   `app/[locale]/(dashboard)`, the shell `components/organization/

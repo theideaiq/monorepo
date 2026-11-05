@@ -7,7 +7,10 @@ name: Import The IDEA Club content
 # The IDEA Club. Running it again overwrites the text of those posts.
 # The `opportunities` choice instead loads supabase/content/opportunities: outside
 # programs as drafts under unclaimed organizations; a re-run leaves alone any an
-# editor has approved or changed. Choosing one never runs the other.
+# editor has approved or changed. The `travel` choice loads
+# supabase/content/travel: Travel Kit routes and their sourced lines as drafts,
+# which editors check and publish in Staff → Club → Travel; a re-run leaves
+# alone any route an editor has touched. Choosing one never runs the others.
 # Run it by hand: Actions → "Import The IDEA Club content" → Run.
 # Uses the same `production` environment secrets as migrate.yml.
 
@@ -21,6 +24,7 @@ on:
         options:
           - posts
           - opportunities
+          - travel
 
 concurrency:
   group: migrate-production
@@ -69,6 +73,8 @@ jobs:
         run: |
           if [ "$CONTENT" = "opportunities" ]; then
             bunx supabase db query --linked "select status, count(*) from public.opportunities group by status order by status"
+          elif [ "$CONTENT" = "travel" ]; then
+            bunx supabase db query --linked "select status, count(*) from public.travel_routes group by status order by status"
           else
             bunx supabase db query --linked "select section, count(*) from public.posts where published_at is not null group by section order by section"
           fi
