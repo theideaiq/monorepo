@@ -18,7 +18,7 @@ import { formatDate, formatNumber } from "@repo/internationalization/format";
 import { CopyIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { type FormEvent, type ReactNode, useId, useState } from "react";
-import { BusinessShell } from "@/components/business/business-shell";
+import { PartnersShell } from "@/components/organization/partners-shell";
 import { useActiveOrganization } from "@/components/organization-provider";
 import { ErrorState, SectionSpinner } from "@/components/states";
 import { env } from "@/env";
@@ -385,7 +385,7 @@ const AffiliateBody = () => {
 
 /** Partners → Affiliate. */
 export const AffiliateScreen = () => (
-  <BusinessShell feature="affiliate">
+  <PartnersShell feature="affiliate">
     <AffiliateBody />
-  </BusinessShell>
+  </PartnersShell>
 );

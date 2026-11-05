@@ -17,7 +17,7 @@ import type { Locale } from "@repo/internationalization";
 import { formatDateTime } from "@repo/internationalization/format";
 import { useLocale, useTranslations } from "next-intl";
 import { useId, useState } from "react";
-import { BusinessShell } from "@/components/business/business-shell";
+import { PartnersShell } from "@/components/organization/partners-shell";
 import { useActiveOrganization } from "@/components/organization-provider";
 import { ErrorState, SectionSpinner } from "@/components/states";
 import { type Listing, useListings } from "@/lib/listing-queries";
@@ -404,7 +404,7 @@ const OffersBody = () => {
  * lets them expire), which listings take offers, and the last 30 days.
  */
 export const ShopOffers = () => (
-  <BusinessShell feature="selling" page="offers">
+  <PartnersShell feature="selling" page="offers">
     <OffersBody />
-  </BusinessShell>
+  </PartnersShell>
 );

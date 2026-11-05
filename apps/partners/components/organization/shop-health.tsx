@@ -19,7 +19,7 @@ import { useShopHealth } from "@/lib/today-queries";
  * judged wrong, with what each costs. Nothing when there's nothing to read.
  */
 export const ShopHealth = ({ sellerId }: { readonly sellerId: string }) => {
-  const t = useTranslations("app.business.today.health");
+  const t = useTranslations("app.partners.today.health");
   const locale = useLocale() as Locale;
   const health = useShopHealth(sellerId);
   const row = health.data;

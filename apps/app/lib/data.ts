@@ -95,6 +95,27 @@ export const getCategories = (kind: "sale" | "rental" = "sale") =>
     return supabase ? ((await listCategories(supabase, kind)) ?? []) : [];
   });
 
+/**
+ * The products a read places (`[[product:<slug>]]`), as cards: only those on
+ * sale, so a draft or archived product simply drops out of the post.
+ */
+export const getProductCards = (slugs: readonly string[]) =>
+  fallback("getProductCards", [] as ProductCard[], async () => {
+    const supabase = createPublicClient();
+    if (!supabase || slugs.length === 0) {
+      return [];
+    }
+    const { data, error } = await supabase
+      .from("products")
+      .select(PRODUCT_CARD_COLUMNS)
+      .eq("status", "active")
+      .in("slug", [...slugs]);
+    if (error) {
+      throw error;
+    }
+    return (data ?? []) as unknown as ProductCard[];
+  });
+
 export const getProduct = async (slug: string) => {
   const supabase = createPublicClient();
   return supabase ? await getProductBySlug(supabase, slug) : null;

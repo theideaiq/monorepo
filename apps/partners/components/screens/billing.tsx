@@ -13,7 +13,7 @@ import {
 import { formatCurrency, formatDate } from "@repo/internationalization/format";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect } from "react";
-import { BusinessShell } from "@/components/business/business-shell";
+import { PartnersShell } from "@/components/organization/partners-shell";
 import { useActiveOrganization } from "@/components/organization-provider";
 import { ErrorState, SectionSpinner } from "@/components/states";
 import { reportCompletedCheckout } from "@/lib/checkout-tracking";
@@ -181,7 +181,7 @@ const OrganizationBilling = () => {
 };
 
 export const Billing = () => (
-  <BusinessShell organization>
+  <PartnersShell organization>
     <OrganizationBilling />
-  </BusinessShell>
+  </PartnersShell>
 );

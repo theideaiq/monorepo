@@ -6,7 +6,7 @@ import { getTranslations } from "next-intl/server";
 import type { PerkAudience } from "@/lib/students";
 
 /** A perk as `my_perks()` gives it to the member. */
-interface PerkRow {
+export interface PerkRow {
   area_ar: string;
   area_en: string;
   audience: string;
@@ -37,7 +37,7 @@ const asUpgrade = (value: Json | null): Upgrade | null =>
     ? (value as unknown as Upgrade)
     : null;
 
-type Translate = Awaited<
+export type Translate = Awaited<
   ReturnType<typeof getTranslations<"pass.partnerPerks">>
 >;
 
@@ -64,7 +64,7 @@ const closedLabel = (perk: PerkRow, t: Translate) => {
   return t(perk.audience === "students" ? "verifyToUse" : "joinToUse");
 };
 
-const PerkCard = ({
+export const PerkCard = ({
   locale,
   perk,
   t,

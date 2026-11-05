@@ -1,16 +1,16 @@
 import { AnalyticsProvider } from "@repo/analytics/provider";
 import type { ReactNode } from "react";
 
-interface BusinessLayoutProps {
+interface DashboardLayoutProps {
   readonly children: ReactNode;
 }
 
 /**
- * The business pages (Partners, invitations): analytics and the ad
+ * The Partners pages (the dashboard, invitations): analytics and the ad
  * pixels, as on the website. Staff loads none.
  */
-const BusinessLayout = ({ children }: BusinessLayoutProps) => (
+const DashboardLayout = ({ children }: DashboardLayoutProps) => (
   <AnalyticsProvider>{children}</AnalyticsProvider>
 );
 
-export default BusinessLayout;
+export default DashboardLayout;

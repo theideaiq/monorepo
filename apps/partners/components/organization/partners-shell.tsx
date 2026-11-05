@@ -40,9 +40,9 @@ const SECTION_GROUP: Record<
   team: "organization",
 };
 
-/** For people without a business account: what it is, invitations, create. */
-const BusinessIntro = () => {
-  const t = useTranslations("app.business");
+/** For people not yet in an organization: what Partners is, invitations, create. */
+const PartnersIntro = () => {
+  const t = useTranslations("app.partners");
 
   return (
     <div className="flex max-w-2xl flex-col gap-6">
@@ -77,7 +77,7 @@ const SectionTabs = ({
   readonly label: string;
   readonly tabs: readonly { href: string; key: TabKey }[];
 }) => {
-  const t = useTranslations("app.business");
+  const t = useTranslations("app.partners");
   const pathname = usePathname();
   return (
     <nav
@@ -113,18 +113,18 @@ const SectionOff = ({ feature }: { readonly feature: OrganizationFeature }) => {
   return (
     <div className="grid max-w-xl gap-2">
       <p>
-        {t("business.sections.off", {
+        {t("partners.sections.off", {
           organization: active?.name ?? "",
           section: t(`nav.${feature}`),
         })}
       </p>
       {canManage ? (
         <Link className="text-sm underline" href={ADD_SECTIONS_HREF}>
-          {t("business.sections.offManage")}
+          {t("partners.sections.offManage")}
         </Link>
       ) : (
         <p className="text-muted-foreground text-sm">
-          {t("business.sections.offAsk")}
+          {t("partners.sections.offAsk")}
         </p>
       )}
     </div>
@@ -153,7 +153,7 @@ const useHeading = (
   return { crumb: undefined, title: page ? t(page) : t("today") };
 };
 
-interface BusinessShellProps {
+interface PartnersShellProps {
   /** The header's actions, the primary last (it sits at the end). */
   readonly actions?: ReactNode;
   readonly children: ReactNode;
@@ -175,7 +175,7 @@ interface BusinessShellProps {
  * the organization hasn't added, it says so. The header follows one
  * pattern: breadcrumb (the menu group), title, status chip, actions.
  */
-export const BusinessShell = ({
+export const PartnersShell = ({
   actions,
   children,
   feature,
@@ -183,7 +183,7 @@ export const BusinessShell = ({
   page,
   status,
   title: pageTitle,
-}: BusinessShellProps) => {
+}: PartnersShellProps) => {
   const t = useTranslations("app");
   const { active } = useOrganization();
   const { crumb, title } = useHeading(feature, organization, page);
@@ -193,8 +193,8 @@ export const BusinessShell = ({
   if (!active) {
     content = (
       <>
-        <p className="text-muted-foreground">{t("business.description")}</p>
-        <BusinessIntro />
+        <p className="text-muted-foreground">{t("partners.description")}</p>
+        <PartnersIntro />
       </>
     );
   } else if (feature && !active.features.includes(feature)) {
@@ -205,7 +205,7 @@ export const BusinessShell = ({
       <>
         {organization ? (
           <SectionTabs
-            label={t("business.organization.title")}
+            label={t("partners.organization.title")}
             tabs={ORGANIZATION_TABS}
           />
         ) : null}
@@ -223,7 +223,7 @@ export const BusinessShell = ({
         actions={ready ? actions : undefined}
         crumb={active ? crumb : undefined}
         status={ready ? status : undefined}
-        title={active ? (pageTitle ?? title) : t("business.title")}
+        title={active ? (pageTitle ?? title) : t("partners.title")}
       />
       <div className="flex flex-1 flex-col gap-6 p-4 pt-0">{content}</div>
     </>

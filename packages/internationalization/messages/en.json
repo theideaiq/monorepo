@@ -317,7 +317,9 @@
         "shopDescription": "Sold by {shop}, delivered and paid through The IDEA.",
         "musicCrate": "From the record crate",
         "booksShelf": "On the books shelf",
-        "categories": "Categories"
+        "categories": "Categories",
+        "tonight": "Tonight's pick",
+        "tonightHint": "A game or film from the Store for tonight. A new one every day."
       },
       "categories": "Categories",
       "allCategories": "All",
@@ -865,6 +867,7 @@
       "empty": "Nothing published here yet. Check back soon.",
       "byline": "By {name}",
       "readingTime": "{minutes} min read",
+      "step": "Step {step} of {total}",
       "theIdea": "The IDEA",
       "meta": {
         "title": "The IDEA Club — join, read and take part",
@@ -1865,6 +1868,8 @@
     "pass": {
       "bulbs": "{bulbs} Bulbs to spend",
       "familyHint": "Your partner, teens and kids on one plan",
+      "perks": "Partner perks",
+      "perksHint": "Discounts at partners when you show your card",
       "availability": {
         "now": "Available now",
         "short": "Short wait",
@@ -2029,6 +2034,18 @@
           "ask": "Ask",
           "approved": "{item}: yes, it's in the queue",
           "declined": "{item}: not this time"
+        }
+      },
+      "year": {
+        "title": "Your year",
+        "hint": "What you did at The IDEA this year",
+        "intro": "Your {year} at The IDEA, from your own orders, rentals and visits.",
+        "empty": "Nothing yet this year. Your year fills in as you order, rent and come to Club events.",
+        "numbers": {
+          "orders": "Orders",
+          "rentals": "Plus rentals",
+          "events": "Club events",
+          "bulbs": "Bulbs earned"
         }
       }
     },
@@ -2870,7 +2887,7 @@
         "withdrawFailed": "This submission can no longer be withdrawn."
       }
     },
-    "business": {
+    "partners": {
       "title": "Partners",
       "description": "Partners: for shops, suppliers and organizations working with The IDEA.",
       "intro": {
@@ -5105,6 +5122,26 @@
         "empty": "No open questions for this trip.",
         "failed": "That didn't save. Try again."
       }
+    },
+    "mixtape": {
+      "title": "Make a mixtape",
+      "description": "Name it, pick records from the Music shelf, then share the link with a friend.",
+      "name": "Mixtape name",
+      "namePlaceholder": "Road trip",
+      "start": "Start",
+      "error": "We couldn't make the mixtape. Try again.",
+      "count": "{n, plural, one {{count} record} other {{count} records}}",
+      "emptyTape": "Nothing on it yet. Search below and add records.",
+      "search": "Find records",
+      "searchPlaceholder": "Artist or album",
+      "moveHint": "A record you already saved moves into this mixtape.",
+      "noResults": "No records match.",
+      "add": "Add",
+      "move": "Move here",
+      "added": "Added",
+      "addError": "We couldn't add that record. Try again.",
+      "allLists": "All your lists",
+      "link": "Make a mixtape"
     }
   },
   "store": {
@@ -7347,6 +7384,7 @@
         "cover": "Cover image",
         "bodyAr": "Article (Arabic)",
         "bodyEn": "Article (English)",
+        "bodyExtras": "In a post under Guides, numbered lists show as step cards. To place a product with its live price, put «[[product:slug]]» on a line of its own, with the product's slug. Drafts and archived products don't show.",
         "topics": "Topics (at least one)",
         "topicNames": {
           "news": "News",
@@ -9072,7 +9110,13 @@
       "joinToUse": "Join Plus to use it",
       "tierToUse": "For Plus {tiers}",
       "upgradePlus": "With Plus: {title}",
-      "upgradeStudents": "For students: {title}"
+      "upgradeStudents": "For students: {title}",
+      "hub": {
+        "title": "Your perks",
+        "yours": "Yours now",
+        "more": "More with a student badge or Plus",
+        "empty": "No partner perks yet. They show here as partners add them."
+      }
     },
     "authorize": {
       "meta": "Sign in with The IDEA Pass",

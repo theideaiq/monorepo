@@ -20,7 +20,7 @@ import {
 } from "@repo/internationalization/format";
 import { useLocale, useTranslations } from "next-intl";
 import { type FormEvent, useId, useState } from "react";
-import { BusinessShell } from "@/components/business/business-shell";
+import { PartnersShell } from "@/components/organization/partners-shell";
 import { useActiveOrganization } from "@/components/organization-provider";
 import { ErrorState, SectionSpinner } from "@/components/states";
 import { useListings } from "@/lib/listing-queries";
@@ -531,7 +531,7 @@ const AuctionsBody = () => {
  * ones and wins waiting for payment, and act on unpaid ones.
  */
 export const ShopAuctions = () => (
-  <BusinessShell feature="selling" page="auctions">
+  <PartnersShell feature="selling" page="auctions">
     <AuctionsBody />
-  </BusinessShell>
+  </PartnersShell>
 );

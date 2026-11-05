@@ -27,7 +27,7 @@ import { useRouter } from "@repo/internationalization/navigation";
 import { CheckIcon, CopyIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { type FormEvent, useId, useState } from "react";
-import { BusinessShell } from "@/components/business/business-shell";
+import { PartnersShell } from "@/components/organization/partners-shell";
 import { useActiveOrganization } from "@/components/organization-provider";
 import { ErrorState, SectionSpinner } from "@/components/states";
 import { env } from "@/env";
@@ -39,13 +39,13 @@ import {
   useOrganizationInvitations,
   useRemoveMember,
   useRevokeInvitation,
-} from "@/lib/business-queries";
+} from "@/lib/organization-queries";
 
 const inviteLink = (locale: string, token: string) =>
   `${env.NEXT_PUBLIC_APP_URL}${localePath(locale, "/invite")}?token=${token}`;
 
 const CopyButton = ({ text }: { readonly text: string }) => {
-  const t = useTranslations("app.business.members.pending");
+  const t = useTranslations("app.partners.members.pending");
   const [copied, setCopied] = useState(false);
   return (
     <Button
@@ -82,8 +82,8 @@ const MemberList = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{t("business.members.title")}</CardTitle>
-        <CardDescription>{t("business.members.description")}</CardDescription>
+        <CardTitle>{t("partners.members.title")}</CardTitle>
+        <CardDescription>{t("partners.members.description")}</CardDescription>
       </CardHeader>
       <CardContent>
         {members.isPending ? <SectionSpinner /> : null}
@@ -102,11 +102,11 @@ const MemberList = () => {
               >
                 <div className="flex min-w-0 items-center gap-2">
                   <span className="truncate font-medium text-sm">
-                    {member.fullName || t("business.members.unnamed")}
+                    {member.fullName || t("partners.members.unnamed")}
                   </span>
                   {self ? (
                     <Badge variant="secondary">
-                      {t("business.members.you")}
+                      {t("partners.members.you")}
                     </Badge>
                   ) : null}
                 </div>
@@ -123,7 +123,7 @@ const MemberList = () => {
                       value={member.role}
                     >
                       <SelectTrigger
-                        aria-label={t("business.members.role")}
+                        aria-label={t("partners.members.role")}
                         className="w-32"
                         size="sm"
                       >
@@ -158,8 +158,8 @@ const MemberList = () => {
                       variant="ghost"
                     >
                       {self
-                        ? t("business.members.leave")
-                        : t("business.members.remove")}
+                        ? t("partners.members.leave")
+                        : t("partners.members.remove")}
                     </Button>
                   ) : null}
                 </div>
@@ -169,7 +169,7 @@ const MemberList = () => {
         </ul>
         {changeRole.isError || remove.isError ? (
           <p className="text-destructive text-sm" role="alert">
-            {t("business.members.failed")}
+            {t("partners.members.failed")}
           </p>
         ) : null}
       </CardContent>
@@ -193,7 +193,7 @@ const Invitations = () => {
   if (!canManage) {
     return (
       <p className="text-muted-foreground text-sm">
-        {t("business.members.invite.managersOnly")}
+        {t("partners.members.invite.managersOnly")}
       </p>
     );
   }
@@ -221,9 +221,9 @@ const Invitations = () => {
     <>
       <Card>
         <CardHeader>
-          <CardTitle>{t("business.members.invite.title")}</CardTitle>
+          <CardTitle>{t("partners.members.invite.title")}</CardTitle>
           <CardDescription>
-            {t("business.members.invite.description")}
+            {t("partners.members.invite.description")}
           </CardDescription>
         </CardHeader>
         <CardContent className="grid gap-3">
@@ -233,7 +233,7 @@ const Invitations = () => {
           >
             <div className="grid flex-1 gap-2">
               <Label htmlFor={`${id}-invitee`}>
-                {t("business.members.invite.invitee")}
+                {t("partners.members.invite.invitee")}
               </Label>
               <Input
                 aria-invalid={invalid}
@@ -253,7 +253,7 @@ const Invitations = () => {
               value={role}
             >
               <SelectTrigger
-                aria-label={t("business.members.role")}
+                aria-label={t("partners.members.role")}
                 className="sm:w-32"
               >
                 <SelectValue />
@@ -268,18 +268,18 @@ const Invitations = () => {
               type="submit"
             >
               {invite.isPending
-                ? t("business.members.invite.submitting")
-                : t("business.members.invite.submit")}
+                ? t("partners.members.invite.submitting")
+                : t("partners.members.invite.submit")}
             </Button>
           </form>
           {invalid ? (
             <p className="text-destructive text-sm" role="alert">
-              {t("business.members.invite.invalid")}
+              {t("partners.members.invite.invalid")}
             </p>
           ) : null}
           {invite.isError ? (
             <p className="text-destructive text-sm" role="alert">
-              {t("business.members.failed")}
+              {t("partners.members.failed")}
             </p>
           ) : null}
           {sentToken ? (
@@ -288,7 +288,7 @@ const Invitations = () => {
               role="status"
             >
               <span className="flex-1">
-                {t("business.members.invite.sent")}
+                {t("partners.members.invite.sent")}
               </span>
               <CopyButton text={inviteLink(locale, sentToken)} />
             </div>
@@ -298,13 +298,13 @@ const Invitations = () => {
 
       <Card>
         <CardHeader>
-          <CardTitle>{t("business.members.pending.title")}</CardTitle>
+          <CardTitle>{t("partners.members.pending.title")}</CardTitle>
         </CardHeader>
         <CardContent>
           {invitations.isPending ? <SectionSpinner /> : null}
           {invitations.data?.length === 0 ? (
             <p className="text-muted-foreground text-sm">
-              {t("business.members.pending.empty")}
+              {t("partners.members.pending.empty")}
             </p>
           ) : null}
           <ul className="divide-y">
@@ -321,7 +321,7 @@ const Invitations = () => {
                   </span>
                   <span className="text-muted-foreground text-xs">
                     {t(`roles.${invitation.role}`)} ·{" "}
-                    {t("business.members.pending.expires", {
+                    {t("partners.members.pending.expires", {
                       date: formatDate(invitation.expires_at, locale),
                     })}
                   </span>
@@ -334,7 +334,7 @@ const Invitations = () => {
                     size="sm"
                     variant="ghost"
                   >
-                    {t("business.members.pending.revoke")}
+                    {t("partners.members.pending.revoke")}
                   </Button>
                 </div>
               </li>
@@ -346,11 +346,11 @@ const Invitations = () => {
   );
 };
 
-export const BusinessMembers = () => (
-  <BusinessShell organization>
+export const Members = () => (
+  <PartnersShell organization>
     <div className="grid max-w-3xl gap-6">
       <MemberList />
       <Invitations />
     </div>
-  </BusinessShell>
+  </PartnersShell>
 );

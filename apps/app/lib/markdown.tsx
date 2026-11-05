@@ -2,7 +2,9 @@ import { localePath, withoutLocalePrefix } from "@repo/internationalization";
 import { currentAppPath } from "@repo/internationalization/app-paths";
 import type {
   Heading,
+  List,
   Nodes,
+  Paragraph,
   Parent,
   PhrasingContent,
   Root,
@@ -77,18 +79,53 @@ export const markdownToText = (source: string, maxLength = 200) => {
     }
   };
   walk(parseMarkdown(source));
-  const text = parts.join("").replace(/\s+/g, " ").trim();
+  const text = parts
+    .join("")
+    .replace(PRODUCT_EMBEDS, " ")
+    .replace(/\s+/g, " ")
+    .trim();
   return text.length > maxLength
     ? `${text.slice(0, maxLength - 1).trimEnd()}…`
     : text;
 };
 
+/**
+ * A product placed in a read (A21): a paragraph holding only
+ * `[[product:<slug>]]` shows that product's card with its live price.
+ */
+const PRODUCT_EMBED = /^\s*\[\[product:([\w-]+)\]\]\s*$/;
+const PRODUCT_EMBEDS = /\[\[product:([\w-]+)\]\]/g;
+
+/** The product slugs a document places, in order, without repeats. */
+export const embeddedProductSlugs = (source: string): string[] => [
+  ...new Set(
+    [...source.matchAll(PRODUCT_EMBEDS)].map((match) => match[1] ?? "")
+  ),
+];
+
+interface RenderContext {
+  /** Renders a placed product, or nothing when it isn't on sale. */
+  readonly product?: (slug: string, key: string) => ReactNode;
+  /** Ordered lists become numbered step cards with this label (A20). */
+  readonly step?: (number: number, total: number) => string;
+}
+
+const embeddedSlug = (node: RootContent | PhrasingContent) => {
+  if (node.type !== "paragraph" || node.children.length !== 1) {
+    return null;
+  }
+  const [only] = node.children;
+  return only?.type === "text"
+    ? (PRODUCT_EMBED.exec(only.value)?.[1] ?? null)
+    : null;
+};
+
 const keyOf = (node: Nodes, index: number) =>
   `${node.type}-${node.position?.start.offset ?? "x"}-${index}`;
 
-const renderChildren = (parent: Parent, depth: number): ReactNode[] =>
+const renderChildren = (parent: Parent, ctx: RenderContext): ReactNode[] =>
   (parent.children as RootContent[]).map((child, index) =>
-    renderNode(child, keyOf(child, index), depth)
+    renderNode(child, keyOf(child, index), ctx)
   );
 
 const ALIGNMENT: Record<string, string> = {
@@ -117,7 +154,7 @@ const renderRow = (
   key: string,
   header: boolean,
   align: (string | null)[],
-  depth: number
+  ctx: RenderContext
 ) => (
   <tr key={key}>
     {row.children.map((cell, index) => {
@@ -128,38 +165,92 @@ const renderRow = (
           className={ALIGNMENT[alignment ?? "left"] ?? "text-start"}
           key={keyOf(cell, index)}
         >
-          {renderChildren(cell, depth)}
+          {renderChildren(cell, ctx)}
         </Cell>
       );
     })}
   </tr>
 );
 
+/**
+ * A guide's numbered list as step cards: "Step 2 of 5" over each step.
+ * Lists inside a step stay plain lists.
+ */
+const renderSteps = (
+  list: List,
+  key: string,
+  ctx: RenderContext,
+  step: NonNullable<RenderContext["step"]>
+) => {
+  const first = list.start ?? 1;
+  const last = first + list.children.length - 1;
+  const inner: RenderContext = { ...ctx, step: undefined };
+  return (
+    <ol className="not-prose my-6 grid list-none gap-3 ps-0" key={key}>
+      {list.children.map((item, index) => (
+        <li
+          className="grid gap-2 rounded-lg border bg-card p-4 leading-relaxed"
+          key={keyOf(item, index)}
+        >
+          <p className="font-semibold text-pink-text text-sm">
+            {step(first + index, last)}
+          </p>
+          <div className="prose prose-neutral dark:prose-invert prose-p:my-1 max-w-none">
+            {item.children.map((child, childIndex) =>
+              renderNode(child, keyOf(child, childIndex), inner)
+            )}
+          </div>
+        </li>
+      ))}
+    </ol>
+  );
+};
+
+const renderParagraph = (node: Paragraph, key: string, ctx: RenderContext) => {
+  const slug = ctx.product ? embeddedSlug(node) : null;
+  if (slug && ctx.product) {
+    return ctx.product(slug, key);
+  }
+  return <p key={key}>{renderChildren(node, ctx)}</p>;
+};
+
+const renderList = (node: List, key: string, ctx: RenderContext) => {
+  if (node.ordered && ctx.step) {
+    return renderSteps(node, key, ctx, ctx.step);
+  }
+  const Tag = node.ordered ? "ol" : "ul";
+  return (
+    <Tag key={key} start={node.ordered ? (node.start ?? 1) : undefined}>
+      {renderChildren(node, ctx)}
+    </Tag>
+  );
+};
+
 const renderNode = (
   node: RootContent | PhrasingContent,
   key: string,
-  depth: number
+  ctx: RenderContext
 ): ReactNode => {
   switch (node.type) {
     case "paragraph":
-      return <p key={key}>{renderChildren(node, depth)}</p>;
+      return renderParagraph(node, key, ctx);
     case "heading": {
       // The page title is the h1; document headings start at h2.
       const Tag = headingTags[node.depth - 1] ?? "h6";
       return (
         <Tag id={sectionId(node)} key={key}>
-          {renderChildren(node, depth)}
+          {renderChildren(node, ctx)}
         </Tag>
       );
     }
     case "text":
       return node.value;
     case "emphasis":
-      return <em key={key}>{renderChildren(node, depth)}</em>;
+      return <em key={key}>{renderChildren(node, ctx)}</em>;
     case "strong":
-      return <strong key={key}>{renderChildren(node, depth)}</strong>;
+      return <strong key={key}>{renderChildren(node, ctx)}</strong>;
     case "delete":
-      return <del key={key}>{renderChildren(node, depth)}</del>;
+      return <del key={key}>{renderChildren(node, ctx)}</del>;
     case "inlineCode":
       return <code key={key}>{node.value}</code>;
     case "code":
@@ -169,21 +260,15 @@ const renderNode = (
         </pre>
       );
     case "blockquote":
-      return <blockquote key={key}>{renderChildren(node, depth)}</blockquote>;
-    case "list": {
-      const Tag = node.ordered ? "ol" : "ul";
-      return (
-        <Tag key={key} start={node.ordered ? (node.start ?? 1) : undefined}>
-          {renderChildren(node, depth)}
-        </Tag>
-      );
-    }
+      return <blockquote key={key}>{renderChildren(node, ctx)}</blockquote>;
+    case "list":
+      return renderList(node, key, ctx);
     case "listItem": {
       // Tight list items wrap their text in paragraphs; unwrap them.
       const content = node.children.flatMap((child, index) =>
         child.type === "paragraph" && !node.spread
-          ? renderChildren(child, depth)
-          : [renderNode(child, keyOf(child, index), depth)]
+          ? renderChildren(child, ctx)
+          : [renderNode(child, keyOf(child, index), ctx)]
       );
       return (
         <li key={key}>
@@ -203,15 +288,15 @@ const renderNode = (
     case "link": {
       const href = safeUrl(node.url);
       if (!href) {
-        return <span key={key}>{renderChildren(node, depth)}</span>;
+        return <span key={key}>{renderChildren(node, ctx)}</span>;
       }
       return isExternal(href) ? (
         <a href={href} key={key} rel="noopener noreferrer" target="_blank">
-          {renderChildren(node, depth)}
+          {renderChildren(node, ctx)}
         </a>
       ) : (
         <a href={href} key={key}>
-          {renderChildren(node, depth)}
+          {renderChildren(node, ctx)}
         </a>
       );
     }
@@ -234,11 +319,11 @@ const renderNode = (
         <div className="overflow-x-auto" key={key}>
           <table>
             {head ? (
-              <thead>{renderRow(head, "head", true, align, depth)}</thead>
+              <thead>{renderRow(head, "head", true, align, ctx)}</thead>
             ) : null}
             <tbody>
               {body.map((row, index) =>
-                renderRow(row, keyOf(row, index), false, align, depth)
+                renderRow(row, keyOf(row, index), false, align, ctx)
               )}
             </tbody>
           </table>
@@ -301,7 +386,7 @@ const normalizeHeadings = (tree: Root) => {
   }
 };
 
-interface MarkdownProps {
+interface MarkdownProps extends RenderContext {
   readonly className?: string;
   /** Prefixes site-relative links with this language. */
   readonly locale?: string;
@@ -309,11 +394,19 @@ interface MarkdownProps {
 }
 
 /** Renders Markdown as React elements; raw HTML is never rendered. */
-export const Markdown = ({ className, locale, source }: MarkdownProps) => {
+export const Markdown = ({
+  className,
+  locale,
+  product,
+  source,
+  step,
+}: MarkdownProps) => {
   const tree = parseMarkdown(source);
   normalizeHeadings(tree);
   if (locale) {
     localizeLinks(tree, locale);
   }
-  return <div className={className}>{renderChildren(tree, 0)}</div>;
+  return (
+    <div className={className}>{renderChildren(tree, { product, step })}</div>
+  );
 };

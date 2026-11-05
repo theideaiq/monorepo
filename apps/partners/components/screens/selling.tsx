@@ -18,8 +18,8 @@ import { fileNameOf } from "@repo/storage";
 import { FileUpIcon, TrashIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { type ChangeEvent, type FormEvent, useId, useState } from "react";
-import { BusinessShell } from "@/components/business/business-shell";
-import { SoldOnKit } from "@/components/business/sold-on-kit";
+import { PartnersShell } from "@/components/organization/partners-shell";
+import { SoldOnKit } from "@/components/organization/sold-on-kit";
 import { useActiveOrganization } from "@/components/organization-provider";
 import { PickupBranches } from "@/components/screens/pickup-locations";
 import { ErrorState, SectionSpinner } from "@/components/states";
@@ -456,7 +456,7 @@ const StatusChip = () => {
  * branches.
  */
 export const Selling = () => (
-  <BusinessShell feature="selling" page="shopSettings" status={<StatusChip />}>
+  <PartnersShell feature="selling" page="shopSettings" status={<StatusChip />}>
     <SellingBody />
-  </BusinessShell>
+  </PartnersShell>
 );

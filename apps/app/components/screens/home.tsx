@@ -11,12 +11,14 @@ import {
 import { Link } from "@repo/internationalization/navigation";
 import {
   CalendarDaysIcon,
+  CalendarHeartIcon,
   ChevronRightIcon,
   HouseIcon,
   InboxIcon,
   type LucideIcon,
   LuggageIcon,
   MoveRight,
+  TicketPercentIcon,
   TruckIcon,
   UsersIcon,
 } from "lucide-react";
@@ -401,6 +403,22 @@ const Rows = () => {
             href="/pass/travel"
             icon={LuggageIcon}
             label={t("nav.travel")}
+          />
+        </li>
+        <li>
+          <RowLink
+            hint={t("pass.year.hint")}
+            href="/pass/year"
+            icon={CalendarHeartIcon}
+            label={t("pass.year.title")}
+          />
+        </li>
+        <li>
+          <RowLink
+            hint={t("pass.perksHint")}
+            href="/pass/perks"
+            icon={TicketPercentIcon}
+            label={t("pass.perks")}
           />
         </li>
         <li>

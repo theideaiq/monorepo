@@ -2,8 +2,8 @@ import type { Database } from "@repo/database";
 import { type DroidBot, notifyMember } from "@repo/droid";
 import { localePath } from "@repo/internationalization";
 import {
-  businessPath,
   currentAppPath,
+  partnersPath,
   safeNextPath,
 } from "@repo/internationalization/app-paths";
 import type { SupabaseClient } from "@supabase/supabase-js";
@@ -23,7 +23,7 @@ export interface TelegramSummary {
  */
 export const notificationUrl = (link: string | null, locale: "ar" | "en") => {
   const path = safeNextPath(link);
-  const business = path ? businessPath(path) : null;
+  const business = path ? partnersPath(path) : null;
   return business
     ? new URL(localePath(locale, business), env.NEXT_PUBLIC_APP_URL).toString()
     : new URL(

@@ -343,7 +343,7 @@ const currentPartnersPage = (page: string) => {
  * the prefix (`/selling/auctions` → `/sell/auctions`); null for the
  * website's pages.
  */
-export const businessPath = (path: string) => {
+export const partnersPath = (path: string) => {
   if (PARTNERS_SECTION.test(path)) {
     return currentPartnersPage(path);
   }

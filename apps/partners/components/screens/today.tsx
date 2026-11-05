@@ -38,9 +38,9 @@ import {
   UsersIcon,
 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
-import { BusinessShell } from "@/components/business/business-shell";
-import { ShopHealth } from "@/components/business/shop-health";
 import { ListActions } from "@/components/list-actions";
+import { PartnersShell } from "@/components/organization/partners-shell";
+import { ShopHealth } from "@/components/organization/shop-health";
 import { useActiveOrganization } from "@/components/organization-provider";
 import { ErrorState, SectionSpinner } from "@/components/states";
 import { useShopPayouts } from "@/lib/payout-queries";
@@ -103,7 +103,7 @@ const KeyNumbers = ({
   readonly rows: ShopRows;
   readonly sellerId: string;
 }) => {
-  const t = useTranslations("app.business.today.numbers");
+  const t = useTranslations("app.partners.today.numbers");
   const locale = useLocale() as Locale;
   const lines = useShopLines(sellerId);
   const payouts = useShopPayouts(sellerId);
@@ -191,7 +191,7 @@ const FirstSale = ({
   readonly rows: ShopRows;
   readonly sellerId: string;
 }) => {
-  const t = useTranslations("app.business.today.firstSale");
+  const t = useTranslations("app.partners.today.firstSale");
   const lines = useShopLines(sellerId);
   const locations = useShopLocations(sellerId);
   if (lines.isPending || locations.isPending) {
@@ -262,7 +262,7 @@ const FirstSale = ({
 
 /** When a task is due, in words with an icon. */
 const Due = ({ due }: { readonly due: string | null }) => {
-  const t = useTranslations("app.business.today.tasks");
+  const t = useTranslations("app.partners.today.tasks");
   const locale = useLocale() as Locale;
   if (!due) {
     return null;
@@ -285,7 +285,7 @@ const Due = ({ due }: { readonly due: string | null }) => {
 };
 
 const TaskRow = ({ task }: { readonly task: Task }) => {
-  const t = useTranslations("app.business.today.tasks");
+  const t = useTranslations("app.partners.today.tasks");
   const locale = useLocale() as Locale;
   const Icon = taskIcons[task.kind];
   const name = locale === "ar" ? task.name.ar : task.name.en;
@@ -323,7 +323,7 @@ const TaskRow = ({ task }: { readonly task: Task }) => {
 
 /** Every task waiting for the organization, by deadline. */
 const Tasks = ({ tasks }: { readonly tasks: readonly Task[] }) => {
-  const t = useTranslations("app.business.today.tasks");
+  const t = useTranslations("app.partners.today.tasks");
   return (
     <section aria-labelledby="tasks" className="grid gap-3">
       <h2 className="font-semibold text-lg" id="tasks">
@@ -350,7 +350,7 @@ const Tasks = ({ tasks }: { readonly tasks: readonly Task[] }) => {
 
 /** The plan line under Today. */
 const PlanLine = () => {
-  const t = useTranslations("app.business.overview");
+  const t = useTranslations("app.partners.overview");
   const locale = useLocale();
   const { active } = useActiveOrganization();
   const plans = usePlans("business");
@@ -455,12 +455,12 @@ const AddSections = () => {
     >
       <div className="grid gap-1">
         <h2 className="font-semibold text-lg" id="add-sections-title">
-          {t("business.sections.title")}
+          {t("partners.sections.title")}
         </h2>
         <p className="text-muted-foreground text-sm">
           {canManage
-            ? t("business.sections.description")
-            : t("business.sections.offAsk")}
+            ? t("partners.sections.description")
+            : t("partners.sections.offAsk")}
         </p>
       </div>
       <ul className="grid gap-3 sm:grid-cols-2">
@@ -479,13 +479,13 @@ const AddSections = () => {
                 <span className="grid gap-1">
                   <span className="font-medium">{t(`nav.${feature}`)}</span>
                   <span className="text-muted-foreground text-sm">
-                    {t(`business.sections.${feature}.description`)}
+                    {t(`partners.sections.${feature}.description`)}
                   </span>
                 </span>
               </span>
               {canManage ? (
                 <Button
-                  aria-label={t("business.sections.addSection", {
+                  aria-label={t("partners.sections.addSection", {
                     section: t(`nav.${feature}`),
                   })}
                   disabled={setFeature.isPending}
@@ -494,7 +494,7 @@ const AddSections = () => {
                   variant="outline"
                 >
                   <PlusIcon />
-                  {t("business.sections.add")}
+                  {t("partners.sections.add")}
                 </Button>
               ) : null}
             </li>
@@ -503,7 +503,7 @@ const AddSections = () => {
       </ul>
       {setFeature.isError ? (
         <p className="text-destructive text-sm" role="alert">
-          {t("business.sections.failed")}
+          {t("partners.sections.failed")}
         </p>
       ) : null}
     </section>
@@ -511,8 +511,8 @@ const AddSections = () => {
 };
 
 /** Today (`/`): the active organization's day, or the introduction. */
-export const Business = () => (
-  <BusinessShell actions={<ListActions />}>
+export const Today = () => (
+  <PartnersShell actions={<ListActions />}>
     <TodayBody />
-  </BusinessShell>
+  </PartnersShell>
 );

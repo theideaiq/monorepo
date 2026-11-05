@@ -15,7 +15,7 @@ vi.mock("@repo/analytics/client", () => ({
 
 const TEAM = /^Team$/;
 
-const { Business } = await import("@/components/screens/business");
+const { Today } = await import("@/components/screens/today");
 const { SideMenu } = await import("@/components/side-menu");
 const { OrganizationProvider } = await import(
   "@/components/organization-provider"
@@ -105,8 +105,8 @@ const renderScreen = (
 ) =>
   renderWithApp(<SidebarProvider>{ui}</SidebarProvider>, { locale, supabase });
 
-describe("business", () => {
-  test("Business offers to create or join one", async () => {
+describe("organization screens", () => {
+  test("Today offers to create or join one", async () => {
     const db = fakeDb({
       results: { "organization_members.select": { data: [], error: null } },
       rpcs: {
@@ -124,7 +124,7 @@ describe("business", () => {
     });
     renderScreen(
       <OrganizationProvider>
-        <Business />
+        <Today />
       </OrganizationProvider>,
       db.supabase
     );
@@ -142,7 +142,7 @@ describe("business", () => {
     const db = approvedShop(["selling"]);
     renderScreen(
       <OrganizationProvider>
-        <Business />
+        <Today />
       </OrganizationProvider>,
       db.supabase
     );

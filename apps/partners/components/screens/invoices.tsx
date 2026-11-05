@@ -4,7 +4,7 @@ import { Badge } from "@repo/design-system/components/ui/badge";
 import { formatCurrency, formatDate } from "@repo/internationalization/format";
 import { Link } from "@repo/internationalization/navigation";
 import { useLocale, useTranslations } from "next-intl";
-import { BusinessShell } from "@/components/business/business-shell";
+import { PartnersShell } from "@/components/organization/partners-shell";
 import { useActiveOrganization } from "@/components/organization-provider";
 import { ErrorState, SectionSpinner } from "@/components/states";
 import { useInvoices } from "@/lib/procurement-queries";
@@ -93,7 +93,7 @@ const InvoiceList = () => {
 };
 
 export const Invoices = () => (
-  <BusinessShell organization>
+  <PartnersShell organization>
     <InvoiceList />
-  </BusinessShell>
+  </PartnersShell>
 );

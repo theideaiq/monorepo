@@ -1,16 +1,16 @@
 import { Suspense } from "react";
-import { BusinessSettings } from "@/components/screens/business-settings";
+import { Members } from "@/components/screens/members";
 import { SectionSpinner } from "@/components/states";
 import { titleFrom } from "@/lib/metadata";
 
 export const generateMetadata = titleFrom((t) =>
-  t("app.business.settings.title")
+  t("app.partners.members.title")
 );
 
-const BusinessSettingsPage = () => (
+const MembersPage = () => (
   <Suspense fallback={<SectionSpinner />}>
-    <BusinessSettings />
+    <Members />
   </Suspense>
 );
 
-export default BusinessSettingsPage;
+export default MembersPage;

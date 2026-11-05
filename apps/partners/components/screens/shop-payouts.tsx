@@ -12,7 +12,7 @@ import {
 import type { Locale } from "@repo/internationalization";
 import { formatDate, formatDateTime } from "@repo/internationalization/format";
 import { useLocale, useTranslations } from "next-intl";
-import { BusinessShell } from "@/components/business/business-shell";
+import { PartnersShell } from "@/components/organization/partners-shell";
 import { useActiveOrganization } from "@/components/organization-provider";
 import { ErrorState, SectionSpinner } from "@/components/states";
 import { type ShopPayout, useShopPayouts } from "@/lib/payout-queries";
@@ -174,7 +174,7 @@ const PayoutsBody = () => {
  * statement (items paid after commission, fees deducted).
  */
 export const ShopPayouts = () => (
-  <BusinessShell feature="selling" page="payouts">
+  <PartnersShell feature="selling" page="payouts">
     <PayoutsBody />
-  </BusinessShell>
+  </PartnersShell>
 );

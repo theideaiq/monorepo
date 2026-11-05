@@ -7,8 +7,8 @@ import type { Enums, Json } from "@repo/database";
 import type { Locale } from "@repo/internationalization";
 import { localePath } from "@repo/internationalization";
 import {
-  businessPath,
   currentAppPath,
+  partnersPath,
   safeNextPath,
 } from "@repo/internationalization/app-paths";
 import {
@@ -313,7 +313,7 @@ export const notificationHref = (link: string | null, locale = "en") => {
     return null;
   }
   return (
-    businessPath(path) ??
+    partnersPath(path) ??
     new URL(localePath(locale, currentAppPath(path)), passOrigin()).href
   );
 };
