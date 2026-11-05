@@ -455,6 +455,23 @@ steps need Xcode, Android Studio and the store/Firebase accounts
 
 ## Decisions
 
+- 2026-11-05: **PR 7, part 1** (owner: start PR 7 in parts). C8: the
+  Store's top-level categories as picture tiles above the catalog, each
+  with a real cover from that category (a featured product's, else the
+  newest; empty categories are left out). C28: Partners → Developers
+  shows a quick start in each app's card, filled in with its client id,
+  first return address and answers (the sign-in link, the token request,
+  the discovery document). A27: the website's page content crossfades on
+  navigation (React `<ViewTransition>`; header and tabs stay put; none for
+  reduced motion). A shared cover morph from card to product page was left
+  out: the same product sits in several rows of one page, and duplicate
+  transition names cancel the transition. A29: `/status` on the website,
+  in both languages, lists the website, Partners, Staff, the API, the
+  developer docs and the product feed with their state (the worst of each
+  one's Better Stack monitors, grouped by address in `servicesOf`), and
+  links to the Better Stack page for the history. C26 (saved reasons in
+  the Inbox) follows with its schema.
+
 - 2026-11-04: **A28, performance budget on a mid-range Android phone.**
   `apps/e2e/tests/performance.spec.ts` (Playwright project "mid-range
   Android", in the CI e2e job) loads the home page, store, a product page,
