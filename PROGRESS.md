@@ -455,6 +455,13 @@ steps need Xcode, Android Studio and the store/Firebase accounts
 
 ## Decisions
 
+- 2026-11-05: **PR 7, C15: what Plus has been worth.** `/plus/plan` shows a
+  member how many items they have had through Plus (Plus rentals that went
+  out) and what those versions cost in the Store today (`usePlusValue`,
+  each version's current price; versions no longer priced add nothing). It
+  doesn't claim a net saving against what the plan cost: plan payments
+  aren't split by period here, so only the Store value is shown.
+
 - 2026-11-05: **PR 7, C19 and C11's schema.** C19: the Club's
   opportunities page shows, before any filter, the destinations listed now
   as chips with how many opportunities go to each (most first), each

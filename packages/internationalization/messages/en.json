@@ -2526,7 +2526,13 @@
         "queue": "Your queue",
         "history": "Past rentals",
         "family": "Family",
-        "familyLink": "Family in your Pass"
+        "familyLink": "Family in your Pass",
+        "value": {
+          "title": "What Plus has been worth",
+          "worth": "Items you've had through Plus so far: {count}. Bought in the Store at today's prices, they'd cost {price}.",
+          "items": "Items you've had through Plus so far: {count}.",
+          "note": "From each version's Store price today; items no longer sold aren't counted in the price."
+        }
       },
       "catalog": {
         "title": "Rental catalog",

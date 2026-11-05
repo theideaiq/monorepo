@@ -224,3 +224,48 @@ export const usePlanCheckout = (
 /** A plan the member can use now (not merely awaiting payment). */
 export const isLivePlan = (status: string | null | undefined) =>
   status === "active" || status === "past_due";
+
+/**
+ * C15: what Plus has been worth to the member, from real prices. The items
+ * they have had through Plus (Plus rentals that went out), and what those
+ * versions cost to buy in the Store today. Products no longer sold count in
+ * the number but add nothing to the value.
+ */
+export const usePlusValue = () => {
+  const { supabase, user } = useAuth();
+  return useQuery({
+    enabled: Boolean(user),
+    queryFn: async () => {
+      const rentals =
+        unwrap(
+          await supabase
+            .from("rentals")
+            .select("product_id, variant_id")
+            .eq("user_id", requireUserId(user?.id))
+            .eq("kind", "plus")
+            .not("started_at", "is", null)
+            .limit(1000)
+        ) ?? [];
+      const variantIds = [
+        ...new Set(rentals.flatMap((row) => row.variant_id ?? [])),
+      ];
+      const variants =
+        variantIds.length > 0
+          ? (unwrap(
+              await supabase
+                .from("product_variants")
+                .select("id, price")
+                .in("id", variantIds)
+            ) ?? [])
+          : [];
+      const prices = new Map(variants.map((row) => [row.id, row.price]));
+      const value = rentals.reduce(
+        (sum, row) =>
+          sum + (row.variant_id ? (prices.get(row.variant_id) ?? 0) : 0),
+        0
+      );
+      return { items: rentals.length, value };
+    },
+    queryKey: ["plus-value", user?.id ?? ""],
+  });
+};
