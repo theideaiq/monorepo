@@ -299,6 +299,30 @@ const useKitData = (kit: string) => {
 };
 
 /**
+ * C11: what's in the box, as staff listed it; nothing while it's empty, or
+ * before the migration that adds it has run (the kit is read with `*`).
+ */
+const KitContents = ({
+  items = [],
+}: {
+  readonly items?: readonly string[];
+}) => {
+  const t = useTranslations("app.kits");
+  return items.length > 0 ? (
+    <section aria-labelledby="kit-contents" className="grid gap-2">
+      <h2 className="font-semibold text-sm" id="kit-contents">
+        {t("contents")}
+      </h2>
+      <ul className="grid list-disc gap-1 ps-5 text-sm">
+        {items.map((item) => (
+          <li key={item}>{item}</li>
+        ))}
+      </ul>
+    </section>
+  ) : null;
+};
+
+/**
  * Booking a game night kit: the weekend (and extra days) and the PS5
  * kit's games go in the cart, which checks it out with everything else,
  * delivered in Baghdad.
@@ -358,6 +382,9 @@ export const KitCheckout = ({ kit }: { readonly kit: string }) => {
               <p className="text-sm">
                 {localized(type, "description", locale)}
               </p>
+              <KitContents
+                items={locale === "ar" ? type.contents_ar : type.contents_en}
+              />
               <WhenCard
                 extraDays={extraDays}
                 onExtraDays={setExtraDays}

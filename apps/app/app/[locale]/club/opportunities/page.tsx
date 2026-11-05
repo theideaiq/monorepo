@@ -7,7 +7,10 @@ import {
   isFeatured,
   OpportunityCard,
 } from "@/components/club/opportunity-card";
-import { OpportunityFiltersForm } from "@/components/club/opportunity-filters";
+import {
+  OpportunitiesByCountry,
+  OpportunityFiltersForm,
+} from "@/components/club/opportunity-filters";
 import { PageHero } from "@/components/page-hero";
 import { EmptyState, Section } from "@/components/section";
 import {
@@ -81,6 +84,12 @@ const OpportunitiesPage = async ({
       />
       <Section className="flex flex-col gap-8">
         <ClubNav current="opportunities" locale={locale} />
+        {filtered ? null : (
+          <OpportunitiesByCountry
+            locale={locale}
+            opportunities={opportunities}
+          />
+        )}
         <OpportunityFiltersForm
           filters={filters}
           locale={locale}

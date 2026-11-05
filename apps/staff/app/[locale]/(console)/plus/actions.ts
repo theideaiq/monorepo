@@ -282,22 +282,46 @@ export const setKitUnitStatus = staffAction(
   }
 );
 
-/** A kit's weekend and extra-day prices, deposit and whether it's offered. */
+/** One item per line (blank lines dropped), at most 20 of 120 characters. */
+const lines = z
+  .string()
+  .default("")
+  .transform((value) =>
+    value
+      .split("\n")
+      .map((line) => line.trim())
+      .filter(Boolean)
+  )
+  .pipe(z.array(z.string().max(120)).max(20));
+
+/**
+ * A kit's weekend and extra-day prices, deposit, whether it's offered and
+ * what's inside (C11).
+ */
 export const saveKitType = staffAction(
   "rentals",
-  z.object({
-    active: checkbox,
-    deposit: int(0, 10_000_000),
-    extraDayPrice: int(0, 10_000_000),
-    id: text(40),
-    price: int(1, 10_000_000),
-  }),
+  z
+    .object({
+      active: checkbox,
+      contentsAr: lines,
+      contentsEn: lines,
+      deposit: int(0, 10_000_000),
+      extraDayPrice: int(0, 10_000_000),
+      id: text(40),
+      price: int(1, 10_000_000),
+    })
+    // What's inside is listed item for item in both languages.
+    .refine((input) => input.contentsAr.length === input.contentsEn.length, {
+      path: ["contentsAr"],
+    }),
   async ({ input, supabase }) => {
     affected(
       await supabase
         .from("kit_types")
         .update({
           active: input.active,
+          contents_ar: input.contentsAr,
+          contents_en: input.contentsEn,
           deposit: input.deposit,
           extra_day_price: input.extraDayPrice,
           price: input.price,

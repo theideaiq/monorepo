@@ -2082,6 +2082,8 @@ export type Database = {
       kit_types: {
         Row: {
           active: boolean;
+          contents_ar: string[];
+          contents_en: string[];
           deposit: number;
           description_ar: string;
           description_en: string;
@@ -2098,6 +2100,8 @@ export type Database = {
         };
         Insert: {
           active?: boolean;
+          contents_ar?: string[];
+          contents_en?: string[];
           deposit?: number;
           description_ar?: string;
           description_en?: string;
@@ -2114,6 +2118,8 @@ export type Database = {
         };
         Update: {
           active?: boolean;
+          contents_ar?: string[];
+          contents_en?: string[];
           deposit?: number;
           description_ar?: string;
           description_en?: string;

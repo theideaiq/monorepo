@@ -154,7 +154,8 @@ const KitsPage = async () => {
       loadBookings(supabase),
       supabase
         .from("kit_types")
-        .select("id, name_ar, name_en, price, extra_day_price, deposit, active")
+        // `*`: works before the C11 migration (contents) has run.
+        .select("*")
         .order("position"),
       supabase
         .from("kit_units")
