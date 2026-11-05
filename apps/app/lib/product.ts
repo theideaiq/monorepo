@@ -215,3 +215,30 @@ export const productJsonLd = ({
       : {}),
   };
 };
+
+/** The top-level category that holds devices and accessories. */
+export const GEAR_SLUG = "gear";
+
+/**
+ * Whether `categoryId` is Gear or one of its subcategories (A5: a gear
+ * product's page leads with the object's specifications).
+ */
+export const isGearCategory = (
+  categories: readonly {
+    id: string;
+    parent_id: string | null;
+    slug: string;
+  }[],
+  categoryId: string | null | undefined
+) => {
+  const byId = new Map(categories.map((category) => [category.id, category]));
+  let current = categoryId ? byId.get(categoryId) : undefined;
+  // Bounded walk up the tree (categories are at most a few levels deep).
+  for (let depth = 0; current && depth < 5; depth += 1) {
+    if (!current.parent_id) {
+      return current.slug === GEAR_SLUG;
+    }
+    current = byId.get(current.parent_id);
+  }
+  return false;
+};

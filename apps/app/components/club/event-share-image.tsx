@@ -68,6 +68,8 @@ export interface EventShareImageProps {
   readonly cover: string | null;
   /** "Friday, 20 November 2026". */
   readonly date: Text;
+  /** The lock-up's line word: "Club" (events) unless given ("Store"). */
+  readonly line?: string;
   readonly location: Text | null;
   readonly rtl: boolean;
   /** "7:30 PM – 10:00 PM, Baghdad time". */
@@ -250,6 +252,7 @@ const Side = ({
 export const EventShareImage = ({
   cover,
   date,
+  line = LINE,
   location,
   rtl,
   time,
@@ -277,7 +280,7 @@ export const EventShareImage = ({
         minWidth: 0,
       }}
     >
-      <LockUp />
+      <LockUp line={line} />
       <Line
         right={rtl}
         size={

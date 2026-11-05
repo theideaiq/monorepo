@@ -415,7 +415,11 @@
       "auctions": {
         "title": "Auctions",
         "description": "Signed, limited, rare and collectible copies, each with the seller's own photos. Set your maximum and we bid for you.",
-        "one": "Bid on {name}: the seller's photos of this copy, its condition, the current bid and time left."
+        "one": "Bid on {name}: the seller's photos of this copy, its condition, the current bid and time left.",
+        "image": {
+          "ends": "Auction ends {date}",
+          "time": "{time}, Baghdad time"
+        }
       },
       "sellTextbooks": "Done with last term's textbooks? Sell them on the Store as an individual trader: open a shop in Partners with your ID; there's no fee to start, only commission on what sells.",
       "sellTextbooksLink": "Start selling"
@@ -6382,7 +6386,10 @@
         "publish": "Publish",
         "unpublish": "Unpublish",
         "delete": "Delete",
-        "deleteConfirm": "Delete this draft campaign?"
+        "deleteConfirm": "Delete this draft campaign?",
+        "useTemplate": "Use as a template",
+        "fromTemplate": "Starting from «{name}», which ran for {count, plural, one {{days} day} other {{days} days}}: its names and descriptions are filled in. Choose a new address and dates.",
+        "startBlank": "Start blank"
       },
       "sales": {
         "panelTitle": "Sales and deals",

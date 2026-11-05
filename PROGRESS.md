@@ -455,6 +455,30 @@ steps need Xcode, Android Studio and the store/Firebase accounts
 
 ## Decisions
 
+- 2026-11-05: **PR 7, C9: an auction's share image** (no schema). A link
+  to `/store/auctions/<number>` shared in a chat now shows the product's
+  name and picture and when the auction ends (Baghdad time), drawn like a
+  Club event's image under The IDEA Store's lock-up (`EventShareImage`
+  takes the lock-up's `line`). No prices: they change with every bid. New
+  Arabic for native review: `web.store.auctions.image`. Left of C9: an
+  archive of ended auctions.
+
+- 2026-11-05: **PR 7, A6: campaign template** (no schema). In Staff →
+  Catalog → Campaigns, every campaign has "Use as a template": the new
+  campaign form opens with that campaign's names and descriptions in both
+  languages, and says how many days it ran. The address and the dates are
+  always chosen again, so nothing is reused by accident ("Start blank"
+  clears it). New Arabic for native review:
+  `admin.catalog.campaigns.useTemplate`, `fromTemplate`, `startBlank`.
+
+- 2026-11-05: **PR 7, A5: Gear leads with the object** (no schema). A
+  product in Gear or any category under it shows its specifications right
+  under the title and price, before the description, so a device's page
+  starts with what it is; other products keep them at the end
+  (`isGearCategory` in `lib/product.ts`). Specifications come only from
+  the product's own `details`; nothing is added when there are none. No
+  new text.
+
 - 2026-11-05: **PR 7, A3: the game night planner** (no schema). A member
   with a game night kit booked sees "Your game night" on Pass, under
   Today, until the kit is collected. It shows when it comes and goes
