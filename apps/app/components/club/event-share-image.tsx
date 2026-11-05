@@ -60,7 +60,8 @@ export interface TextImage {
   readonly width: number;
 }
 
-type Text = string | TextImage;
+export type ShareText = string | TextImage;
+type Text = ShareText;
 
 export interface EventShareImageProps {
   /** A data: URL of the cover, already sized (or null for none). */
@@ -92,7 +93,7 @@ const titleSize = (length: number, narrow: boolean) => {
 };
 
 /** A drawn text image, or a string laid out word by word (see `bidiText`). */
-const Line = ({ right, size, text, weight = 400 }: LineProps) => {
+export const Line = ({ right, size, text, weight = 400 }: LineProps) => {
   if (typeof text !== "string") {
     return (
       // biome-ignore lint/performance/noImgElement: Satori draws only <img>.
@@ -198,11 +199,11 @@ const Detail = ({
 );
 
 /**
- * The Club lock-up, left to right in both languages like `BrandLogo` with a
+ * The lock-up, left to right in both languages like `BrandLogo` with a
  * line: the bulb (1.6 × the cap height), a third of its height, then
- * "The IDEA" in 700 and "Club" in 600.
+ * "The IDEA" in 700 and the line ("Club" by default) in 600, or no line.
  */
-const LockUp = () => (
+export const LockUp = ({ line = LINE }: { readonly line?: string | null }) => (
   <div
     style={{
       alignItems: "center",
@@ -217,9 +218,11 @@ const LockUp = () => (
       <path d={BULB_PATH} fill={YELLOW} />
     </svg>
     <span style={{ display: "flex", marginLeft: 15 }}>{project.name}</span>
-    <span style={{ display: "flex", fontWeight: 600, marginLeft: 11 }}>
-      {LINE}
-    </span>
+    {line ? (
+      <span style={{ display: "flex", fontWeight: 600, marginLeft: 11 }}>
+        {line}
+      </span>
+    ) : null}
   </div>
 );
 

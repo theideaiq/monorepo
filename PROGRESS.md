@@ -455,6 +455,24 @@ steps need Xcode, Android Studio and the store/Firebase accounts
 
 ## Decisions
 
+- 2026-11-05: **PR 7, A16, A11 and A12: sharing and printing, no schema.**
+  A16: an invite link (`/r/<code>`) has its own share image
+  (`opengraph-image.tsx`, `InviteShareImage`): the lock-up, "A friend
+  invited you to The IDEA" and the offer with its real cap, in the
+  visitor's language; nothing personal, and none for a code that isn't an
+  invite. The event image's lock-up and text line are exported for it.
+  A11: Staff → an order → "Print the packing slip" (`/orders/<id>/slip`,
+  outside the console frame for printing): order number, date, who it's
+  for, the physical lines (no prices, no deposit or digital lines), the
+  gift message, and a QR code to the buyer's order page on the website, or
+  to Help for a gift. It prints in the buyer's language when their Pass
+  has one. A12: Partners → Shop settings, for an approved shop, "Sold on
+  The IDEA": the two lock-ups the brand guide allows (light and pink) to
+  download, the guide's three rules, the shop page link, its QR code (SVG)
+  and a snippet for the shop's website. New Arabic for native review:
+  `web.invite.imageOffer`, `app.company.selling.kit.*`,
+  `admin.orders.slip.*`.
+
 - 2026-11-05: **PR 7, R4: drafts to review in Staff, nothing deleted.**
   Staff → Club → Opportunities → Drafts to review
   (`/club/opportunities/drafts`) lists every opportunity still a draft (the

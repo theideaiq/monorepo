@@ -599,6 +599,14 @@ const OrderPage = async ({ params }: OrderPageProps) => {
             />
           </Panel>
 
+          <Link
+            className="text-sm underline-offset-4 hover:underline"
+            href={`/orders/${order.id}/slip`}
+            target="_blank"
+          >
+            {t("slip.open")}
+          </Link>
+
           <Panel id="notes" title={t("notes")}>
             <OrderNotesForm
               disabled={!canWrite}
