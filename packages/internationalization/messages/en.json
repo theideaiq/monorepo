@@ -4140,7 +4140,8 @@
           "unknown": "Something went wrong. Try again.",
           "bundleSize": "Choose at least 2 items, 1 to 20 of each.",
           "bundleItems": "A bundle holds only items you offer.",
-          "bundleInBundle": "A bundle can't hold another bundle."
+          "bundleInBundle": "A bundle can't hold another bundle.",
+          "limit": "Free allows 100 live listings. Move to Pro for no limit, or end a listing first."
         },
         "upload": {
           "title": "Upload a spreadsheet",
@@ -4204,6 +4205,18 @@
           "save": "Save photos",
           "cancel": "Cancel",
           "failed": "The photos weren't saved. Try again."
+        },
+        "plan": {
+          "count": "{live} of {limit} live listings on Free",
+          "near": "You're close to Free's limit",
+          "full": "You've reached Free's limit",
+          "pitch": "Pro has no limit on live listings and a lower commission in every category. Its fee is taken from your weekly payout; cancel any time and the paid period runs out.",
+          "monthly": "Pro monthly · {price}",
+          "yearly": "Pro yearly · {price}",
+          "askAdmin": "Your shop's owners and admins can move it to Pro.",
+          "failed": "The plan didn't change. Try again.",
+          "proMonthly": "Pro, monthly: no limit on live listings.",
+          "proYearly": "Pro, yearly: no limit on live listings."
         }
       },
       "shopOrders": {

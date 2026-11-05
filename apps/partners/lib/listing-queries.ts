@@ -467,6 +467,7 @@ export type ListingProblem =
   | "bundleSize"
   | "exists"
   | "invalidBarcode"
+  | "limit"
   | "notAllowed"
   | "unknown";
 
@@ -483,6 +484,9 @@ export const toListingProblem = (error: unknown): ListingProblem => {
   }
   if (message.includes("Invalid barcode")) {
     return "invalidBarcode";
+  }
+  if (message.includes("active listings; upgrade to Pro")) {
+    return "limit";
   }
   if (message.includes("approved shop")) {
     return "notAllowed";

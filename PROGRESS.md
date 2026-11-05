@@ -455,6 +455,15 @@ steps need Xcode, Android Studio and the store/Firebase accounts
 
 ## Decisions
 
+- 2026-11-05: **PR 7, C25: the Pro offer at the listing limit.** Partners →
+  Sell → Listings shows a Free shop its live listings against the limit
+  of 100; from 90 it offers Pro (no limit, a lower commission in every
+  category, the fee taken from the weekly payout, monthly or yearly at
+  `seller_plan_price`), and owners and admins switch there
+  (`set_seller_plan`, which existed with no screen). Listing past the
+  limit now says so ("Free allows 100 live listings…") instead of a
+  generic error. Pro shops see their plan.
+
 - 2026-11-05: **PR 7, C26, schema first** (migration
   `20270401000000_saved_reasons.sql`): `staff_saved_reasons`, the reasons
   staff reuse when they turn something down in the Inbox, per kind of
