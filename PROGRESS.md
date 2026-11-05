@@ -455,6 +455,16 @@ steps need Xcode, Android Studio and the store/Firebase accounts
 
 ## Decisions
 
+- 2026-11-05: **PR 7, C26, schema first** (migration
+  `20270401000000_saved_reasons.sql`): `staff_saved_reasons`, the reasons
+  staff reuse when they turn something down in the Inbox, per kind of
+  decision (applications, checks, returns, shops, submissions,
+  verifications), each once per kind. Any staff member with an
+  authenticator-app session reads and saves them (as themselves); the
+  author or an admin removes one; changes are in the audit log. A saved
+  reason is only a suggestion: what reaches the person is still the text
+  submitted with the decision. Staff's forms use it in the next change.
+
 - 2026-11-05: **PR 7, part 1** (owner: start PR 7 in parts). C8: the
   Store's top-level categories as picture tiles above the catalog, each
   with a real cover from that category (a featured product's, else the
