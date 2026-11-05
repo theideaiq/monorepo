@@ -2,6 +2,7 @@ import type { Locale } from "@repo/internationalization";
 import type { Metadata } from "next";
 import { after } from "next/server";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { CategoryTiles } from "@/components/shop/category-tiles";
 import { ShelfTabs } from "@/components/shop/shelf-tabs";
 import { CatalogueGrid } from "@/components/store/catalogue-grid";
 import { CodesLink } from "@/components/store/digital-codes";
@@ -73,6 +74,9 @@ const Store = async ({ params, searchParams }: StoreProps) => {
         <h1 className="font-bold text-2xl tracking-tight md:text-3xl">
           {q ? t("results", { query: q }) : t("title")}
         </h1>
+        {q || query.category || query.page > 1 ? null : (
+          <CategoryTiles categories={categories} locale={locale} />
+        )}
         {q || query.category ? null : <CodesLink />}
       </div>
       <CatalogueGrid

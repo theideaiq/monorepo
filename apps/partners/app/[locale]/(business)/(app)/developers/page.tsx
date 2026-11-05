@@ -17,6 +17,7 @@ const DevelopersPage = () => (
         TRAILING_SLASH,
         ""
       )}
+      webUrl={new URL(env.NEXT_PUBLIC_WEB_URL).origin}
     />
   </Suspense>
 );

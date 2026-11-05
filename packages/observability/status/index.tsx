@@ -1,6 +1,6 @@
 import type { SystemStatus } from "./types";
 
-export type { SystemStatus } from "./types";
+export type { Service, ServiceStatus, SystemStatus } from "./types";
 
 export interface StatusLabels {
   degraded: string;
@@ -17,6 +17,8 @@ const colors: Record<SystemStatus["state"], string> = {
 };
 
 interface StatusProps {
+  /** Where it links: the public status page unless given (the website's /status). */
+  readonly href?: string;
   /** Translated texts. */
   readonly labels: StatusLabels;
   /** From `GET /status` on apps/api (`fetchStatus` in ./server). */
@@ -24,14 +26,14 @@ interface StatusProps {
 }
 
 /** A dot and a label linking to the public status page. */
-export const Status = ({ labels, status }: StatusProps) => {
+export const Status = ({ href, labels, status }: StatusProps) => {
   const color = colors[status.state];
   return (
     <a
       className="flex items-center gap-3 font-medium text-sm"
-      href={status.url}
-      rel="noreferrer"
-      target="_blank"
+      href={href ?? status.url}
+      rel={href ? undefined : "noreferrer"}
+      target={href ? undefined : "_blank"}
     >
       <span className="relative flex h-2 w-2">
         <span

@@ -10,7 +10,7 @@ import type { Metadata, Viewport } from "next";
 import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
-import type { ReactNode } from "react";
+import { type ReactNode, ViewTransition } from "react";
 import { AppProviders } from "@/components/providers";
 import { NATIVE_MARK_SCRIPT } from "@/lib/native/user-agent";
 import { Footer } from "./components/footer";
@@ -76,7 +76,8 @@ const RootLayout = async ({ children, params }: RootLayoutProperties) => {
                 <SiteChrome>
                   <Header />
                 </SiteChrome>
-                {children}
+                {/* A27: the page crossfades on navigation; the header and tabs stay put. */}
+                <ViewTransition default="page">{children}</ViewTransition>
                 <SiteChrome>
                   <WebOnly>
                     <Footer />
