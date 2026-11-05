@@ -455,6 +455,19 @@ steps need Xcode, Android Studio and the store/Firebase accounts
 
 ## Decisions
 
+- 2026-11-05: **PR 7, A24: shop health** (migration
+  `20270403000000_shop_health.sql`, pgTAP `…_shop_health.test.sql`).
+  `shop_health(shop)` returns a shop's 90-day score (the nightly
+  `sellers.score` buyers see) and what it is made of: lines due, lines
+  ready late, out of stock, shop-fault returns, auction marks reviewed and
+  judged wrong. Only the shop's people and staff get a row (security
+  definer in `private`, invoker wrapper in `public`). Partners → Today
+  shows it as "Shop health" with what each part costs (once for late,
+  twice for the rest, as in `private.seller_score`); the card is left out
+  when the function isn't there yet. Staff → Partners → Shops shows each
+  approved shop's score and line count. New Arabic for native review:
+  `app.business.today.health.*`, `admin.companies.shops.score`.
+
 - 2026-11-05: **PR 7, A16, A11 and A12: sharing and printing, no schema.**
   A16: an invite link (`/r/<code>`) has its own share image
   (`opengraph-image.tsx`, `InviteShareImage`): the lock-up, "A friend

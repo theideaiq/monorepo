@@ -3031,6 +3031,29 @@
               "description": "Orders show here with what to pack and by when."
             }
           }
+        },
+        "health": {
+          "title": "Shop health",
+          "description": "Your shop score over the last 90 days, as buyers see it beside \"Sold by\", and what it's made of. It updates every night.",
+          "outOf": "out of 100",
+          "quiet": "No orders due in the last 90 days, so your shop starts at 100.",
+          "lines": "{lines} order lines were due in the last 90 days.",
+          "late": {
+            "label": "Ready late",
+            "weight": "Counts once each"
+          },
+          "outOfStock": {
+            "label": "Out of stock",
+            "weight": "Counts twice each"
+          },
+          "returns": {
+            "label": "Returns that were the shop's fault",
+            "weight": "Counts twice each"
+          },
+          "wrongMarks": {
+            "label": "Auction marks judged wrong",
+            "weight": "Counts twice each"
+          }
         }
       },
       "organization": {
@@ -8618,7 +8641,8 @@
           "activeHint": "Paused suppliers earn nothing until switched on again.",
           "save": "Save fees",
           "start": "Make a supplier"
-        }
+        },
+        "score": "Score {score}/100 over 90 days, from {lines} order lines."
       }
     },
     "partnerCrm": {

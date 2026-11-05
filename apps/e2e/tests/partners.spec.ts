@@ -314,6 +314,8 @@ test("a company applies to sell and, once approved, lists an offer that reaches 
   ).toBeVisible();
   await page.getByRole("link", { exact: true, name: "Today" }).click();
   await expect(page.getByText("Hidden until it has a photo")).toBeVisible();
+  // Shop health: the score buyers see and what it is made of (A24).
+  await expect(page.getByText("Shop health", { exact: true })).toBeVisible();
   await expectAccessible(page);
   await page.getByRole("link", { name: "List an item" }).click();
   await expect(page).toHaveURL(/\/sell\/listings#list$/);

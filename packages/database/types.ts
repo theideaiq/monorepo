@@ -12624,6 +12624,19 @@ export type Database = {
           product_id: string;
         }[];
       };
+      shop_health: {
+        Args: { shop: string };
+        Returns: {
+          late: number;
+          lines: number;
+          marks_reviewed: number;
+          out_of_stock: number;
+          score: number;
+          score_updated_at: string;
+          shop_returns: number;
+          wrong_marks: number;
+        }[];
+      };
       shop_limit: { Args: { shop: string }; Returns: Json };
       shop_sell_offer_items: {
         Args: { seller: string };

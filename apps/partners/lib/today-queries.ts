@@ -87,3 +87,22 @@ export const useActionCounts = (sellerId: string) => {
     returns: returns.data,
   });
 };
+
+/**
+ * The shop's 90-day score and its parts (`shop_health`), or null when there
+ * is none to show (no row, or the function isn't deployed yet): Today then
+ * leaves the card out rather than failing.
+ */
+export const useShopHealth = (sellerId: string) => {
+  const { supabase } = useAuth();
+  return useQuery({
+    enabled: Boolean(sellerId),
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc("shop_health", {
+        shop: sellerId,
+      });
+      return error ? null : (data?.[0] ?? null);
+    },
+    queryKey: ["shop-health", sellerId],
+  });
+};
