@@ -10,20 +10,10 @@ import Script from "next/script";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect } from "react";
 import { SocialButtons } from "@/components/pass/social-buttons";
-
-/** The parts of Telegram's Web App object the Mini App uses. */
-interface TelegramWebApp {
-  expand: () => void;
-  ready: () => void;
-}
-
-declare global {
-  interface Window {
-    Telegram?: { WebApp?: TelegramWebApp };
-  }
-}
+import { markTelegramMiniApp } from "@/lib/telegram";
 
 const ready = () => {
+  markTelegramMiniApp();
   window.Telegram?.WebApp?.ready();
   window.Telegram?.WebApp?.expand();
 };
