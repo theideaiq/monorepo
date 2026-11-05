@@ -455,6 +455,25 @@ steps need Xcode, Android Studio and the store/Firebase accounts
 
 ## Decisions
 
+- 2026-11-05: **Programs handover (research zip, checked 2026-11-04): what
+  it held and where it went.** Kept outside the repository; nobody was
+  contacted. (1) Travel Kit: the visa research became the first routes
+  (next entry). (2) Partner CRM: `crm-organizations.csv` (226
+  organizations) and `crm-people.csv` (411 people) pass Staff's importer
+  with no problems; the organizations file now carries the three drafted
+  partner emails (CYSC of CAST, ATAST for I-FEST², BUCA IMSEF) in their
+  notes, with "Send the drafted email" as the next action for 8 November.
+  **Owner:** import both at Staff → Partners → CRM → Import (organizations
+  first), assign owners, then send the emails yourself. (3) Programs: the
+  49 programs marked ready were already batch 01. Of the 227 new research
+  rows, 21 have a named official source and aren't unverified or ended; 13
+  repeat the catalogue or rows held back for a stated reason (doubtful,
+  grouped or stale), 2 are corrections batch 01 already has (MAECI and
+  ICGEB list Iraq), and the other 8 are past or one-off (calls from 2018 to
+  2022, a closed accelerator, community-targeted training, no stated
+  selection), so no second batch was made. The landscape notes, the
+  funding catalogue and the workbook are reference only.
+
 - 2026-11-05: **Programs handover, part 1: the first Travel Kit routes**
   (content, no schema; `supabase/content/travel/01-first-routes.sql`, run
   by hand from the Import The IDEA Club content workflow, now with a
