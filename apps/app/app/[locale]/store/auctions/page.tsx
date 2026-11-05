@@ -1,7 +1,7 @@
 import type { Locale } from "@repo/internationalization";
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { LiveAuctions } from "@/components/store/auctions";
+import { EndedAuctions, LiveAuctions } from "@/components/store/auctions";
 import { localizedMetadata } from "@/lib/metadata";
 
 interface AuctionsProps {
@@ -21,7 +21,8 @@ export const generateMetadata = async ({
 
 /**
  * Store → Auctions: every live auction (signed, limited and rare copies,
- * collectibles), with their current bids and time left.
+ * collectibles), with their current bids and time left, then those that
+ * ended in the last 90 days with the price each went for (C9).
  */
 const AuctionsPage = async ({ params }: AuctionsProps) => {
   const { locale } = await params;
@@ -34,6 +35,7 @@ const AuctionsPage = async ({ params }: AuctionsProps) => {
         <p className="max-w-2xl text-muted-foreground">{t("description")}</p>
       </header>
       <LiveAuctions />
+      <EndedAuctions />
     </div>
   );
 };

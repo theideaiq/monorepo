@@ -29,6 +29,7 @@ import {
   type Auction,
   bidError,
   minimumBid,
+  soldPrice,
   useAddCartAuction,
   useAuction,
   useAuctionWatch,
@@ -308,15 +309,10 @@ const Outcome = ({ auction }: { readonly auction: Auction }) => {
       </p>
     );
   }
-  const sold =
-    auction.status === "won" ||
-    auction.status === "paid" ||
-    auction.status === "unpaid";
+  const price = soldPrice(auction);
   return (
     <p className="font-medium text-sm">
-      {sold && auction.final_price
-        ? t("sold", { amount: formatPrice(auction.final_price, locale) })
-        : t("ended")}
+      {price ? t("sold", { amount: formatPrice(price, locale) }) : t("ended")}
     </p>
   );
 };

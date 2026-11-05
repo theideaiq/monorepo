@@ -5,6 +5,7 @@ import { formatPrice, localized } from "@repo/commerce";
 import { Badge } from "@repo/design-system/components/ui/badge";
 import type { Locale } from "@repo/internationalization";
 import {
+  formatDate,
   formatDateTime,
   formatNumber,
   formatRelativeTime,
@@ -18,6 +19,8 @@ import { ErrorState, SectionSpinner } from "@/components/states";
 import {
   type Auction,
   type MyBid,
+  soldPrice,
+  useEndedAuctions,
   useLiveAuctions,
   useMyBids,
   useProductAuctions,
@@ -302,5 +305,62 @@ export const LiveAuctions = () => {
         </li>
       ))}
     </ul>
+  );
+};
+
+/**
+ * C9: auctions that ended in the last 90 days under the live ones, each
+ * with the price it went for or "Ended" (unsold), so buyers and sellers can
+ * see what such copies fetch. Nothing when none has ended.
+ */
+export const EndedAuctions = () => {
+  const t = useTranslations("app.auctions");
+  const locale = useLocale() as Locale;
+  const photo = useAuctionPhoto();
+  const auctions = useEndedAuctions().data ?? [];
+  if (auctions.length === 0) {
+    return null;
+  }
+  return (
+    <section aria-labelledby="ended-auctions" className="grid gap-4">
+      <h2 className="font-semibold text-xl" id="ended-auctions">
+        {t("endedTitle")}
+      </h2>
+      <ul className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+        {auctions.map((auction) => {
+          const name = auction.product
+            ? localized(auction.product, "name", locale)
+            : "";
+          const price = soldPrice(auction);
+          return (
+            <li key={auction.id}>
+              <Link
+                className="grid content-start gap-2"
+                href={`/store/auctions/${auction.number}`}
+              >
+                <CoverImage
+                  alt={name}
+                  fit="product"
+                  sizes="(min-width: 1024px) 25vw, 50vw"
+                  src={photo(auction.photos[0])}
+                />
+                <span className="font-medium text-sm">{name}</span>
+                <span className="text-sm">
+                  {price
+                    ? t("page.sold", { amount: formatPrice(price, locale) })
+                    : t("page.ended")}
+                </span>
+                <time
+                  className="text-muted-foreground text-xs"
+                  dateTime={auction.ends_at}
+                >
+                  {formatDate(auction.ends_at, locale)}
+                </time>
+              </Link>
+            </li>
+          );
+        })}
+      </ul>
+    </section>
   );
 };
