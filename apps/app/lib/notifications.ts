@@ -93,6 +93,7 @@ export const NOTIFICATION_EVENTS = [
   "survey_refunded",
   "survey_answers_expiring",
   "survey_answers_deleted",
+  "survey_results",
   "product_available",
   "saved_back_in_stock",
   "saved_out_now",
@@ -432,6 +433,7 @@ const extraValues: Partial<
     };
   },
   survey_rejected: (data) => ({ title: text(data.title) }),
+  survey_results: (data) => ({ title: text(data.title) }),
   travel_due: travelValues,
   wanted_in_store: (data, locale) => ({ name: itemName(data, locale) }),
 };

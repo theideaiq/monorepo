@@ -326,6 +326,20 @@ export interface SurveySummary {
   title: string;
 }
 
+/**
+ * An option's share of the people who answered its question, as a whole
+ * percent, or null when either count is hidden (fewer than 5) or nobody
+ * answered. Several choices can be picked in a "multiple" question, so its
+ * shares can add up to more than 100.
+ */
+export const optionShare = (
+  count: number | null,
+  answered: number | null
+): number | null =>
+  count === null || answered === null || answered === 0
+    ? null
+    : Math.round((count / answered) * 100);
+
 /** The member's answers (`my_survey_record()`): never the answers themselves. */
 export interface SurveyRecord {
   counted: number;

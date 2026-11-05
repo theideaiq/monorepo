@@ -455,6 +455,18 @@ steps need Xcode, Android Studio and the store/Firebase accounts
 
 ## Decisions
 
+- 2026-11-05: **PR 7, A22: survey results pages** (migration
+  `20270405000000_survey_results_ready.sql`, pgTAP). The results page
+  already existed: a closed survey's page shows respondents its summary
+  (`survey_summary`, no count under 5, off only for academic surveys), and
+  Club → Yours → Surveys links to it. Now respondents hear when it is ready:
+  when a survey closes with its summary on and at least 5 counted
+  responses, everyone who submitted and kept their answers gets one
+  `survey_results` notification. Each option shows its share of the people
+  who answered, as a percent and a bar (`optionShare`; a "multiple"
+  question can add up to more than 100). New Arabic for native review:
+  `web.club.surveys.summary.share`, `store.notifications.events.survey_results`.
+
 - 2026-11-05: **A28 budget, sturdier timings.** `main` went red on Total
   Blocking Time (737 and 765 ms against 600) on a run where every page was
   slower, while the same pages measured about 230 ms the run before: the

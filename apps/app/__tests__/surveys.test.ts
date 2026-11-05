@@ -3,6 +3,7 @@ import {
   answersDeleteOn,
   audienceRows,
   missingAnswers,
+  optionShare,
   questionSummary,
   resultRows,
   type SurveyQuestion,
@@ -206,5 +207,18 @@ describe("part 3: export and retention", () => {
     expect(
       answersDeleteOn("2026-01-15T10:00:00Z", 24).toISOString().slice(0, 10)
     ).toBe("2028-01-15");
+  });
+});
+
+describe("optionShare", () => {
+  it("is an option's share of the people who answered, as a whole percent", () => {
+    expect(optionShare(12, 40)).toBe(30);
+    expect(optionShare(1, 3)).toBe(33);
+  });
+
+  it("is null when a count is hidden or nobody answered", () => {
+    expect(optionShare(null, 40)).toBeNull();
+    expect(optionShare(12, null)).toBeNull();
+    expect(optionShare(0, 0)).toBeNull();
   });
 });

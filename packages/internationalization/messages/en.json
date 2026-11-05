@@ -1218,7 +1218,8 @@
           "responses": "{count} counted responses",
           "tooFew": "There aren't enough answers to show a summary.",
           "fewer": "Fewer than 5",
-          "note": "Groups of fewer than 5 people are never shown."
+          "note": "Groups of fewer than 5 people are never shown.",
+          "share": "{count} · {share}%"
         },
         "answered": {
           "title": "Surveys you answered",
@@ -5392,6 +5393,10 @@
         "survey_answers_deleted": {
           "title": "Survey answers deleted",
           "body": "The raw answers to \"{title}\" were deleted; the counts stay."
+        },
+        "survey_results": {
+          "title": "Survey results are ready",
+          "body": "See how people answered \"{title}\"."
         },
         "gift_claimed": {
           "title": "Your gift was accepted",
