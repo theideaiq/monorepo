@@ -55,7 +55,9 @@ test.describe("The IDEA Pass", () => {
       page.getByRole("heading", { name: "Verify you're a student" })
     ).toBeVisible();
     await page.getByLabel("University").selectOption("auib");
-    await expect(page.getByLabel("Email")).toBeVisible();
+    await expect(
+      page.getByRole("textbox", { exact: true, name: "Email" })
+    ).toBeVisible();
     await expectAccessible(page);
 
     await page.goto(`${urls.web}/ar/verify`);
@@ -69,16 +71,26 @@ test.describe("The IDEA Pass", () => {
   test("is branded and accessible in both languages", async ({ page }) => {
     await page.goto(`${urls.web}/sign-in`);
     await expect(page).toHaveTitle(/The IDEA Pass/);
-    // Waits out a moment where hydration briefly shows the form twice, but
-    // still fails if a second field stays.
-    await expect(page.getByLabel("Email")).toHaveCount(1);
-    await expect(page.getByLabel("Email")).toBeVisible();
+    // By role, not label: while the page streams in, React can render the
+    // form before the server's copy is swapped in, which then sits in a
+    // hidden container for a moment. Hidden fields have no role, so this
+    // still fails if a second visible field stays.
+    await expect(
+      page.getByRole("textbox", { exact: true, name: "Email" })
+    ).toHaveCount(1);
+    await expect(
+      page.getByRole("textbox", { exact: true, name: "Email" })
+    ).toBeVisible();
     await expectAccessible(page);
 
     await page.goto(`${urls.web}/ar/sign-in`);
     await expect(page.locator("html")).toHaveAttribute("dir", "rtl");
-    await expect(page.getByLabel("الإيميل")).toHaveCount(1);
-    await expect(page.getByLabel("الإيميل")).toBeVisible();
+    await expect(
+      page.getByRole("textbox", { exact: true, name: "الإيميل" })
+    ).toHaveCount(1);
+    await expect(
+      page.getByRole("textbox", { exact: true, name: "الإيميل" })
+    ).toBeVisible();
     await expectAccessible(page);
   });
 

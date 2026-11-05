@@ -76,7 +76,9 @@ test.describe("the live card on a partner's site", () => {
         .getByRole("button", { name: "Show my Pass card" })
         .click(),
     ]);
-    await popup.getByLabel("Email").fill(customer.email);
+    await popup
+      .getByRole("textbox", { exact: true, name: "Email" })
+      .fill(customer.email);
     await popup.getByLabel("Password").fill(PASSWORD);
     await popup.getByRole("button", { exact: true, name: "Sign in" }).click();
     await popup.getByRole("button", { name: "Show my card" }).click();

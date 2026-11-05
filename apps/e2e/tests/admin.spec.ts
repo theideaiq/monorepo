@@ -23,7 +23,9 @@ test.describe("Staff", () => {
   test("visitors are sent to The IDEA Pass to sign in", async ({ page }) => {
     await page.goto(`${urls.staff}/`);
     await expect(page).toHaveURL(`${urls.web}/sign-in${toAdmin("en")}`);
-    await expect(page.getByLabel("Email")).toBeVisible();
+    await expect(
+      page.getByRole("textbox", { exact: true, name: "Email" })
+    ).toBeVisible();
     await expectAccessible(page);
 
     await page.goto(`${urls.staff}/ar/orders`);
@@ -58,7 +60,9 @@ test.describe("Staff", () => {
     await page.goto(`${urls.staff}/`);
     await expect(page).toHaveURL(`${urls.web}/sign-in${toAdmin("en")}`);
     await page.getByRole("button", { name: "Email me a code instead" }).click();
-    await page.getByLabel("Email").fill(staff.email);
+    await page
+      .getByRole("textbox", { exact: true, name: "Email" })
+      .fill(staff.email);
     await clearInbox(staff.email);
     await page.getByRole("button", { name: "Continue" }).click();
     await page
