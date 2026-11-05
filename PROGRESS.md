@@ -455,6 +455,17 @@ steps need Xcode, Android Studio and the store/Firebase accounts
 
 ## Decisions
 
+- 2026-11-05: **PR 7, A26: the Droid Mini App, part 1** (no schema).
+  Once Telegram opens the website as the Mini App (`/tg`, or any page
+  whose address carries Telegram's `tgWebAppData`), the tab remembers it
+  for its session (`lib/telegram.ts`) and every page then loads Telegram's
+  script (`TelegramShell` in the app providers; ordinary visits and the
+  iOS/Android apps never load it). Telegram's header and background take
+  the page's own background, light or dark, and Telegram's back button
+  goes back a page everywhere but Home, `/store` and `/tg`. No new text.
+  Next: signing in from Telegram's `initData` (checked in apps/api with
+  the bot's token) and the Main button on the cart.
+
 - 2026-11-05: **PR 7, A22: survey results pages** (migration
   `20270405000000_survey_results_ready.sql`, pgTAP). The results page
   already existed: a closed survey's page shows respondents its summary
