@@ -15,6 +15,8 @@ export interface TelegramWebApp {
     show: () => void;
   };
   expand: () => void;
+  /** The signed launch data (empty outside a real Mini App launch). */
+  initData?: string;
   MainButton: {
     hide: () => void;
     offClick: (callback: () => void) => void;

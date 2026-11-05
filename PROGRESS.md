@@ -460,10 +460,16 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   at the bottom of Telegram) while the cart can be checked out; it opens
   checkout and goes away on other pages (`useTelegramMainButton` in
   `lib/use-telegram.ts`; `TelegramShell` says when Telegram's script is
-  ready). No new text. Not built, for the owner to decide: signing in
-  straight from Telegram's `initData`. It would make the API mint sessions
-  for linked Passes, a new way to sign in; "Continue with Telegram" (the
-  OIDC provider) already signs members in inside the Mini App.
+  ready). One-tap sign-in (owner: "All in one PR"): `/tg` sends Telegram's
+  signed `initData` to `POST /v1/telegram/mini-app` (apps/api). The API
+  checks the signature with the bot's token (constant time), accepts data
+  signed in the last 10 minutes only, allows 10 tries per address every 10
+  minutes, and only for a Telegram account linked to a Pass that isn't
+  suspended returns a one-time sign-in token (`generateLink`, never
+  emailed); the browser exchanges it for a session (`verifyOtp`). Anything
+  else falls back to the Mini App's buttons. The session is a normal one
+  (AAL1), so Staff still asks for the authenticator app. No new secrets
+  (`TELEGRAM_BOT_TOKEN`); no new text.
 
 - 2026-11-05: **PR 7, C9: ended auctions** (no schema). Store → Auctions
   now lists, under the live ones, auctions that ended in the last 90 days
