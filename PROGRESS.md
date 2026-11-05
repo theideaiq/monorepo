@@ -455,6 +455,14 @@ steps need Xcode, Android Studio and the store/Firebase accounts
 
 ## Decisions
 
+- 2026-11-05: **PR 7, A5: Gear leads with the object** (no schema). A
+  product in Gear or any category under it shows its specifications right
+  under the title and price, before the description, so a device's page
+  starts with what it is; other products keep them at the end
+  (`isGearCategory` in `lib/product.ts`). Specifications come only from
+  the product's own `details`; nothing is added when there are none. No
+  new text.
+
 - 2026-11-05: **PR 7, A3: the game night planner** (no schema). A member
   with a game night kit booked sees "Your game night" on Pass, under
   Today, until the kit is collected. It shows when it comes and goes

@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { deliveryWindow } from "@/lib/cart";
 import { appLink, pagePath } from "@/lib/links";
 import { cheapestMonthly, toAvailability } from "@/lib/plus";
-import { productJsonLd, productSpecs } from "@/lib/product";
+import { isGearCategory, productJsonLd, productSpecs } from "@/lib/product";
 import { queuePlace } from "@/lib/queue-queries";
 import {
   activeFilterCount,
@@ -330,5 +330,28 @@ describe("product helpers", () => {
     });
     expect("aggregateRating" in data).toBe(true);
     expect("review" in data).toBe(false);
+  });
+});
+
+describe("isGearCategory", () => {
+  const categories = [
+    { id: "gear", parent_id: null, slug: "gear" },
+    { id: "audio", parent_id: "gear", slug: "audio" },
+    { id: "turntables", parent_id: "audio", slug: "turntables" },
+    { id: "music", parent_id: null, slug: "music" },
+    { id: "vinyl", parent_id: "music", slug: "vinyl" },
+  ];
+
+  it("is Gear for Gear and every category under it", () => {
+    expect(isGearCategory(categories, "gear")).toBe(true);
+    expect(isGearCategory(categories, "audio")).toBe(true);
+    expect(isGearCategory(categories, "turntables")).toBe(true);
+  });
+
+  it("is not Gear elsewhere, or without a category", () => {
+    expect(isGearCategory(categories, "vinyl")).toBe(false);
+    expect(isGearCategory(categories, "music")).toBe(false);
+    expect(isGearCategory(categories, null)).toBe(false);
+    expect(isGearCategory(categories, "missing")).toBe(false);
   });
 });

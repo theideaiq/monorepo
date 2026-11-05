@@ -45,7 +45,7 @@ import {
 } from "@/lib/data";
 import { markdownToText } from "@/lib/markdown";
 import { localizedMetadata, siteUrl } from "@/lib/metadata";
-import { productJsonLd, productSpecs } from "@/lib/product";
+import { isGearCategory, productJsonLd, productSpecs } from "@/lib/product";
 import { parseStoreQuery } from "@/lib/store-params";
 
 // Rendered per request, like `/store`: a category's shelf reads its filters
@@ -194,17 +194,27 @@ const ProductView = async ({
   readonly product: ProductDetail;
   readonly slug: string;
 }) => {
-  const [t, store, ratings, reviews, offers, bundle, photos, history] =
-    await Promise.all([
-      getTranslations({ locale, namespace: "web.store.product" }),
-      getTranslations({ locale, namespace: "store" }),
-      getRatings([product.id]),
-      getReviews(product.id, REVIEWS_SHOWN),
-      getOffers(product.id),
-      getBundle(product.id),
-      getOfferPhotos(product.id),
-      getPriceHistory(product.product_variants.map((variant) => variant.id)),
-    ]);
+  const [
+    t,
+    store,
+    ratings,
+    reviews,
+    offers,
+    bundle,
+    photos,
+    history,
+    categories,
+  ] = await Promise.all([
+    getTranslations({ locale, namespace: "web.store.product" }),
+    getTranslations({ locale, namespace: "store" }),
+    getRatings([product.id]),
+    getReviews(product.id, REVIEWS_SHOWN),
+    getOffers(product.id),
+    getBundle(product.id),
+    getOfferPhotos(product.id),
+    getPriceHistory(product.product_variants.map((variant) => variant.id)),
+    getCategories("sale"),
+  ]);
   const records = await getSellerRecords([
     ...new Set(
       offers
@@ -225,6 +235,24 @@ const ProductView = async ({
   const rental = product.kind === "rental";
   const specs = productSpecs(product.details);
   const pageUrl = new URL(localePath(locale, `/store/${slug}`), siteUrl()).href;
+  // A5: Gear leads with the object, its specifications under the title.
+  const gear = isGearCategory(categories, product.category?.id);
+  const specSheet =
+    specs.length > 0 ? (
+      <section className="flex flex-col gap-3">
+        <h2 className="font-semibold text-lg">{t("specs")}</h2>
+        <dl className="divide-y rounded-md border text-sm">
+          {specs.map(([label, value]) => (
+            <div className="grid grid-cols-2 gap-4 p-3" key={label}>
+              <dt className="text-muted-foreground">{label}</dt>
+              <dd>{value}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+    ) : null;
+  const topSpecs = gear ? specSheet : null;
+  const bottomSpecs = gear ? null : specSheet;
 
   return (
     <div className="container mx-auto px-4 py-6 md:py-10">
@@ -309,6 +337,7 @@ const ProductView = async ({
               product={product}
             />
           )}
+          {topSpecs}
         </div>
 
         <aside className="lg:sticky lg:top-20 lg:col-start-3 lg:row-span-2 lg:row-start-1">
@@ -343,19 +372,7 @@ const ProductView = async ({
             )}
           />
 
-          {specs.length > 0 ? (
-            <section className="flex flex-col gap-3">
-              <h2 className="font-semibold text-lg">{t("specs")}</h2>
-              <dl className="divide-y rounded-md border text-sm">
-                {specs.map(([label, value]) => (
-                  <div className="grid grid-cols-2 gap-4 p-3" key={label}>
-                    <dt className="text-muted-foreground">{label}</dt>
-                    <dd>{value}</dd>
-                  </div>
-                ))}
-              </dl>
-            </section>
-          ) : null}
+          {bottomSpecs}
         </div>
       </div>
 
