@@ -461,8 +461,10 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   opening the list filtered to that country. C11, schema first (migration
   `20270402000000_kit_contents.sql`): `kit_types.contents_ar`/`contents_en`,
   what's in each kit's box item by item, paired across the languages, left
-  empty for staff to fill in Staff → Plus → Kits; the kit page shows it in
-  the next change, and shows nothing while it is empty.
+  empty for staff to fill in Staff → Plus → Kits (one item per line in
+  each language, the same count in both); the kit page shows "What's
+  inside" and nothing while it is empty. The website and Staff read kits
+  with `*`, so they work before the migration has run.
 
 - 2026-11-05: **PR 7, C25: the Pro offer at the listing limit.** Partners →
   Sell → Listings shows a Free shop its live listings against the limit

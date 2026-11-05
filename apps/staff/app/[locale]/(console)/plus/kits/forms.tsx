@@ -8,6 +8,7 @@ import {
   CheckboxField,
   FieldGrid,
   SelectField,
+  TextareaField,
   TextField,
 } from "@/components/admin/fields";
 import type { SupplierOption } from "@/lib/admin/suppliers";
@@ -88,6 +89,9 @@ export const KitTypeForm = ({
   readonly disabled: boolean;
   readonly kit: {
     active: boolean;
+    /** Absent before the C11 migration has run. */
+    contents_ar?: string[];
+    contents_en?: string[];
     deposit: number;
     extra_day_price: number;
     id: string;
@@ -134,6 +138,23 @@ export const KitTypeForm = ({
               <SubmitButton size="sm">{tCommon("save")}</SubmitButton>
             )}
           </div>
+        </FieldGrid>
+        <FieldGrid className="mt-3" columns={2}>
+          <TextareaField
+            defaultValue={kit.contents_en?.join("\n")}
+            dir="ltr"
+            hint={t("contentsHint")}
+            label={t("contentsEn")}
+            name="contentsEn"
+            rows={4}
+          />
+          <TextareaField
+            defaultValue={kit.contents_ar?.join("\n")}
+            dir="rtl"
+            label={t("contentsAr")}
+            name="contentsAr"
+            rows={4}
+          />
         </FieldGrid>
       </fieldset>
     </ActionForm>

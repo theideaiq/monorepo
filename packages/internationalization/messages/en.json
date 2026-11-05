@@ -4683,7 +4683,8 @@
         "pickGames": "Choose the kit's games.",
         "unavailable": "This kit or one of its games isn't available right now.",
         "unknown": "We couldn't add this to your cart. Please try again."
-      }
+      },
+      "contents": "What's inside"
     },
     "verifyPhone": {
       "title": "Phone and WhatsApp",
@@ -6693,7 +6694,10 @@
         "offered": "Offered",
         "house": "The IDEA",
         "supplier": "Owner",
-        "suppliedBy": "Lent by {shop}"
+        "suppliedBy": "Lent by {shop}",
+        "contentsEn": "What's inside (English)",
+        "contentsAr": "What's inside (Arabic)",
+        "contentsHint": "One item per line, the same items in the same order in both languages. Shown on the kit's page; leave empty to show nothing."
       },
       "demand": {
         "description": "The most-queued products against their copies for rent. One copy for every three people queued.",

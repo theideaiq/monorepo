@@ -18,13 +18,7 @@ export const useKitType = (kit: string) => {
   return useQuery({
     queryFn: async () =>
       unwrap(
-        await supabase
-          .from("kit_types")
-          .select(
-            "id, name_ar, name_en, description_ar, description_en, price, extra_day_price, deposit, games"
-          )
-          .eq("id", kit)
-          .maybeSingle()
+        await supabase.from("kit_types").select("*").eq("id", kit).maybeSingle()
       ) ?? null,
     queryKey: ["kits", "type", kit],
   });
