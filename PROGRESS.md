@@ -455,6 +455,15 @@ steps need Xcode, Android Studio and the store/Firebase accounts
 
 ## Decisions
 
+- 2026-11-05: **PR 7, C19 and C11's schema.** C19: the Club's
+  opportunities page shows, before any filter, the destinations listed now
+  as chips with how many opportunities go to each (most first), each
+  opening the list filtered to that country. C11, schema first (migration
+  `20270402000000_kit_contents.sql`): `kit_types.contents_ar`/`contents_en`,
+  what's in each kit's box item by item, paired across the languages, left
+  empty for staff to fill in Staff → Plus → Kits; the kit page shows it in
+  the next change, and shows nothing while it is empty.
+
 - 2026-11-05: **PR 7, C25: the Pro offer at the listing limit.** Partners →
   Sell → Listings shows a Free shop its live listings against the limit
   of 100; from 90 it offers Pro (no limit, a lower commission in every
