@@ -455,6 +455,14 @@ steps need Xcode, Android Studio and the store/Firebase accounts
 
 ## Decisions
 
+- 2026-11-05: **A28 budget, sturdier timings.** `main` went red on Total
+  Blocking Time (737 and 765 ms against 600) on a run where every page was
+  slower, while the same pages measured about 230 ms the run before: the
+  shared runner, not the code. A page over its time budget (LCP or TBT)
+  now loads twice more and the median of the three is judged; bytes and
+  layout shift still come from the first load. A real regression, over
+  budget on two of three loads, still fails. The budget is unchanged.
+
 - 2026-11-05: **PR 7, C9: auction improvements** (migration
   `20270404000000_auction_watches.sql`, pgTAP `…_auction_watches.test.sql`).
   A member watches a live auction (`auction_watches`, their own rows only)
