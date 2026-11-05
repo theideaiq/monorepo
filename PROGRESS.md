@@ -455,6 +455,14 @@ steps need Xcode, Android Studio and the store/Firebase accounts
 
 ## Decisions
 
+- 2026-11-05: **PR 7, C9: an auction's share image** (no schema). A link
+  to `/store/auctions/<number>` shared in a chat now shows the product's
+  name and picture and when the auction ends (Baghdad time), drawn like a
+  Club event's image under The IDEA Store's lock-up (`EventShareImage`
+  takes the lock-up's `line`). No prices: they change with every bid. New
+  Arabic for native review: `web.store.auctions.image`. Left of C9: an
+  archive of ended auctions.
+
 - 2026-11-05: **PR 7, A6: campaign template** (no schema). In Staff →
   Catalog → Campaigns, every campaign has "Use as a template": the new
   campaign form opens with that campaign's names and descriptions in both

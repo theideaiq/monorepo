@@ -415,7 +415,11 @@
       "auctions": {
         "title": "Auctions",
         "description": "Signed, limited, rare and collectible copies, each with the seller's own photos. Set your maximum and we bid for you.",
-        "one": "Bid on {name}: the seller's photos of this copy, its condition, the current bid and time left."
+        "one": "Bid on {name}: the seller's photos of this copy, its condition, the current bid and time left.",
+        "image": {
+          "ends": "Auction ends {date}",
+          "time": "{time}, Baghdad time"
+        }
       },
       "sellTextbooks": "Done with last term's textbooks? Sell them on the Store as an individual trader: open a shop in Partners with your ID; there's no fee to start, only commission on what sells.",
       "sellTextbooksLink": "Start selling"

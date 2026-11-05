@@ -980,6 +980,34 @@ export const getAuctionTitle = (number: number) =>
   );
 
 /**
+ * What an auction's share image shows (C9): the product's name and first
+ * picture, and when the auction ends. Null when there's no such auction.
+ */
+export const getAuctionShare = (number: number) =>
+  fallback(
+    "auctionShare",
+    null as {
+      ends_at: string;
+      product: { images: string[]; name_ar: string; name_en: string } | null;
+    } | null,
+    async () => {
+      const supabase = createPublicClient();
+      if (!supabase) {
+        return null;
+      }
+      const { data, error } = await supabase
+        .from("auctions")
+        .select("ends_at, product:products (name_ar, name_en, images)")
+        .eq("number", number)
+        .maybeSingle();
+      if (error) {
+        throw error;
+      }
+      return data ?? null;
+    }
+  );
+
+/**
  * Counts a search that found no product (`record_search_miss`), for
  * Staff → Catalog → Searches. Failures are only logged.
  */
