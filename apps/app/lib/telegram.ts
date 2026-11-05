@@ -15,10 +15,22 @@ export interface TelegramWebApp {
     show: () => void;
   };
   expand: () => void;
+  /** The signed launch data (empty outside a real Mini App launch). */
+  initData?: string;
+  MainButton: {
+    hide: () => void;
+    offClick: (callback: () => void) => void;
+    onClick: (callback: () => void) => void;
+    setText: (text: string) => void;
+    show: () => void;
+  };
   ready: () => void;
   setBackgroundColor?: (color: string) => void;
   setHeaderColor?: (color: string) => void;
 }
+
+/** Sent on `window` once Telegram's script is ready (`TelegramShell`). */
+export const TELEGRAM_READY = "the-idea:telegram-ready";
 
 declare global {
   interface Window {

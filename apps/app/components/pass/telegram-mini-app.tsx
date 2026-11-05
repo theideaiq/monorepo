@@ -8,8 +8,9 @@ import { localePath } from "@repo/internationalization";
 import { Link } from "@repo/internationalization/navigation";
 import Script from "next/script";
 import { useLocale, useTranslations } from "next-intl";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { SocialButtons } from "@/components/pass/social-buttons";
+import { callPublicApi } from "@/lib/api";
 import { markTelegramMiniApp } from "@/lib/telegram";
 
 const ready = () => {
@@ -19,8 +20,33 @@ const ready = () => {
 };
 
 /**
+ * One-tap sign-in (A26): the API checks Telegram's signed `initData` and, for
+ * a Telegram account linked to a Pass, returns a one-time token the browser
+ * exchanges for a session. False when that isn't possible.
+ */
+const signInWithInitData = async (
+  supabase: ReturnType<typeof useAuth>["supabase"],
+  initData: string
+) => {
+  try {
+    const { tokenHash } = await callPublicApi<{ tokenHash: string }>(
+      "/v1/telegram/mini-app",
+      { initData }
+    );
+    const { error } = await supabase.auth.verifyOtp({
+      token_hash: tokenHash,
+      type: "magiclink",
+    });
+    return !error;
+  } catch {
+    return false;
+  }
+};
+
+/**
  * The Droid's Mini App: Telegram opens the website at /tg. A signed-in
- * Pass goes straight to the store; otherwise "Continue with Telegram"
+ * Pass goes straight to the store; a Telegram account linked to a Pass
+ * signs straight in; otherwise "Continue with Telegram"
  * (Supabase Auth, the Telegram the Pass connected), signing in with email,
  * or browsing as a guest.
  */
@@ -32,11 +58,39 @@ export const TelegramMiniApp = ({
 }) => {
   const t = useTranslations("pass.telegram.miniApp");
   const locale = useLocale();
-  const { loading, user } = useAuth();
+  const { loading, supabase, user } = useAuth();
   const store = localePath(locale, "/store");
+  const [scriptReady, setScriptReady] = useState(false);
+  const [trying, setTrying] = useState(true);
 
   // The script may already be there (a client-side navigation back to /tg).
-  useEffect(ready, []);
+  useEffect(() => {
+    ready();
+    if (window.Telegram?.WebApp) {
+      setScriptReady(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (loading || user || !scriptReady) {
+      return;
+    }
+    const initData = window.Telegram?.WebApp?.initData;
+    if (!initData) {
+      setTrying(false);
+      return;
+    }
+    let active = true;
+    signInWithInitData(supabase, initData).then((signedIn) => {
+      // Signed in, the effect below takes the member to the store.
+      if (active && !signedIn) {
+        setTrying(false);
+      }
+    });
+    return () => {
+      active = false;
+    };
+  }, [loading, scriptReady, supabase, user]);
 
   useEffect(() => {
     if (!loading && user) {
@@ -47,11 +101,16 @@ export const TelegramMiniApp = ({
   return (
     <>
       <Script
-        onReady={ready}
+        // Blocked or offline: show the buttons rather than wait.
+        onError={() => setScriptReady(true)}
+        onReady={() => {
+          ready();
+          setScriptReady(true);
+        }}
         src="https://telegram.org/js/telegram-web-app.js"
         strategy="afterInteractive"
       />
-      {loading || user ? (
+      {loading || user || trying ? (
         <div
           className="flex items-center justify-center gap-2 text-sm"
           role="status"

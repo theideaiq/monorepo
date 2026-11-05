@@ -7,6 +7,7 @@ import { isNativeApp } from "@/lib/platform";
 import {
   inTelegramMiniApp,
   showsBackButton,
+  TELEGRAM_READY,
   type TelegramWebApp,
 } from "@/lib/telegram";
 
@@ -89,6 +90,7 @@ export const TelegramShell = () => {
           webApp.ready();
           webApp.expand();
           setApp(webApp);
+          window.dispatchEvent(new Event(TELEGRAM_READY));
         }
       }}
       src="https://telegram.org/js/telegram-web-app.js"
