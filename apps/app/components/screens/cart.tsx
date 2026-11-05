@@ -21,7 +21,7 @@ import {
   formatDateTime,
   formatNumber,
 } from "@repo/internationalization/format";
-import { Link } from "@repo/internationalization/navigation";
+import { Link, useRouter } from "@repo/internationalization/navigation";
 import {
   GiftIcon,
   HeartIcon,
@@ -29,6 +29,7 @@ import {
   Trash2Icon,
 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
+import { useCallback } from "react";
 import { PageHeader } from "@/components/page-header";
 import { ErrorState, SectionSpinner } from "@/components/states";
 import { CheckoutSteps } from "@/components/store/checkout-steps";
@@ -74,6 +75,7 @@ import {
   useUpdateCartLine,
 } from "@/lib/store-queries";
 import { useMyStudent } from "@/lib/student-queries";
+import { useTelegramMainButton } from "@/lib/use-telegram";
 import { useSaveForLater } from "@/lib/wishlist-queries";
 
 const CartLineRow = ({ line }: { readonly line: CartLineView }) => {
@@ -468,6 +470,14 @@ export const Cart = () => {
   const failed = cart.isError || settings.isError;
   const { auctions, digital, empty, kit, plus, programs, summary } =
     useCartSummary(cart.data, settings.data);
+  const router = useRouter();
+  const toCheckout = useCallback(() => router.push("/checkout"), [router]);
+  // Inside the Droid's Mini App, Telegram's main button also checks out.
+  useTelegramMainButton({
+    onClick: toCheckout,
+    text: t("checkout"),
+    visible: Boolean(summary?.canCheckout),
+  });
   // Deposits, gifted Plus months, programs and codes don't count towards
   // free delivery.
   const outside =

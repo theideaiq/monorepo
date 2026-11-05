@@ -455,6 +455,16 @@ steps need Xcode, Android Studio and the store/Firebase accounts
 
 ## Decisions
 
+- 2026-11-05: **PR 7, A26: the Droid Mini App, part 2** (no schema). Inside
+  the Mini App, the cart also shows Telegram's own main button ("Checkout",
+  at the bottom of Telegram) while the cart can be checked out; it opens
+  checkout and goes away on other pages (`useTelegramMainButton` in
+  `lib/use-telegram.ts`; `TelegramShell` says when Telegram's script is
+  ready). No new text. Not built, for the owner to decide: signing in
+  straight from Telegram's `initData`. It would make the API mint sessions
+  for linked Passes, a new way to sign in; "Continue with Telegram" (the
+  OIDC provider) already signs members in inside the Mini App.
+
 - 2026-11-05: **PR 7, C9: ended auctions** (no schema). Store → Auctions
   now lists, under the live ones, auctions that ended in the last 90 days
   (newest first, up to 24): each with the price it went for ("Ended · sold
