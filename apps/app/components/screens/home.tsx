@@ -25,6 +25,7 @@ import type { ReactNode } from "react";
 import { AboutHelpLink } from "@/components/about-help-link";
 import { PageHeader } from "@/components/page-header";
 import { AskToPlay } from "@/components/pass/family";
+import { GameNights } from "@/components/pass/game-night";
 import { AvailabilityLabel } from "@/components/pass/plus-words";
 import { isAtHome } from "@/components/pass/rentals";
 import { OrderStatusBadge } from "@/components/store/order-status-badge";
@@ -432,7 +433,7 @@ const Rows = () => {
 
 /**
  * `/pass`: the live card (`card`, rendered on the server), then Today
- * (only when something is due), the Library's shelves (At home, Up next
+ * (only when something is due), a game night ahead (A3), the Library's shelves (At home, Up next
  * in your queue, Bought, Tickets), Bulbs, Family, Settings and About &
  * help. Each shelf opens its page.
  */
@@ -451,6 +452,7 @@ export const Home = ({ card }: { readonly card?: ReactNode }) => {
         </h2>
         {card}
         <Today />
+        <GameNights />
         <AskToPlay />
         <AtHomeShelf />
         <QueueShelf />

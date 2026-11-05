@@ -160,3 +160,86 @@ export const useCartKitLine = (isStudent: boolean) => {
     price: kitTotal(weekend, kit.extra_days),
   };
 };
+
+/** A booked game night as the planner shows it. */
+export interface GameNight {
+  contentsAr: string[];
+  contentsEn: string[];
+  endsOn: string;
+  games: { name_ar: string; name_en: string }[];
+  id: string;
+  kitNameAr: string;
+  kitNameEn: string;
+  kitType: string;
+  startsOn: string;
+  status: string;
+}
+
+/** Today in Baghdad as `YYYY-MM-DD`. */
+const baghdadToday = (now: Date) =>
+  new Intl.DateTimeFormat("en-CA", {
+    day: "2-digit",
+    month: "2-digit",
+    timeZone: "Asia/Baghdad",
+    year: "numeric",
+  }).format(now);
+
+/**
+ * The game nights still ahead or under way: booked or out, not yet
+ * collected (ends today or later), soonest first.
+ */
+export const upcomingGameNights = <
+  Night extends { endsOn: string; startsOn: string; status: string },
+>(
+  nights: readonly Night[],
+  now = new Date()
+) => {
+  const today = baghdadToday(now);
+  return nights
+    .filter(
+      (night) =>
+        (night.status === "booked" || night.status === "out") &&
+        night.endsOn >= today
+    )
+    .sort((a, b) => a.startsOn.localeCompare(b.startsOn));
+};
+
+/** The member's game nights ahead (A3, the planner on Pass). */
+export const useMyGameNights = () => {
+  const { supabase, user } = useAuth();
+  return useQuery({
+    enabled: Boolean(user),
+    queryFn: async () => {
+      const rows =
+        unwrap(
+          await supabase
+            .from("kit_bookings")
+            .select(
+              "id, kit_type, starts_on, ends_on, status, kit_types(name_ar, name_en, contents_ar, contents_en), kit_booking_games(products(name_ar, name_en))"
+            )
+            .in("status", ["booked", "out"])
+            .order("starts_on")
+            .limit(5)
+        ) ?? [];
+      return upcomingGameNights(
+        rows.map(
+          (row): GameNight => ({
+            contentsAr: row.kit_types?.contents_ar ?? [],
+            contentsEn: row.kit_types?.contents_en ?? [],
+            endsOn: row.ends_on,
+            games: row.kit_booking_games.flatMap((game) =>
+              game.products ? [game.products] : []
+            ),
+            id: row.id,
+            kitNameAr: row.kit_types?.name_ar ?? "",
+            kitNameEn: row.kit_types?.name_en ?? "",
+            kitType: row.kit_type,
+            startsOn: row.starts_on,
+            status: row.status,
+          })
+        )
+      );
+    },
+    queryKey: ["kits", "nights", user?.id ?? ""],
+  });
+};

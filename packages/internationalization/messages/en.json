@@ -1875,6 +1875,15 @@
         "event": "{title} today at {time}",
         "family": "{count, plural, one {{n} Family request to answer} other {{n} Family requests to answer}}"
       },
+      "gameNight": {
+        "title": "Your game night",
+        "arrives": "We bring it on {from}, in the evening, and collect it on {to}, in the evening.",
+        "atHome": "It's with you until {to}, in the evening.",
+        "games": "Your games",
+        "inTheBox": "What's inside",
+        "invite": "Invite friends",
+        "inviteText": "Game night on {date}: {kit}"
+      },
       "shelves": {
         "atHome": "At home",
         "atHomeEmpty": "Nothing from Plus at home right now.",
