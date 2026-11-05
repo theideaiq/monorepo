@@ -6382,7 +6382,10 @@
         "publish": "انشر",
         "unpublish": "وگّف النشر",
         "delete": "امسح",
-        "deleteConfirm": "تمسح مسودة الحملة هاي؟"
+        "deleteConfirm": "تمسح مسودة الحملة هاي؟",
+        "useTemplate": "استخدمها كقالب",
+        "fromTemplate": "تبدي من «{name}»، اللي دامت {count, plural, one {يوم واحد} other {{days} يوم}}: أسماءها ووصفها مكتوبة. اختار عنوان جديد وتواريخ جديدة.",
+        "startBlank": "ابدي من الصفر"
       },
       "sales": {
         "panelTitle": "التخفيضات والعروض",

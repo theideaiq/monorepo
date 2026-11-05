@@ -455,6 +455,14 @@ steps need Xcode, Android Studio and the store/Firebase accounts
 
 ## Decisions
 
+- 2026-11-05: **PR 7, A6: campaign template** (no schema). In Staff →
+  Catalog → Campaigns, every campaign has "Use as a template": the new
+  campaign form opens with that campaign's names and descriptions in both
+  languages, and says how many days it ran. The address and the dates are
+  always chosen again, so nothing is reused by accident ("Start blank"
+  clears it). New Arabic for native review:
+  `admin.catalog.campaigns.useTemplate`, `fromTemplate`, `startBlank`.
+
 - 2026-11-05: **PR 7, A5: Gear leads with the object** (no schema). A
   product in Gear or any category under it shows its specifications right
   under the title and price, before the description, so a device's page

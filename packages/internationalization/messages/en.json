@@ -6382,7 +6382,10 @@
         "publish": "Publish",
         "unpublish": "Unpublish",
         "delete": "Delete",
-        "deleteConfirm": "Delete this draft campaign?"
+        "deleteConfirm": "Delete this draft campaign?",
+        "useTemplate": "Use as a template",
+        "fromTemplate": "Starting from «{name}», which ran for {count, plural, one {{days} day} other {{days} days}}: its names and descriptions are filled in. Choose a new address and dates.",
+        "startBlank": "Start blank"
       },
       "sales": {
         "panelTitle": "Sales and deals",
