@@ -455,6 +455,16 @@ steps need Xcode, Android Studio and the store/Firebase accounts
 
 ## Decisions
 
+- 2026-11-05: **PR 7, A3: the game night planner** (no schema). A member
+  with a game night kit booked sees "Your game night" on Pass, under
+  Today, until the kit is collected. It shows when it comes and goes
+  (Thursday evening to the day it is collected), the games they picked,
+  what's inside the kit (only when staff have written it in Staff → Plus →
+  Kits) and "Invite friends", which shares the kit's page with the date.
+  Members could not see their kit bookings anywhere before
+  (`useMyGameNights`, `upcomingGameNights` in `lib/kits.ts`). New Arabic
+  for native review: `app.pass.gameNight`.
+
 - 2026-11-05: **PR 7, A26: the Droid Mini App, part 1** (no schema).
   Once Telegram opens the website as the Mini App (`/tg`, or any page
   whose address carries Telegram's `tgWebAppData`), the tab remembers it

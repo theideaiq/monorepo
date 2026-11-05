@@ -1875,6 +1875,15 @@
         "event": "{title} اليوم الساعة {time}",
         "family": "{count, plural, one {طلب عائلي واحد ينتظر ردّك} other {{n} طلبات عائلية تنتظر ردّك}}"
       },
+      "gameNight": {
+        "title": "سهرة الألعاب مالتك",
+        "arrives": "نوصلها {from} بالليل ونرجع ناخذها {to} بالليل.",
+        "atHome": "تبقى يمك لحد {to} بالليل.",
+        "games": "ألعابك",
+        "inTheBox": "شنو بداخله",
+        "invite": "اعزم أصدقائك",
+        "inviteText": "سهرة ألعاب {date}: {kit}"
+      },
       "shelves": {
         "atHome": "بالبيت",
         "atHomeEmpty": "ماكو شي من الپلص ببيتك هسه.",
