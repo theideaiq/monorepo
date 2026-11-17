@@ -37,7 +37,7 @@
     "fflate": "^0.8.3",
     "import-in-the-middle": "^3.0.0",
     "jose": "^6.2.12",
-    "next": "16.4.3",
+    "next": "16.4.5",
     "node-forge": "^1.4.2",
     "react": "19.3.0",
     "react-dom": "19.3.0",
