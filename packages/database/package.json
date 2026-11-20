@@ -25,15 +25,15 @@
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.115.0",
+    "@supabase/supabase-js": "^2.118.0",
     "@t3-oss/env-nextjs": "^0.13.10",
     "server-only": "^0.0.1",
     "zod": "^4.6.7"
   },
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",
-    "@types/node": "24.19.1",
-    "supabase": "2.119.0",
+    "@types/node": "24.19.2",
+    "supabase": "2.122.0",
     "typescript": "^7.0.2"
   }
 }
